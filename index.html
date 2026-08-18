@@ -138,6 +138,18 @@
   #backTop.show { opacity:1; pointer-events:auto; }
   #backTop:hover { transform:translateY(-2px); }
 
+  /* 加微信入口 */
+  #wxBtn { position:fixed; right:28px; bottom:90px; width:50px; height:50px; border-radius:50%; background:var(--accent); color:#fff; border:none; cursor:pointer; font-size:20px; box-shadow:0 12px 30px rgba(79,70,229,.38); z-index:150; display:flex; align-items:center; justify-content:center; animation:wxPulse 2.4s ease-in-out infinite; }
+  #wxBtn:hover { transform:scale(1.08); }
+  @keyframes wxPulse { 0%,100% { box-shadow:0 12px 30px rgba(79,70,229,.38), 0 0 0 0 rgba(79,70,229,.35); } 50% { box-shadow:0 12px 30px rgba(79,70,229,.38), 0 0 0 12px rgba(79,70,229,0); } }
+  #wxModal { position:fixed; inset:0; background:rgba(17,24,39,.6); backdrop-filter:blur(4px); z-index:600; display:none; align-items:center; justify-content:center; padding:20px; }
+  #wxModal.show { display:flex; }
+  #wxModal .box { position:relative; background:#fff; border-radius:22px; padding:32px 28px 26px; width:320px; max-width:90vw; text-align:center; box-shadow:0 30px 80px rgba(0,0,0,.3); }
+  #wxModal .box .x { position:absolute; top:14px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--muted); }
+  #wxModal .box img { width:200px; height:200px; object-fit:cover; border-radius:12px; border:1px solid var(--border); }
+  #wxModal .box h4 { font-size:17px; font-weight:800; margin-top:14px; letter-spacing:-.01em; }
+  #wxModal .box p { font-size:12.5px; color:var(--muted); margin-top:6px; line-height:1.6; }
+
   /* ===== 03 组件 ===== */
   .modal-mask { position:fixed; inset:0; background:rgba(17,24,39,.5); z-index:400; display:none; align-items:center; justify-content:center; }
   .modal-mask.show { display:flex; }
@@ -1382,8 +1394,19 @@
 
 <button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
+<button id="wxBtn" onclick="toggleWx()">💬</button>
+<div id="wxModal" onclick="if(event.target===this)toggleWx()">
+  <div class="box">
+    <button class="x" onclick="toggleWx()">✕</button>
+    <img src="9edee0894289c5fc4186482404d74e13.jpg" alt="扫码联系博主">
+    <h4>联系博主</h4>
+    <p>做网站 or 学建站，扫码加微信详聊<br>备注「教程」或「接单」</p>
+  </div>
+</div>
+
 <script>
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function toggleWx() { document.getElementById('wxModal').classList.toggle('show'); }
   const progress = document.getElementById('progress');
   const backTop = document.getElementById('backTop');
   window.addEventListener('scroll', () => {
