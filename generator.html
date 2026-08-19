@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>万能 Prompt 生成器 · AI 浩然</title>
+<style>
+  :root {
+    --bg: #F6F6F7; --card: #FFFFFF; --text: #111827; --muted: #6B7280; --faint: #9CA3AF;
+    --accent: #4F46E5; --accent-soft: #EEF2FF; --green: #16A34A; --green-soft: #F0FDF4;
+    --border: #ECECEF; --radius: 16px;
+    --shadow: 0 1px 2px rgba(17,24,39,.04), 0 12px 32px -12px rgba(17,24,39,.10);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); line-height:1.7; -webkit-font-smoothing:antialiased; font-size:15px; }
+
+  .topbar { position:sticky; top:0; z-index:100; height:60px; background:rgba(246,246,247,.85); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:18px; padding:0 26px; }
+  .topbar .logo { font-weight:800; font-size:15.5px; letter-spacing:-.02em; }
+  .topbar .back { font-size:13px; color:var(--accent); text-decoration:none; font-weight:600; padding:7px 14px; border-radius:8px; background:var(--accent-soft); }
+  .topbar .back:hover { opacity:.85; }
+
+  .wrap { max-width:1200px; margin:0 auto; padding:40px 24px 100px; }
+  .hero { text-align:center; margin-bottom:28px; }
+  .hero .tag { display:inline-block; font-size:12px; font-weight:700; color:var(--accent); background:var(--accent-soft); padding:5px 13px; border-radius:999px; letter-spacing:.04em; }
+  .hero h1 { font-size:30px; font-weight:800; letter-spacing:-.03em; margin:12px 0 6px; line-height:1.2; }
+  .hero p { color:var(--muted); font-size:14.5px; }
+
+  .layout { display:flex; gap:24px; align-items:stretch; }
+  .col-left { flex:1; min-width:0; }
+  .col-right { width:400px; flex-shrink:0; }
+
+  .gen-box { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:28px; box-shadow:var(--shadow); }
+  .gen-box .g-label { font-size:13.5px; font-weight:700; color:var(--text); margin:22px 0 9px; }
+  .gen-box .g-label:first-of-type { margin-top:0; }
+  .gen-box .g-label .step { display:inline-block; width:20px; height:20px; line-height:20px; text-align:center; background:var(--accent-soft); color:var(--accent); border-radius:6px; font-size:11px; margin-right:7px; }
+  .gen-input { width:100%; border:1px solid var(--border); border-radius:9px; padding:12px 14px; font-size:13.5px; font-family:inherit; background:#fff; color:var(--text); margin-top:9px; }
+  .gen-input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(79,70,229,.1); }
+  .gen-chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .gen-chip { padding:8px 14px; border:1px solid var(--border); border-radius:999px; font-size:12.5px; cursor:pointer; background:#fff; color:var(--muted); transition:all .15s; user-select:none; }
+  .gen-chip.on { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
+  .g-tip { font-size:11px; color:var(--faint); font-weight:400; margin-left:6px; }
+  .g-tip.warn { color:#F59E0B; }
+  .clear-btn { background:#fff; color:var(--muted); border:1px solid var(--border); border-radius:8px; padding:7px 15px; font-size:12px; cursor:pointer; margin-left:8px; vertical-align:middle; }
+  .clear-btn:hover { color:#EF4444; border-color:#EF4444; }
+  .gen-btn { background:var(--accent); color:#fff; border:none; border-radius:11px; padding:15px 28px; font-size:15px; font-weight:700; cursor:pointer; margin-top:28px; width:100%; }
+  .gen-btn:hover { opacity:.92; }
+  .gen-result { width:100%; border:1px solid var(--border); border-radius:10px; padding:15px 17px; font-size:12.5px; line-height:1.7; font-family:ui-monospace,Consolas,monospace; background:#F8F9FB; color:#334155; margin-top:14px; min-height:160px; resize:vertical; }
+  .gen-copy { background:var(--green); color:#fff; border:none; border-radius:8px; padding:11px 24px; font-size:13px; font-weight:600; cursor:pointer; margin-top:10px; }
+  .gen-copy:hover { opacity:.9; }
+
+  /* 预览区 */
+  .preview-card { position:sticky; top:80px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; }
+  .preview-card .p-head { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .preview-card .p-head b { font-size:14px; }
+  .preview-card .p-head .hint { font-size:11px; color:var(--faint); }
+  .p-frame { margin:16px; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#fff; }
+  .p-topbar { display:flex; gap:5px; padding:8px 11px; border-bottom:1px solid var(--border); background:#fff; }
+  .p-topbar i { width:8px; height:8px; border-radius:50%; display:block; }
+  .p-topbar i:nth-child(1){background:#FCA5A5}.p-topbar i:nth-child(2){background:#FCD34D}.p-topbar i:nth-child(3){background:#86EFAC}
+  .p-body { padding:14px; min-height:420px; display:flex; flex-direction:column; gap:10px; transition:background .3s; }
+  .p-empty { flex:1; display:flex; align-items:center; justify-content:center; color:#CBD5E1; font-size:12px; text-align:center; flex-direction:column; gap:8px; }
+  .p-empty .ico { font-size:30px; }
+
+  /* 视觉块 */
+  .pv { border-radius:8px; }
+  .pv-nav { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; }
+  .pv-nav .logo { width:14px; height:14px; border-radius:4px; }
+  .pv-nav .links { display:flex; gap:5px; }
+  .pv-nav .links i { width:22px; height:6px; border-radius:3px; display:block; }
+  .pv-hero { padding:22px 14px; display:flex; flex-direction:column; gap:8px; }
+  .pv-hero .line { height:12px; border-radius:6px; }
+  .pv-hero .line.w60 { width:60%; }
+  .pv-hero .line.w40 { width:40%; }
+  .pv-hero .btn { width:52px; height:18px; border-radius:6px; }
+  .pv-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; padding:12px; }
+  .pv-grid .cell { height:44px; border-radius:7px; }
+  .pv-form { display:flex; flex-direction:column; gap:7px; padding:12px; }
+  .pv-form .f { height:16px; border-radius:5px; }
+  .pv-form .f.btn { height:20px; width:60px; }
+  .pv-carousel { position:relative; height:64px; border-radius:8px; margin:4px 12px; }
+  .pv-timeline { display:flex; flex-direction:column; gap:10px; padding:12px 12px 12px 24px; position:relative; }
+  .pv-timeline::before { content:""; position:absolute; left:16px; top:12px; bottom:12px; width:2px; border-radius:1px; }
+  .pv-timeline .t { display:flex; align-items:center; gap:8px; }
+  .pv-timeline .dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .pv-timeline .bar { height:9px; border-radius:5px; flex:1; }
+  .pv-faq { display:flex; flex-direction:column; gap:6px; padding:12px; }
+  .pv-faq .q { height:18px; border-radius:5px; }
+  .pv-footer { padding:14px 12px; display:flex; gap:10px; }
+  .pv-footer .col { flex:1; height:26px; border-radius:5px; opacity:.5; }
+  .pv-modal { width:70%; margin:0 auto; border-radius:9px; padding:12px; display:flex; flex-direction:column; gap:7px; }
+  .pv-modal .f { height:14px; border-radius:5px; }
+  .pv-progress { padding:12px; display:flex; flex-direction:column; gap:7px; }
+  .pv-progress .track { height:9px; border-radius:5px; overflow:hidden; }
+  .pv-progress .fill { height:100%; width:65%; border-radius:5px; }
+  .pv-skel { padding:12px; display:flex; flex-direction:column; gap:7px; }
+  .pv-skel .s { height:16px; border-radius:5px; animation:skelpulse 1.2s infinite; }
+
+  @keyframes skelpulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+  .anim-reveal .pv { animation:fadeUp .6s ease; }
+
+  /* 更多视觉块 + 动效 */
+  .pv-crumb { display:flex; align-items:center; gap:6px; padding:8px 12px; }
+  .pv-crumb i { width:26px; height:7px; border-radius:3px; display:block; }
+  .pv-crumb em { font-style:normal; font-size:10px; opacity:.5; }
+  .pv-tabs { display:flex; gap:4px; padding:8px 12px 0; border-bottom:1px solid; }
+  .pv-tabs i { width:34px; height:20px; border-radius:5px 5px 0 0; display:block; }
+  .pv-sidenav { display:flex; gap:8px; padding:10px 12px; }
+  .pv-sidenav .col { width:56px; display:flex; flex-direction:column; gap:5px; }
+  .pv-sidenav .col i { height:10px; border-radius:4px; display:block; }
+  .pv-sidenav .body { flex:1; display:flex; flex-direction:column; gap:6px; }
+  .pv-sidenav .body i { height:10px; border-radius:4px; display:block; }
+  .pv-mega { padding:10px 12px; }
+  .pv-mega .trig { width:60px; height:16px; border-radius:5px; display:block; margin-bottom:6px; }
+  .pv-mega .panel { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+  .pv-mega .panel i { height:24px; border-radius:5px; display:block; }
+  .pv-marquee { overflow:hidden; white-space:nowrap; padding:8px 0; }
+  .pv-marquee .track { display:inline-flex; gap:14px; animation:pvMarquee 4s linear infinite; }
+  .pv-marquee .track i { width:44px; height:8px; border-radius:4px; display:inline-block; }
+  @keyframes pvMarquee { to { transform:translateX(-50%); } }
+  .pv-spinner { display:flex; align-items:center; gap:8px; padding:10px 12px; }
+  .pv-spinner .ring { width:18px; height:18px; border:3px solid rgba(128,128,128,.2); border-top-color:currentColor; border-radius:50%; animation:pvSpin .8s linear infinite; flex-shrink:0; }
+  @keyframes pvSpin { to { transform:rotate(360deg); } }
+  .pv-loadbtn { display:flex; align-items:center; gap:7px; padding:9px 14px; border-radius:7px; }
+  .pv-loadbtn .ring { width:13px; height:13px; border:2px solid rgba(255,255,255,.5); border-top-color:#fff; border-radius:50%; animation:pvSpin .7s linear infinite; }
+  .pv-state { padding:14px 12px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:7px; }
+  .pv-state .ic { font-size:20px; }
+  .pv-state i { width:60%; height:10px; border-radius:4px; display:block; }
+  .pv-like { display:flex; align-items:center; gap:7px; padding:10px 12px; }
+  .pv-like .heart { font-size:18px; cursor:pointer; }
+  .pv-inline { padding:10px 12px; display:flex; flex-direction:column; gap:6px; }
+  .pv-inline .field { height:18px; border-radius:5px; }
+  .pv-inline .msg { height:6px; border-radius:3px; width:50%; }
+  .pv-progressline { height:4px; width:0; border-radius:2px; animation:pvGrow 2.5s ease forwards; }
+  @keyframes pvGrow { to { width:68%; } }
+  .pv-hscroll { display:flex; gap:8px; overflow:hidden; padding:8px 4px; }
+  .pv-hscroll i { min-width:70px; height:44px; border-radius:7px; display:block; }
+  .pv-infinite { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; padding:8px 12px; }
+  .pv-infinite i { height:34px; border-radius:6px; display:block; }
+  .pv-sddrive { display:flex; gap:8px; padding:10px 12px; }
+  .pv-sddrive .line { width:4px; border-radius:2px; position:relative; }
+  .pv-sddrive .line::after { content:""; position:absolute; top:0; left:0; width:100%; height:60%; border-radius:2px; }
+  .pv-sddrive .panels { flex:1; display:flex; flex-direction:column; gap:5px; }
+  .pv-sddrive .panels i { height:12px; border-radius:4px; display:block; }
+  .pv-hovercard { transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+  .pv-hovercard:hover { transform:translateY(-4px); box-shadow:0 8px 16px rgba(0,0,0,.15); }
+
+  /* 高级效果预览 */
+  .pv-tilt { transform-style:preserve-3d; transition:transform .18s ease; }
+  .pv-spotlight { position:relative; overflow:hidden; }
+  .pv-spotlight::after { content:""; position:absolute; inset:0; background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.45), transparent 50%); pointer-events:none; }
+  .pv-textmask { background:linear-gradient(135deg,#6366F1,#8B5CF6,#10B981); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; font-weight:900; font-size:17px; text-align:center; padding:14px; }
+  .pv-clip { animation:pvClip 1.6s ease forwards; }
+  @keyframes pvClip { from { clip-path:inset(0 100% 0 0); } to { clip-path:inset(0 0 0 0); } }
+  .pv-webgl { background:radial-gradient(circle at 50% 60%, #1E1B4B, #0F172A); position:relative; display:flex; align-items:center; justify-content:center; min-height:70px; }
+  .pv-webgl .ball { width:28px; height:28px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #A5B4FC, #4F46E5); animation:pvFloat 3s ease-in-out infinite; }
+  @keyframes pvFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+  .pv-cursor-demo { position:relative; cursor:none; min-height:60px; display:flex; align-items:center; justify-content:center; }
+  .pv-cursor-demo .dot { position:absolute; width:15px; height:15px; border-radius:50%; pointer-events:none; transform:translate(-50%,-50%); z-index:5; }
+  .pv-perf { display:flex; flex-direction:column; gap:6px; padding:10px 12px; }
+  .pv-perf .r { display:flex; align-items:center; gap:8px; }
+  .pv-perf .r i { flex:1; height:7px; border-radius:3px; display:block; }
+  .pv-perf .r b { font-size:9px; font-weight:700; }
+  .pv-motion-toggle { display:flex; align-items:center; gap:8px; padding:10px 12px; }
+  .pv-motion-toggle .sw { width:34px; height:18px; border-radius:999px; position:relative; }
+  .pv-motion-toggle .sw::after { content:""; position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:#fff; transition:left .2s; }
+  .pv-motion-toggle .sw.on::after { left:18px; }
+  .pv-drawer { display:flex; padding:8px 12px; gap:8px; }
+  .pv-drawer .main { flex:1; }
+  .pv-drawer .slide { width:80px; border-radius:7px; }
+  .pv-tooltip { position:relative; display:inline-flex; padding:10px 12px; }
+  .pv-tooltip .bubble { position:absolute; top:-6px; left:60%; width:52px; height:16px; border-radius:5px; }
+  .pv-toastblock { position:relative; padding:10px 12px; display:flex; justify-content:flex-end; }
+  .pv-toastblock .t { width:60%; height:22px; border-radius:6px; }
+  .pv-lightbox { position:relative; min-height:60px; display:flex; align-items:center; justify-content:center; }
+  .pv-lightbox .img { width:80%; height:44px; border-radius:7px; }
+  .pv-command { padding:10px 12px; }
+  .pv-command .search { height:20px; border-radius:6px; display:flex; align-items:center; padding:0 8px; font-size:10px; }
+  .pv-fab { position:relative; min-height:60px; }
+  .pv-fab .fab { position:absolute; right:12px; bottom:10px; width:30px; height:30px; border-radius:50%; }
+  .pv-pagination { display:flex; gap:5px; padding:10px 12px; justify-content:center; }
+  .pv-pagination i { width:20px; height:20px; border-radius:5px; display:block; }
+  .pv-backtop { position:relative; min-height:40px; }
+  .pv-backtop .bt { position:absolute; right:10px; bottom:6px; width:22px; height:22px; border-radius:50%; }
+  .pv-grain { position:relative; }
+  .pv-grain::after { content:""; position:absolute; inset:0; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E"); border-radius:inherit; pointer-events:none; }
+
+  .toast { position:fixed; top:76px; right:24px; z-index:500; background:#111827; color:#fff; padding:12px 18px; border-radius:10px; font-size:13px; box-shadow:0 12px 32px rgba(0,0,0,.2); display:none; }
+
+  /* 平板端 */
+  @media (max-width:1024px) and (min-width:769px) {
+    .wrap { padding:36px 18px 90px; }
+    .col-right { width:330px; }
+  }
+
+  /* 手机端 */
+  @media (max-width:768px) {
+    .topbar { padding:0 16px; gap:12px; }
+    .topbar .logo { font-size:14px; }
+    .wrap { padding:28px 14px 80px; }
+    .hero { margin-bottom:20px; }
+    .hero h1 { font-size:24px; }
+    .hero p { font-size:13px; }
+    .layout { flex-direction:column; gap:16px; }
+    .col-left { order:2; }
+    .col-right { order:1; width:100%; }
+    .preview-card { position:static; }
+    .p-frame { margin:12px; }
+    .p-body { min-height:240px; padding:10px; gap:8px; }
+    .gen-box { padding:20px 16px; }
+    .gen-box .g-label { font-size:13px; margin:18px 0 8px; }
+    .gen-chip { padding:7px 12px; font-size:12px; }
+    .gen-input { padding:11px 13px; font-size:13px; }
+    .gen-btn { padding:14px 24px; font-size:14.5px; }
+    .toast { top:auto; bottom:20px; left:16px; right:16px; text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="logo">AI 浩然</div>
+  <a class="back" href="index.html">← 返回知识库</a>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <span class="tag">🧰 工具箱</span>
+    <h1>万能 Prompt 生成器</h1>
+    <p>左侧点选模块，右侧实时预览网页效果，点「生成」得到完整 Prompt。</p>
+  </div>
+
+  <div class="layout">
+    <div class="col-left">
+      <div class="gen-box">
+        <div class="g-label">基础信息 <button class="clear-btn" onclick="clearAll()">🗑 一键清除所有</button></div>
+        <input class="gen-input" id="genName" placeholder="网站名称，如：悦己美容">
+        <input class="gen-input" id="genUser" placeholder="目标用户，如：想预约美容服务的人">
+        <input class="gen-input" id="genGoal" placeholder="核心目标，如：引导访客预约">
+
+        <div class="g-label"><span class="step">①</span>页面结构（可多选）<span class="g-tip" id="tip-genStruct">建议 3-5 个</span></div>
+        <div class="gen-chips" id="genStruct">
+          <span class="gen-chip" onclick="toggleChip(this)">单页网站</span>
+          <span class="gen-chip" onclick="toggleChip(this)">多页网站</span>
+          <span class="gen-chip" onclick="toggleChip(this)">落地页</span>
+          <span class="gen-chip" onclick="toggleChip(this)">案例研究页</span>
+          <span class="gen-chip" onclick="toggleChip(this)">首屏 Hero</span>
+          <span class="gen-chip" onclick="toggleChip(this)">功能网格</span>
+          <span class="gen-chip" onclick="toggleChip(this)">固定叙事区</span>
+          <span class="gen-chip" onclick="toggleChip(this)">时间线</span>
+          <span class="gen-chip" onclick="toggleChip(this)">FAQ</span>
+          <span class="gen-chip" onclick="toggleChip(this)">页脚 Footer</span>
+        </div>
+
+        <div class="g-label"><span class="step">②</span>导航与切换（可多选）<span class="g-tip" id="tip-genNav">建议 2-3 个</span></div>
+        <div class="gen-chips" id="genNav">
+          <span class="gen-chip" onclick="toggleChip(this)">固定导航</span>
+          <span class="gen-chip" onclick="toggleChip(this)">汉堡菜单</span>
+          <span class="gen-chip" onclick="toggleChip(this)">面包屑</span>
+          <span class="gen-chip" onclick="toggleChip(this)">锚点跳转</span>
+          <span class="gen-chip" onclick="toggleChip(this)">标签切换</span>
+          <span class="gen-chip" onclick="toggleChip(this)">侧边导航</span>
+          <span class="gen-chip" onclick="toggleChip(this)">超级菜单</span>
+          <span class="gen-chip" onclick="toggleChip(this)">底部导航</span>
+          <span class="gen-chip" onclick="toggleChip(this)">分页</span>
+          <span class="gen-chip" onclick="toggleChip(this)">返回顶部</span>
+        </div>
+
+        <div class="g-label"><span class="step">③</span>常用组件（可多选）<span class="g-tip" id="tip-genComp">建议 2-4 个</span></div>
+        <div class="gen-chips" id="genComp">
+          <span class="gen-chip" onclick="toggleChip(this)">模态框</span>
+          <span class="gen-chip" onclick="toggleChip(this)">抽屉</span>
+          <span class="gen-chip" onclick="toggleChip(this)">手风琴</span>
+          <span class="gen-chip" onclick="toggleChip(this)">气泡提示</span>
+          <span class="gen-chip" onclick="toggleChip(this)">轻提示 Toast</span>
+          <span class="gen-chip" onclick="toggleChip(this)">轮播图</span>
+          <span class="gen-chip" onclick="toggleChip(this)">图片灯箱</span>
+          <span class="gen-chip" onclick="toggleChip(this)">表单</span>
+          <span class="gen-chip" onclick="toggleChip(this)">命令面板</span>
+          <span class="gen-chip" onclick="toggleChip(this)">悬浮按钮 FAB</span>
+        </div>
+
+        <div class="g-label"><span class="step">④</span>滚动与动作（可多选）<span class="g-tip" id="tip-genMotion">建议 1-2 个，可都不选</span></div>
+        <div class="gen-chips" id="genMotion">
+          <span class="gen-chip" onclick="toggleChip(this)">滚动出现</span>
+          <span class="gen-chip" onclick="toggleChip(this)">视差滚动</span>
+          <span class="gen-chip" onclick="toggleChip(this)">阅读进度条</span>
+          <span class="gen-chip" onclick="toggleChip(this)">滚动吸附</span>
+          <span class="gen-chip" onclick="toggleChip(this)">横向滚动</span>
+          <span class="gen-chip" onclick="toggleChip(this)">无限滚动</span>
+          <span class="gen-chip" onclick="toggleChip(this)">跑马灯</span>
+          <span class="gen-chip" onclick="toggleChip(this)">悬停微交互</span>
+          <span class="gen-chip" onclick="toggleChip(this)">错峰动画</span>
+          <span class="gen-chip" onclick="toggleChip(this)">滚动驱动</span>
+        </div>
+
+        <div class="g-label"><span class="step">⑤</span>提示与加载（可多选）<span class="g-tip" id="tip-genFb">建议 1-3 个</span></div>
+        <div class="gen-chips" id="genFb">
+          <span class="gen-chip" onclick="toggleChip(this)">骨架屏</span>
+          <span class="gen-chip" onclick="toggleChip(this)">懒加载</span>
+          <span class="gen-chip" onclick="toggleChip(this)">加载转圈</span>
+          <span class="gen-chip" onclick="toggleChip(this)">进度条</span>
+          <span class="gen-chip" onclick="toggleChip(this)">加载按钮</span>
+          <span class="gen-chip" onclick="toggleChip(this)">空状态</span>
+          <span class="gen-chip" onclick="toggleChip(this)">错误状态</span>
+          <span class="gen-chip" onclick="toggleChip(this)">重试状态</span>
+          <span class="gen-chip" onclick="toggleChip(this)">乐观更新</span>
+          <span class="gen-chip" onclick="toggleChip(this)">行内验证</span>
+        </div>
+
+        <div class="g-label"><span class="step">⑥</span>视觉风格（可多选）<span class="g-tip" id="tip-genStyle">建议只选 1 个</span></div>
+        <div class="gen-chips" id="genStyle">
+          <span class="gen-chip" onclick="toggleChip(this)">极简主义</span>
+          <span class="gen-chip" onclick="toggleChip(this)">编辑杂志风</span>
+          <span class="gen-chip" onclick="toggleChip(this)">瑞士风</span>
+          <span class="gen-chip" onclick="toggleChip(this)">玻璃拟态</span>
+          <span class="gen-chip" onclick="toggleChip(this)">新野兽派</span>
+          <span class="gen-chip" onclick="toggleChip(this)">深色模式</span>
+          <span class="gen-chip" onclick="toggleChip(this)">单色双色</span>
+          <span class="gen-chip" onclick="toggleChip(this)">网格渐变</span>
+          <span class="gen-chip" onclick="toggleChip(this)">颗粒噪点</span>
+          <span class="gen-chip" onclick="toggleChip(this)">新拟态</span>
+        </div>
+
+        <div class="g-label"><span class="step">⑦</span>高级效果（可多选）<span class="g-tip" id="tip-genAdv">建议 0-2 个，可都不选</span></div>
+        <div class="gen-chips" id="genAdv">
+          <span class="gen-chip" onclick="toggleChip(this)">自定义光标</span>
+          <span class="gen-chip" onclick="toggleChip(this)">磁吸按钮</span>
+          <span class="gen-chip" onclick="toggleChip(this)">3D 倾斜卡片</span>
+          <span class="gen-chip" onclick="toggleChip(this)">聚光灯悬停</span>
+          <span class="gen-chip" onclick="toggleChip(this)">文字蒙版</span>
+          <span class="gen-chip" onclick="toggleChip(this)">裁切揭示</span>
+          <span class="gen-chip" onclick="toggleChip(this)">WebGL</span>
+          <span class="gen-chip" onclick="toggleChip(this)">视图过渡</span>
+          <span class="gen-chip" onclick="toggleChip(this)">减少动态</span>
+          <span class="gen-chip" onclick="toggleChip(this)">性能预算</span>
+        </div>
+
+        <button class="gen-btn" onclick="generatePrompt()">⚡ 生成 Prompt</button>
+        <textarea class="gen-result" id="genResult" readonly placeholder="点击上方按钮，生成的 Prompt 会显示在这里…"></textarea>
+        <button class="gen-copy" onclick="copyGen()">📋 复制 Prompt</button>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="preview-card">
+        <div class="p-head"><b>👁 实时预览</b><span class="hint" id="pvCount">已选 0 项</span></div>
+        <div class="p-frame">
+          <div class="p-topbar"><i></i><i></i><i></i></div>
+          <div class="p-body" id="pBody">
+            <div class="p-empty"><div class="ico">🖼️</div>点选左侧选项<br>这里实时拼出网页</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const styleColors = {
+    '极简主义': { bg:'#FAFAFA', fg:'#111827', accent:'#16A34A', border:'#E5E7EB', solid:'#111827' },
+    '编辑杂志风': { bg:'#FAF9F6', fg:'#1A1A1A', accent:'#9A3412', border:'#E7E5E4', solid:'#1A1A1A' },
+    '瑞士风': { bg:'#FAFAFA', fg:'#111827', accent:'#EF4444', border:'#111827', solid:'#111827' },
+    '玻璃拟态': { bg:'#14532D', fg:'#FFFFFF', accent:'rgba(255,255,255,.85)', border:'rgba(255,255,255,.25)', solid:'rgba(255,255,255,.16)' },
+    '新野兽派': { bg:'#FFE66D', fg:'#111827', accent:'#16A34A', border:'#111827', solid:'#111827' },
+    '深色模式': { bg:'#0F172A', fg:'#E2E8F0', accent:'#4ADE80', border:'#1E293B', solid:'#334155' },
+    '单色双色': { bg:'#FAFAFA', fg:'#111827', accent:'#14532D', border:'#E5E7EB', solid:'#14532D' },
+    '网格渐变': { bg:'#EEF2FF', fg:'#111827', accent:'#4F46E5', border:'#DDE3FF', solid:'#818CF8' },
+    '新拟态': { bg:'#E7E9EE', fg:'#111827', accent:'#6B7280', border:'#D1D5DB', solid:'#C4C7CF' },
+    '默认': { bg:'#FAFAFA', fg:'#111827', accent:'#4F46E5', border:'#E5E7EB', solid:'#4F46E5' }
+  };
+
+  function getSelected(id) { return [...document.querySelectorAll('#' + id + ' .gen-chip.on')].map(c => c.textContent.trim()); }
+  function has(id, name) { return getSelected(id).some(x => x.indexOf(name) === 0 || x === name); }
+  function hasAny(id) { return getSelected(id).length > 0; }
+
+  function currentColors() {
+    const styles = getSelected('genStyle');
+    for (const s of styles) { if (styleColors[s]) return styleColors[s]; }
+    return styleColors['默认'];
+  }
+
+  const limits = {
+    genStruct: { max: 5, name: '页面结构' },
+    genNav: { max: 3, name: '导航' },
+    genComp: { max: 4, name: '组件' },
+    genMotion: { max: 2, name: '动效' },
+    genFb: { max: 3, name: '提示加载' },
+    genStyle: { max: 1, name: '视觉风格' },
+    genAdv: { max: 2, name: '高级效果' }
+  };
+
+  function toggleChip(el) {
+    const group = el.parentElement.id;
+    const wasOn = el.classList.contains('on');
+    el.classList.toggle('on');
+    const limit = limits[group];
+    if (!wasOn && limit) {
+      const cnt = getSelected(group).length;
+      const tipEl = document.getElementById('tip-' + group);
+      if (cnt > limit.max) {
+        showToast('💡 ' + limit.name + '建议不超过 ' + limit.max + ' 个，太多会显得乱');
+        if (tipEl) tipEl.classList.add('warn');
+      } else if (tipEl) {
+        tipEl.classList.remove('warn');
+      }
+    }
+    updatePreview();
+  }
+
+  function clearAll() {
+    document.querySelectorAll('.gen-chip.on').forEach(c => c.classList.remove('on'));
+    ['genName','genUser','genGoal'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('genResult').value = '';
+    document.querySelectorAll('.g-tip').forEach(t => t.classList.remove('warn'));
+    updatePreview();
+    showToast('已清空所有选择');
+  }
+
+  function updatePreview() {
+    const body = document.getElementById('pBody');
+    const c = currentColors();
+    const items = [];
+
+    // ===== 顶部导航 =====
+    if (has('genNav', '固定导航') || has('genNav', '锚点跳转')) {
+      items.push('<div class="pv pv-nav" style="background:' + c.solid + '10;border:1px solid ' + c.border + '"><span class="logo" style="background:' + c.accent + '"></span><span class="links"><i style="background:' + c.fg + '22"></i><i style="background:' + c.fg + '22"></i><i style="background:' + c.fg + '22"></i></span></div>');
+    }
+    if (has('genNav', '汉堡菜单')) {
+      items.push('<div class="pv pv-nav" style="background:' + c.solid + '10;border:1px solid ' + c.border + '"><span class="logo" style="background:' + c.accent + '"></span><span style="display:flex;flex-direction:column;gap:3px"><i style="width:16px;height:2px;background:' + c.fg + ';border-radius:1px;display:block"></i><i style="width:16px;height:2px;background:' + c.fg + ';border-radius:1px;display:block"></i><i style="width:16px;height:2px;background:' + c.fg + ';border-radius:1px;display:block"></i></span></div>');
+    }
+    if (has('genNav', '面包屑')) {
+      items.push('<div class="pv pv-crumb" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><i style="background:' + c.fg + '55"></i><em style="color:' + c.fg + '">›</em><i style="background:' + c.fg + '55"></i><em style="color:' + c.fg + '">›</em><i style="background:' + c.accent + '"></i></div>');
+    }
+    if (has('genNav', '标签切换')) {
+      items.push('<div class="pv pv-tabs" style="border-color:' + c.border + '"><i style="background:' + c.accent + '"></i><i style="background:' + c.fg + '33"></i><i style="background:' + c.fg + '33"></i><i style="background:' + c.fg + '33"></i></div>');
+    }
+    if (has('genNav', '侧边导航')) {
+      items.push('<div class="pv pv-sidenav" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="col"><i style="background:' + c.accent + '"></i><i style="background:' + c.fg + '33"></i><i style="background:' + c.fg + '33"></i><i style="background:' + c.fg + '33"></i></div><div class="body"><i style="background:' + c.fg + '44"></i><i style="background:' + c.fg + '44"></i><i style="background:' + c.fg + '44"></i></div></div>');
+    }
+    if (has('genNav', '超级菜单')) {
+      items.push('<div class="pv pv-mega" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><span class="trig" style="background:' + c.accent + '"></span><div class="panel"><i style="background:' + c.fg + '22"></i><i style="background:' + c.fg + '22"></i><i style="background:' + c.fg + '22"></i><i style="background:' + c.fg + '22"></i><i style="background:' + c.fg + '22"></i><i style="background:' + c.fg + '22"></i></div></div>');
+    }
+
+    // ===== 主内容 =====
+    if (has('genStruct', '首屏') || has('genStruct', '落地页') || has('genStruct', '单页') || has('genStruct', '多页')) {
+      items.push('<div class="pv pv-hero" style="background:' + c.solid + '12;border:1px solid ' + c.border + '"><div class="line w60" style="background:' + c.fg + '"></div><div class="line w40" style="background:' + c.fg + '66"></div><div class="btn" style="background:' + c.accent + '"></div></div>');
+    }
+    if (has('genStruct', '案例研究')) {
+      items.push('<div class="pv pv-drawer" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="main"><i style="height:8px;background:' + c.fg + '44;border-radius:4px;display:block;margin-bottom:5px"></i><i style="height:8px;background:' + c.fg + '33;border-radius:4px;display:block;margin-bottom:5px"></i><i style="height:8px;background:' + c.fg + '33;border-radius:4px;display:block"></i></div><div class="slide" style="background:' + c.accent + '33"></div></div>');
+    }
+    if (has('genStruct', '功能网格')) {
+      items.push('<div class="pv pv-grid">' + [1,2,3,4].map(() => '<div class="cell" style="background:' + c.solid + '1f;border:1px solid ' + c.border + '"></div>').join('') + '</div>');
+    }
+    if (has('genStruct', '固定叙事')) {
+      items.push('<div class="pv pv-drawer" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="slide" style="background:' + c.accent + '33;width:70px"></div><div class="main"><i style="height:10px;background:' + c.fg + '44;border-radius:4px;display:block;margin-bottom:6px"></i><i style="height:10px;background:' + c.fg + '33;border-radius:4px;display:block;margin-bottom:6px"></i><i style="height:10px;background:' + c.fg + '33;border-radius:4px;display:block"></i></div></div>');
+    }
+    if (has('genStruct', '时间线')) {
+      items.push('<div class="pv pv-timeline" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="t"><span class="dot" style="background:' + c.accent + '"></span><span class="bar" style="background:' + c.fg + '33"></span></div><div class="t"><span class="dot" style="background:' + c.accent + '"></span><span class="bar" style="background:' + c.fg + '33"></span></div><div class="t"><span class="dot" style="background:' + c.accent + '"></span><span class="bar" style="background:' + c.fg + '33"></span></div></div>');
+    }
+    if (has('genStruct', 'FAQ') || has('genComp', '手风琴')) {
+      items.push('<div class="pv pv-faq" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="q" style="background:' + c.fg + '22"></div><div class="q" style="background:' + c.fg + '22"></div><div class="q" style="background:' + c.fg + '22"></div></div>');
+    }
+
+    // ===== 组件 =====
+    if (has('genComp', '表单')) {
+      items.push('<div class="pv pv-form" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="f" style="background:' + c.fg + '22"></div><div class="f" style="background:' + c.fg + '22"></div><div class="f btn" style="background:' + c.accent + '"></div></div>');
+    }
+    if (has('genComp', '轮播')) {
+      items.push('<div class="pv pv-carousel" style="background:linear-gradient(135deg,' + c.accent + '66,' + c.accent + '33)"></div>');
+    }
+    if (has('genComp', '模态框')) {
+      items.push('<div class="pv pv-modal" style="background:' + c.solid + '20;border:2px solid ' + c.border + '"><div class="f" style="background:' + c.fg + '33"></div><div class="f" style="background:' + c.fg + '33"></div><div class="f" style="background:' + c.accent + '"></div></div>');
+    }
+    if (has('genComp', '抽屉')) {
+      items.push('<div class="pv pv-drawer" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="main"><i style="height:9px;background:' + c.fg + '33;border-radius:4px;display:block;margin-bottom:6px"></i><i style="height:9px;background:' + c.fg + '33;border-radius:4px;display:block"></i></div><div class="slide" style="background:' + c.accent + '55"></div></div>');
+    }
+    if (has('genComp', '气泡提示')) {
+      items.push('<div class="pv pv-tooltip" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><span style="width:16px;height:16px;border-radius:50%;background:' + c.accent + ';display:inline-block"></span><span class="bubble" style="background:' + c.fg + '"></span></div>');
+    }
+    if (has('genComp', '轻提示')) {
+      items.push('<div class="pv pv-toastblock" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><span class="t" style="background:' + c.fg + '"></span></div>');
+    }
+    if (has('genComp', '图片灯箱')) {
+      items.push('<div class="pv pv-lightbox" style="background:' + c.solid + '20;border:1px solid ' + c.border + '"><div class="img" style="background:linear-gradient(135deg,' + c.accent + '88,' + c.accent + '44)"></div></div>');
+    }
+    if (has('genComp', '命令面板')) {
+      items.push('<div class="pv pv-command" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="search" style="background:' + c.fg + '22;color:' + c.fg + '88">⌘ 搜索…</div></div>');
+    }
+
+    // ===== 加载 =====
+    if (has('genFb', '骨架屏')) {
+      items.push('<div class="pv pv-skel" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="s" style="background:' + c.fg + '22"></div><div class="s" style="background:' + c.fg + '22"></div></div>');
+    }
+    if (has('genFb', '加载转圈')) {
+      items.push('<div class="pv pv-spinner" style="background:' + c.solid + '08;border:1px solid ' + c.border + ';color:' + c.accent + '"><span class="ring"></span><i style="width:40%;height:8px;border-radius:4px;background:' + c.fg + '33;display:block"></i></div>');
+    }
+    if (has('genFb', '进度条')) {
+      items.push('<div class="pv pv-progress" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="track" style="background:' + c.fg + '22"><div class="fill" style="background:' + c.accent + '"></div></div></div>');
+    }
+    if (has('genFb', '加载按钮')) {
+      items.push('<div class="pv pv-loadbtn" style="background:' + c.accent + ';color:#fff;width:70%"><span class="ring"></span><i style="width:50px;height:7px;border-radius:3px;background:rgba(255,255,255,.7);display:block"></i></div>');
+    }
+    if (has('genFb', '空状态')) {
+      items.push('<div class="pv pv-state" style="background:' + c.solid + '08;border:1px dashed ' + c.border + '"><span class="ic">📭</span><i style="background:' + c.fg + '44"></i><i style="width:40%;background:' + c.fg + '33"></i></div>');
+    }
+    if (has('genFb', '错误状态')) {
+      items.push('<div class="pv pv-state" style="background:#FEF2F2;border:1px solid #FECACA"><span class="ic">⚠️</span><i style="background:#F87171"></i><i style="width:40%;background:#FCA5A5"></i></div>');
+    }
+    if (has('genFb', '重试状态')) {
+      items.push('<div class="pv pv-state" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><span class="ic">🔁</span><i style="background:' + c.fg + '44"></i><span style="display:inline-block;width:40px;height:14px;border-radius:5px;background:' + c.accent + '"></span></div>');
+    }
+    if (has('genFb', '乐观更新')) {
+      items.push('<div class="pv pv-like" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><span class="heart" style="color:#EF4444">♥</span><i style="width:30px;height:8px;border-radius:4px;background:' + c.fg + '44;display:block"></i></div>');
+    }
+    if (has('genFb', '行内验证')) {
+      items.push('<div class="pv pv-inline" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="field" style="background:' + c.fg + '22;border:1px solid ' + c.accent + '"></div><div class="msg" style="background:' + c.accent + '"></div></div>');
+    }
+    if (has('genFb', '懒加载')) {
+      items.push('<div class="pv pv-skel" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="s" style="background:' + c.fg + '22"></div><div class="s" style="background:' + c.accent + '44"></div></div>');
+    }
+
+    // ===== 动效 =====
+    if (has('genMotion', '跑马灯')) {
+      items.push('<div class="pv pv-marquee" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><span class="track"><i style="background:' + c.accent + '88"></i><i style="background:' + c.fg + '44"></i><i style="background:' + c.accent + '88"></i><i style="background:' + c.fg + '44"></i><i style="background:' + c.accent + '88"></i><i style="background:' + c.fg + '44"></i><i style="background:' + c.accent + '88"></i><i style="background:' + c.fg + '44"></i></span></div>');
+    }
+    if (has('genMotion', '阅读进度条') || has('genMotion', '滚动驱动')) {
+      items.push('<div class="pv" style="padding:8px 12px;background:' + c.solid + '08;border:1px solid ' + c.border + '"><div style="height:6px;background:' + c.fg + '22;border-radius:3px;overflow:hidden"><div class="pv-progressline" style="background:' + c.accent + '"></div></div></div>');
+    }
+    if (has('genMotion', '视差滚动')) {
+      items.push('<div class="pv" style="background:linear-gradient(180deg,' + c.accent + '55,' + c.accent + '22);border:1px solid ' + c.border + ';height:54px;position:relative;overflow:hidden"><div style="position:absolute;bottom:0;left:0;right:0;height:30px;background:linear-gradient(0deg,' + c.accent + '66,transparent);clip-path:polygon(0 100%,20% 50%,40% 80%,60% 30%,80% 70%,100% 40%,100% 100%)"></div></div>');
+    }
+    if (has('genMotion', '滚动吸附') || has('genMotion', '横向滚动')) {
+      items.push('<div class="pv pv-hscroll" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><i style="background:' + c.accent + '88"></i><i style="background:' + c.fg + '33"></i><i style="background:' + c.fg + '33"></i><i style="background:' + c.fg + '33"></i><i style="background:' + c.fg + '33"></i></div>');
+    }
+    if (has('genMotion', '无限滚动')) {
+      items.push('<div class="pv pv-infinite" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><i style="background:' + c.fg + '22"></i><i style="background:' + c.fg + '22"></i><i style="background:' + c.fg + '22"></i><i style="background:' + c.accent + '44"></i></div>');
+    }
+    if (has('genMotion', '悬停微交互')) {
+      items.push('<div class="pv pv-hovercard" style="background:' + c.solid + '12;border:2px solid ' + c.border + ';height:44px;border-radius:9px;display:flex;align-items:center;justify-content:center"><i style="width:42%;height:9px;border-radius:4px;background:' + c.fg + '44;display:block"></i></div>');
+    }
+
+    // ===== 高级效果 =====
+    if (has('genAdv', '文字蒙版')) {
+      items.push('<div class="pv pv-textmask">IDEAS VISIBLE</div>');
+    }
+    if (has('genAdv', '裁切揭示')) {
+      items.push('<div class="pv pv-clip" style="background:linear-gradient(135deg,' + c.accent + ',' + c.accent + '88);height:40px;border-radius:8px"></div>');
+    }
+    if (has('genAdv', 'WebGL')) {
+      items.push('<div class="pv pv-webgl"><span class="ball"></span></div>');
+    }
+    if (has('genAdv', '3D 倾斜卡片')) {
+      items.push('<div class="pv pv-tilt" style="background:linear-gradient(135deg,' + c.accent + ',' + c.accent + '88);height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center"><i style="width:40%;height:8px;border-radius:4px;background:rgba(255,255,255,.8);display:block"></i></div>');
+    }
+    if (has('genAdv', '聚光灯悬停')) {
+      items.push('<div class="pv pv-spotlight" style="background:' + c.fg + ';height:52px;border-radius:9px;padding:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><i style="background:rgba(255,255,255,.15);border-radius:5px;display:block"></i><i style="background:rgba(255,255,255,.15);border-radius:5px;display:block"></i><i style="background:rgba(255,255,255,.15);border-radius:5px;display:block"></i></div>');
+    }
+    if (has('genAdv', '磁吸按钮')) {
+      items.push('<div style="display:flex;justify-content:center;padding:10px 12px;background:' + c.solid + '08;border:1px solid ' + c.border + '"><span class="pv-mag" style="background:' + c.accent + ';padding:9px 18px;border-radius:8px;display:inline-block;transition:transform .15s"><i style="width:40px;height:8px;border-radius:4px;background:rgba(255,255,255,.85);display:block"></i></span></div>');
+    }
+    if (has('genAdv', '自定义光标')) {
+      items.push('<div class="pv pv-cursor-demo" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><i style="width:50px;height:30px;border-radius:7px;background:' + c.fg + '22;display:block"></i><span class="dot" style="background:' + c.accent + '"></span></div>');
+    }
+    if (has('genAdv', '视图过渡')) {
+      items.push('<div class="pv" style="padding:10px 12px;background:' + c.solid + '08;border:1px solid ' + c.border + ';display:flex;gap:6px"><i style="width:34px;height:34px;border-radius:8px;background:' + c.accent + ';display:block"></i><i style="width:34px;height:34px;border-radius:8px;background:' + c.fg + '33;display:block"></i><i style="width:34px;height:34px;border-radius:8px;background:' + c.fg + '33;display:block"></i></div>');
+    }
+    if (has('genAdv', '减少动态')) {
+      items.push('<div class="pv pv-motion-toggle" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><span class="sw on" style="background:' + c.accent + '"></span><i style="width:40%;height:8px;border-radius:4px;background:' + c.fg + '33;display:block"></i></div>');
+    }
+    if (has('genAdv', '性能预算')) {
+      items.push('<div class="pv pv-perf" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><div class="r"><i style="background:' + c.accent + ';width:70%"></i><b style="color:' + c.accent + '">✓</b></div><div class="r"><i style="background:' + c.fg + '44;width:55%"></i><b style="color:' + c.fg + '">✓</b></div><div class="r"><i style="background:' + c.fg + '33;width:40%"></i><b style="color:#F59E0B">!</b></div></div>');
+    }
+
+    // ===== 底部 =====
+    if (has('genNav', '底部导航')) {
+      items.push('<div class="pv pv-nav" style="background:' + c.solid + '14;border:1px solid ' + c.border + ';justify-content:space-around"><i style="width:10px;height:10px;border-radius:50%;background:' + c.fg + '44"></i><i style="width:10px;height:10px;border-radius:50%;background:' + c.accent + '"></i><i style="width:10px;height:10px;border-radius:50%;background:' + c.fg + '44"></i><i style="width:10px;height:10px;border-radius:50%;background:' + c.fg + '44"></i></div>');
+    }
+    if (has('genNav', '分页')) {
+      items.push('<div class="pv pv-pagination" style="background:' + c.solid + '08;border:1px solid ' + c.border + '"><i style="background:' + c.fg + '22"></i><i style="background:' + c.accent + '"></i><i style="background:' + c.fg + '22"></i><i style="background:' + c.fg + '22"></i></div>');
+    }
+    if (has('genComp', '悬浮按钮') || has('genNav', '返回顶部')) {
+      items.push('<div class="pv pv-fab"><span class="fab" style="background:' + c.accent + '"></span></div>');
+    }
+    if (has('genStruct', '页脚')) {
+      items.push('<div class="pv pv-footer" style="background:' + c.fg + '"><div class="col" style="background:' + c.bg + '"></div><div class="col" style="background:' + c.bg + '"></div><div class="col" style="background:' + c.bg + '"></div></div>');
+    }
+
+    body.style.background = c.bg;
+    body.style.color = c.fg;
+
+    // 颗粒噪点（风格）
+    if (has('genStyle', '颗粒噪点')) { body.classList.add('pv-grain'); } else { body.classList.remove('pv-grain'); }
+
+    if (items.length === 0) {
+      body.innerHTML = '<div class="p-empty"><div class="ico">🖼️</div>点选左侧选项<br>这里实时拼出网页</div>';
+    } else {
+      const hasReveal = has('genMotion', '滚动出现') || has('genMotion', '错峰');
+      body.innerHTML = (hasReveal ? '<div class="anim-reveal">' : '') + items.join('') + (hasReveal ? '</div>' : '');
+    }
+
+    // 绑定高级效果的 JS 交互
+    bindAdvancedEffects();
+
+    const total = ['genStruct','genNav','genComp','genMotion','genFb','genStyle','genAdv'].reduce((s,id) => s + getSelected(id).length, 0);
+    document.getElementById('pvCount').textContent = '已选 ' + total + ' 项';
+  }
+
+  function bindAdvancedEffects() {
+    const body = document.getElementById('pBody');
+    // 3D 倾斜
+    const tilt = body.querySelector('.pv-tilt');
+    if (tilt) {
+      tilt.addEventListener('mousemove', e => {
+        const r = tilt.getBoundingClientRect();
+        const rx = ((e.clientY - r.top) / r.height - .5) * -16;
+        const ry = ((e.clientX - r.left) / r.width - .5) * 16;
+        tilt.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+      });
+      tilt.addEventListener('mouseleave', () => tilt.style.transform = 'rotateX(0) rotateY(0)');
+    }
+    // 聚光灯
+    const spot = body.querySelector('.pv-spotlight');
+    if (spot) {
+      spot.addEventListener('mousemove', e => {
+        const r = spot.getBoundingClientRect();
+        spot.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        spot.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+      });
+    }
+    // 磁吸按钮
+    const mag = body.querySelector('.pv-mag');
+    if (mag) {
+      const wrap = mag.parentElement;
+      wrap.addEventListener('mousemove', e => {
+        const r = mag.getBoundingClientRect();
+        let dx = (e.clientX - (r.left + r.width / 2)) / 6;
+        let dy = (e.clientY - (r.top + r.height / 2)) / 6;
+        dx = Math.max(-14, Math.min(14, dx));
+        dy = Math.max(-14, Math.min(14, dy));
+        mag.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+      });
+      wrap.addEventListener('mouseleave', () => mag.style.transform = 'translate(0,0)');
+    }
+    // 自定义光标
+    const cur = body.querySelector('.pv-cursor-demo');
+    if (cur) {
+      const dot = cur.querySelector('.dot');
+      cur.addEventListener('mousemove', e => {
+        const r = cur.getBoundingClientRect();
+        dot.style.left = (e.clientX - r.left) + 'px';
+        dot.style.top = (e.clientY - r.top) + 'px';
+      });
+    }
+  }
+
+  function getChips(id) {
+    const chips = getSelected(id);
+    return chips.length ? chips.join('、') : '无';
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.style.display = 'block';
+    clearTimeout(t._timer); t._timer = setTimeout(() => t.style.display = 'none', 2000);
+  }
+  function generatePrompt() {
+    const name = document.getElementById('genName').value.trim() || '我的网站';
+    const user = document.getElementById('genUser').value.trim() || '目标用户';
+    const goal = document.getElementById('genGoal').value.trim() || '完成核心目标';
+    const struct = getChips('genStruct');
+    const nav = getChips('genNav');
+    const comp = getChips('genComp');
+    const motion = getChips('genMotion');
+    const fb = getChips('genFb');
+    const style = getChips('genStyle');
+    const adv = getChips('genAdv');
+    const p = '为「' + name + '」做一个网站，目标用户是' + user + '，核心目标是' + goal + '。\n' +
+      '页面结构：' + struct + '。\n' +
+      '导航与切换：' + nav + '。\n' +
+      '常用组件：' + comp + '。\n' +
+      '滚动与动作：' + motion + '。\n' +
+      '提示与加载：' + fb + '。\n' +
+      '视觉风格：' + style + '。\n' +
+      '高级效果：' + adv + '。\n' +
+      '所有动效尊重 prefers-reduced-motion，并控制性能预算。';
+    document.getElementById('genResult').value = p;
+    document.getElementById('genResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function copyGen() {
+    const r = document.getElementById('genResult');
+    if (!r.value) { showToast('先生成 Prompt 再复制'); return; }
+    navigator.clipboard.writeText(r.value).then(() => showToast('已复制 Prompt ✓'));
+  }
+
+  updatePreview();
+</script>
+</body>
+</html>
