@@ -1432,13 +1432,8 @@
 
 <button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<button id="wxBtn" onclick="toggleWx()">💬</button>
-
-<button id="aiBtn" onclick="toggleAI()">🤖</button>
-<div id="aiPanel">
-  <div class="h"><b>🤖 浩然 AI 数字分身</b><button class="x" onclick="toggleAI()">✕</button></div>
-  <iframe src="http://localhost/chatbot/9fZRfxmJdo1OsZDM" allow="microphone;clipboard-write"></iframe>
-</div>
+<button id="aiBtn" onclick="location.href='chat.html'">🤖</button>
+<button id="wxBtn" onclick="toggleWx()">📱</button>
 
 <div id="wxModal" onclick="if(event.target===this)toggleWx()">
   <div class="box">
@@ -1452,7 +1447,6 @@
 <script>
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function toggleWx() { document.getElementById('wxModal').classList.toggle('show'); }
-  function toggleAI() { document.getElementById('aiPanel').classList.toggle('show'); }
 
   const progress = document.getElementById('progress');
   const backTop = document.getElementById('backTop');
@@ -1750,5 +1744,7 @@
     if (sdRoot) onScrollDriven();
   }, { passive:true });
 </script>
+
+
 </body>
 </html>
