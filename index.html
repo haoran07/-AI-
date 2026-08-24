@@ -1432,7 +1432,6 @@
 
 <button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<button id="aiBtn" onclick="location.href='chat.html'">🤖</button>
 <button id="wxBtn" onclick="toggleWx()">📱</button>
 
 <div id="wxModal" onclick="if(event.target===this)toggleWx()">
@@ -1745,6 +1744,32 @@
   }, { passive:true });
 </script>
 
+
+<!-- AI 数字分身（悬浮气泡） -->
+<script>
+  window.difyChatbotConfig = {
+    token: 'QfzBwTFjkvRobafA',
+    baseUrl: 'http://118.89.116.235',
+    inputs: {},
+    systemVariables: {},
+    userVariables: {}
+  }
+</script>
+<script src="http://118.89.116.235/embed.min.js" id="QfzBwTFjkvRobafA" defer></script>
+<style>
+  #dify-chatbot-bubble-button {
+    right: 28px !important;
+    bottom: 150px !important;
+    background-color: #1C64F2 !important;
+  }
+  #dify-chatbot-bubble-window {
+    width: 24rem !important;
+    height: 40rem !important;
+  }
+  @media (max-width: 480px) {
+    #dify-chatbot-bubble-window { width: 92vw !important; }
+  }
+</style>
 
 </body>
 </html>
