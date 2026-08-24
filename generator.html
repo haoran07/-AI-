@@ -687,10 +687,32 @@
     document.getElementById('genResult').value = p;
     document.getElementById('genResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
+  function copyText(text, ok, fail) {
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      var done = false;
+      try { done = document.execCommand('copy'); } catch (e) { done = false; }
+      document.body.removeChild(ta);
+      if (done) { ok && ok(); } else { fail && fail(); }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { ok && ok(); }).catch(fallback);
+    } else {
+      fallback();
+    }
+  }
   function copyGen() {
     const r = document.getElementById('genResult');
     if (!r.value) { showToast('先生成 Prompt 再复制'); return; }
-    navigator.clipboard.writeText(r.value).then(() => showToast('已复制 Prompt ✓'));
+    copyText(r.value, function () { showToast('已复制 Prompt ✓'); }, function () { showToast('复制失败，请手动长按复制'); });
   }
 
   updatePreview();
