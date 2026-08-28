@@ -7,10 +7,10 @@
 <script defer src="/_vercel/insights/script.js"></script>
 <style>
   :root {
-    --bg: #F6F6F7; --card: #FFFFFF; --text: #111827; --muted: #6B7280; --faint: #9CA3AF;
-    --accent: #4F46E5; --accent-soft: #EEF2FF; --green: #16A34A; --green-soft: #F0FDF4;
-    --border: #ECECEF; --radius: 16px;
-    --shadow: 0 1px 2px rgba(17,24,39,.04), 0 12px 32px -12px rgba(17,24,39,.10);
+    --bg: #FAF9F4; --card: #FFFFFF; --text: #111111; --muted: #555555; --faint: #777777;
+    --accent: #1B4332; --accent-soft: #E8F5E9; --green: #1B4332; --green-soft: #F0F7F4;
+    --border: #111111; --radius: 8px;
+    --shadow: 4px 4px 0 #111111;
     --sidebar-w: 292px;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -368,6 +368,28 @@
     .fgrid { grid-template-columns:1fr 1fr; }
   }
 </style>
+<style>
+  /* ===== 新野兽派 Neo-brutalism 覆盖 ===== */
+  body{background:#FAF9F4;}
+  .navbar{background:#fff;border-bottom:2px solid #111;}
+  .navbar .logo em{color:#1B4332;}
+  .navbar .links a:hover{color:#111;background:#E8F5E9;}
+  .sidebar{background:#fff;border-right:2px solid #111;}
+  .sidebar .cat-head .n{border:1.5px solid #111;box-shadow:1.5px 1.5px 0 #111;background:#E8F5E9;color:#1B4332;}
+  .sidebar .sub a.active{border-left:3px solid #1B4332;color:#1B4332;}
+  .cat-hero .tag{border:1.5px solid #111;box-shadow:2px 2px 0 #111;border-radius:6px;color:#1B4332;background:#E8F5E9;}
+  .cat-hero h2{color:#111;}
+  .demo-card{border:2px solid #111;border-radius:8px;box-shadow:6px 6px 0 rgba(0,0,0,.85)!important;margin:32px 0;}
+  .demo-card .head .idx{color:#1B4332;}
+  .demo-card .stage{border-top:2px solid #111;background:#F5F5EE;}
+  .demo-card .note{border-top:2px solid #111;background:#FAFAFB;}
+  .demo-card .prompt{border-top:2px solid #111;background:#F8F9FB;}
+  .demo-card .prompt .copy{border:2px solid #111;box-shadow:2px 2px 0 #111;border-radius:6px;color:#111;font-weight:800;background:#fff;}
+  .demo-card .prompt .copy:hover{background:#E8F5E9;border-color:#111;color:#111;}
+  .demo-card .prompt pre{border:2px solid #111;border-radius:6px;background:#fff;color:#222;}
+  #progress{height:4px;background:#1B4332;}
+  #dify-chatbot-bubble-button{border:2px solid #111!important;box-shadow:4px 4px 0 #111!important;border-radius:8px!important;}
+</style>
 </head>
 <body>
 
@@ -401,6 +423,8 @@
     <a href="#advanced">高级效果</a>
   </div>
 </nav>
+
+<a href="index.html" style="position:fixed;left:20px;bottom:24px;z-index:999;background:#1B4332;color:#fff;padding:12px 18px;border-radius:8px;font-size:14px;font-weight:800;text-decoration:none;border:2px solid #111;box-shadow:4px 4px 0 #111;display:inline-flex;align-items:center;gap:6px;">← 返回配置器</a>
 
 <aside class="sidebar" id="sidebar">
   <a href="index.html" style="display:flex;align-items:center;gap:9px;padding:11px 10px;border-radius:9px;font-size:13.5px;font-weight:700;color:var(--accent);text-decoration:none;background:var(--accent-soft);margin-bottom:10px"><span class="n" style="width:21px;height:21px;border-radius:6px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🧰</span>AI 建站配置器</a>

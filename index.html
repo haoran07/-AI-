@@ -7,9 +7,9 @@
 <style>
   :root{
     --green:#1B4332; --green2:#2D5A45; --green-soft:#E8F5E9; --green-softer:#F0F7F4;
-    --bg:#FAFAF5; --panel:#FFFFFF; --preview-bg:#ECECE6;
-    --text:#1A1A1A; --muted:#666666; --faint:#888888; --border:#E7E7E2;
-    --radius:12px; --shadow:0 4px 16px rgba(0,0,0,.08);
+    --bg:#FAF9F4; --panel:#FFFFFF; --preview-bg:#ECECE6;
+    --text:#111111; --muted:#555555; --faint:#777777; --border:#111111;
+    --radius:8px; --shadow:4px 4px 0 #111111;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{height:100%;}
@@ -34,7 +34,7 @@
 
   /* ===== 工作台三栏 ===== */
   .workbench{display:flex;height:100vh;padding-top:56px;}
-  .left{width:280px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+  .left{width:360px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
   .center{flex:1;background:var(--preview-bg);position:relative;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
   .right{width:320px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
 
@@ -65,8 +65,8 @@
   .ccard .nm{font-size:12px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .ccard .help{margin-left:auto;width:15px;height:15px;border-radius:50%;background:#EDEDE8;color:var(--muted);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .ccard.on{border-color:var(--green);background:var(--green-soft);box-shadow:0 2px 8px rgba(27,67,50,.12);}
-  .ccard .tip{display:none;position:absolute;left:0;right:auto;bottom:calc(100% + 6px);background:#111;color:#fff;font-size:11px;padding:8px 10px;border-radius:8px;z-index:60;line-height:1.45;pointer-events:none;width:220px;}
-  .ccard .help:hover .tip{display:block;}
+  #ccTip{display:none;position:fixed;z-index:500;background:#111;color:#fff;font-size:11.5px;padding:9px 12px;border-radius:9px;line-height:1.5;pointer-events:none;max-width:300px;box-shadow:0 8px 24px rgba(0,0,0,.25);}
+  #ccTip b{color:#A7F3D0;}
 
   .left-foot{padding:12px 14px;border-top:1px solid var(--border);}
   .left-foot a{font-size:12.5px;color:var(--green);font-weight:600;}
@@ -76,13 +76,13 @@
   .center-head .tt{font-size:13px;font-weight:700;color:var(--muted);}
   .center-head .hint{font-size:11.5px;color:var(--faint);}
   .preview-wrap{flex:1;overflow:auto;padding:6px 20px 100px;display:flex;justify-content:center;}
-  .browser{width:100%;max-width:760px;border-radius:14px;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,.14);overflow:hidden;display:flex;flex-direction:column;transition:background .3s,color .3s;align-self:flex-start;}
+  .browser{width:100%;max-width:1200px;border-radius:14px;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,.14);overflow:hidden;display:flex;flex-direction:column;transition:background .3s,color .3s;align-self:flex-start;min-height:100%;}
   .browser .bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F1F1EC;border-bottom:1px solid var(--border);flex-shrink:0;}
   .browser .dots{display:flex;gap:6px;}
   .browser .dot{width:11px;height:11px;border-radius:50%;}
   .browser .dot.r{background:#FF5F57;} .browser .dot.y{background:#FEBC2E;} .browser .dot.g{background:#28C840;}
   .browser .addr{flex:1;max-width:340px;margin:0 auto;background:#fff;border-radius:7px;padding:4px 12px;font-size:12px;color:var(--muted);text-align:center;}
-  #pvBody{background:#fff;padding:0;transition:background .3s,color .3s;min-height:420px;}
+  #pvBody{flex:1;background:#fff;padding:0;transition:background .3s,color .3s;min-height:420px;}
   .pv-empty{padding:70px 30px;text-align:center;color:var(--faint);}
   .pv-empty .big{font-size:44px;margin-bottom:12px;}
   .pv-empty p{font-size:13px;}
@@ -120,7 +120,9 @@
   .browser.editorial #pvBody .pv-title{font-family:Georgia,"Times New Roman",serif;font-size:22px;}
 
   /* ===== 底部生成栏 ===== */
-  .genbar{position:absolute;left:0;right:0;bottom:24px;display:flex;justify-content:center;padding:0 20px;pointer-events:none;}
+  .genzone{position:absolute;left:0;right:0;bottom:0;height:88px;display:flex;align-items:flex-end;justify-content:center;padding:0 20px 20px;z-index:60;}
+  .genbar{width:100%;display:flex;justify-content:center;transform:translateY(150%);opacity:0;transition:transform .3s ease,opacity .3s ease;pointer-events:none;}
+  .genzone:hover .genbar{transform:translateY(0);opacity:1;}
   .genbar .inner{pointer-events:auto;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.16);padding:10px 12px 10px 16px;display:flex;align-items:center;gap:14px;max-width:100%;flex-wrap:wrap;}
   .pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
   .pill{font-size:11px;font-weight:600;color:var(--green);background:var(--green-soft);padding:3px 9px;border-radius:20px;white-space:nowrap;}
@@ -177,19 +179,52 @@
   .toast.show{opacity:1;transform:none;}
 
   /* ===== 响应式 ===== */
-  @media (max-width:1024px){
-    .right{display:none;}
-    .hamburger{display:block;}
-  }
   @media (max-width:768px){
     .nav-links{display:none;}
+    .hamburger{display:block;}
     .left{position:fixed;top:56px;left:0;bottom:0;z-index:400;width:280px;transform:translateX(-100%);transition:transform .25s;box-shadow:8px 0 30px rgba(0,0,0,.15);}
     .left.open{transform:translateX(0);}
     .center-head{padding:12px 14px 6px;}
     .preview-wrap{padding:6px 12px 110px;}
-    .genbar{bottom:16px;padding:0 12px;}
+    .genzone{padding:0 12px 16px;height:84px;}
     .genbar .inner{width:100%;justify-content:space-between;}
   }
+</style>
+<style>
+  /* ===== 新野兽派 Neo-brutalism 覆盖 ===== */
+  body{background:#FAF9F4;}
+  .navbar{background:#fff;border-bottom:2px solid #111;}
+  .navbar .logo .sq{border:2px solid #111;box-shadow:3px 3px 0 #111;}
+  .nav-links a:hover{color:#111;background:#E8F5E9;}
+  .btn-primary{border:2px solid #111;box-shadow:3px 3px 0 #111;border-radius:6px;font-weight:800;}
+  .btn-primary:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 #111;}
+  .btn-primary:active{transform:translate(3px,3px);box-shadow:none;}
+  .proj-card{border:2px solid #111;box-shadow:3px 3px 0 #111;background:#E8F5E9;}
+  .tabs{border-bottom:2px solid #111;}
+  .tabs button.active{color:#111;border-bottom:3px solid #111;}
+  .cat-head{color:#111;font-weight:800;}
+  .ccard{border:2px solid #111;border-radius:6px;box-shadow:2px 2px 0 #111;}
+  .ccard:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 #111;border-color:#111;}
+  .ccard.on{background:#E8F5E9;box-shadow:2px 2px 0 #111;}
+  .ccard .help{background:#111;color:#fff;}
+  .left-foot{border-top:2px solid #111;}
+  .browser{border:3px solid #111;border-radius:8px;box-shadow:8px 8px 0 rgba(0,0,0,.85)!important;}
+  .browser .bar{border-bottom:2px solid #111;background:#F5F5EE;}
+  .pv-badge{background:#111;color:#fff;border-radius:4px;}
+  .pv-btn{border:2px solid #111;box-shadow:2px 2px 0 #111;border-radius:5px;font-weight:700;}
+  .pv-btn.ghost{background:#fff;color:#1B4332;}
+  .genbar .inner{border:2px solid #111;box-shadow:4px 4px 0 #111!important;border-radius:10px;}
+  .pill{border:1.5px solid #111;box-shadow:1px 1px 0 #111;background:#E8F5E9;}
+  #aiBtn{border:2px solid #111;box-shadow:4px 4px 0 #111;border-radius:8px;font-weight:800;}
+  #aiPanel{border:3px solid #111;box-shadow:8px 8px 0 rgba(0,0,0,.85)!important;border-radius:10px;}
+  #aiPanel .aiPanel-head{border-bottom:2px solid #111;}
+  .modal{border:3px solid #111;box-shadow:8px 8px 0 rgba(0,0,0,.85)!important;border-radius:12px;}
+  .btn-ghost{border:2px solid #111;box-shadow:2px 2px 0 #111;background:#fff;border-radius:8px;}
+  .field input,.field textarea{border:2px solid #111;border-radius:6px;background:#fff;}
+  .prompt-box{border:2px solid #111;background:#F5F5EE;border-radius:8px;}
+  .step .n{border:2px solid #111;box-shadow:2px 2px 0 #111;background:#fff;color:#111;}
+  #ccTip{background:#111;color:#fff;border-radius:8px;box-shadow:4px 4px 0 rgba(0,0,0,.4);}
+  .toast{border:2px solid #111;box-shadow:4px 4px 0 #111;}
 </style>
 </head>
 <body>
@@ -245,37 +280,15 @@
         <div id="pvBody"></div>
       </div>
     </div>
-    <div class="genbar">
-      <div class="inner">
-        <div class="pills" id="pills"><span class="pill placeholder">尚未选择组件</span></div>
-        <button class="btn" onclick="openPrompt()">⚡ 生成完整 Prompt</button>
-      </div>
-    </div>
-  </main>
-
-  <!-- 右栏：AI 顾问 -->
-  <aside class="right">
-    <div class="chat-head">
-      <div class="chat-avatar">AI</div>
-      <div class="chat-id"><b>建站顾问</b><span class="st"><i></i>在线</span></div>
-    </div>
-    <div class="chat-body" id="chatBody">
-      <div class="msg ai">你好！我是你的 AI 建站顾问。你想做什么样的网站？可以告诉我网站名称和用途，我来帮你规划结构和风格。也可以直接点下面的方案快速开始 👇</div>
-      <div class="msg ai">
-        试试这些方案：
-        <div class="apply-row">
-          <button class="apply-chip" onclick="applyPreset('photo')">🖼️ 摄影工作室</button>
-          <button class="apply-chip" onclick="applyPreset('restaurant')">🍜 餐饮门店</button>
-          <button class="apply-chip" onclick="applyPreset('consult')">💼 咨询服务</button>
-          <button class="apply-chip" onclick="applyPreset('portfolio')">📄 个人作品集</button>
+    <div class="genzone">
+      <div class="genbar">
+        <div class="inner">
+          <div class="pills" id="pills"><span class="pill placeholder">尚未选择组件</span></div>
+          <button class="btn" onclick="openPrompt()">⚡ 生成完整 Prompt</button>
         </div>
       </div>
     </div>
-    <div class="chat-input">
-      <input id="chatInput" placeholder="继续和 AI 聊聊你的需求..." onkeydown="if(event.key==='Enter')sendMsg()">
-      <button onclick="sendMsg()">➤</button>
-    </div>
-  </aside>
+  </main>
 </div>
 
 <!-- 首次访问引导 -->
@@ -329,6 +342,7 @@
 </div>
 
 <div class="toast" id="toast"></div>
+<div id="ccTip"></div>
 
 <script src="components.js"></script>
 <script>
@@ -365,7 +379,7 @@
         const on=selected.has(i.id);
         html += '<button class="ccard'+(on?' on':'')+'" data-id="'+i.id+'" onclick="toggleItem(\''+i.id+'\')">'
               + '<span class="emoji">'+i.emoji+'</span><span class="nm">'+i.name+'</span>'
-              + '<span class="help">?<span class="tip"><b>'+i.name+'</b> · '+i.desc+'<br><br>'+escapeHtml(i.prompt.slice(0,90))+'…</span></span>'
+              + '<span class="help" onmouseenter="showTip(this)" onmouseleave="hideTip()">?</span>'
               + '</button>';
       });
       html += '</div></div>';
@@ -373,6 +387,23 @@
     body.innerHTML=html;
   }
   function toggleGroup(id){ document.getElementById('grp-'+id).classList.toggle('collapsed'); }
+  function showTip(el){
+    var card=el.closest('.ccard'); if(!card) return;
+    var it=itemById(card.getAttribute('data-id')); if(!it) return;
+    var tip=document.getElementById('ccTip');
+    tip.innerHTML='<b>'+escapeHtml(it.name)+'</b> · '+escapeHtml(it.desc)+'<br>'+escapeHtml(it.prompt.slice(0,100))+'…';
+    tip.style.display='block';
+    var r=el.getBoundingClientRect();
+    var tw=tip.offsetWidth, th=tip.offsetHeight;
+    var x=r.left + r.width/2 - tw/2;
+    var y=r.top - th - 8;
+    if(x<8) x=8;
+    if(x+tw>window.innerWidth-8) x=window.innerWidth-8-tw;
+    if(y<8) y=r.bottom+8;
+    tip.style.left=x+'px';
+    tip.style.top=y+'px';
+  }
+  function hideTip(){ var t=document.getElementById('ccTip'); if(t) t.style.display='none'; }
 
   function toggleItem(id){
     const it=itemById(id); if(!it) return;
@@ -515,39 +546,7 @@
     else fallback();
   }
 
-  /* ========== AI 聊天（模拟，预留 Dify 接入） ========== */
-  function sendMsg(){
-    const inp=document.getElementById('chatInput'); const t=inp.value.trim(); if(!t) return;
-    appendMsg('me',t); inp.value='';
-    setTimeout(()=>{
-      let reply;
-      if(/摄影|照片|拍照|作品/.test(t)) reply='摄影类网站建议：单页结构 + Hero 首屏 + 作品网格 + 联系表单，风格用「极简主义」或「编辑杂志风」最能突出作品。要不要我直接帮你套上这套方案？';
-      else if(/餐厅|餐饮|门店|菜单/.test(t)) reply='餐饮门店建议：落地页 + 轮播图展示菜品 + 预约表单，强调「引导到店」。点下方按钮我可以一键应用。';
-      else if(/咨询|服务|公司|企业/.test(t)) reply='咨询/服务类建议：落地页 + 服务介绍网格 + 时间线（成果）+ FAQ + 联系表单，风格选「极简主义」更显专业。';
-      else reply='收到！我记下了。你可以继续补充需求，或者直接从左侧点选组件、看中间预览；也可以点下方方案让我一键帮你配一套。';
-      appendMsg('ai',reply);
-    },500);
-  }
-  function appendMsg(who,text){
-    const body=document.getElementById('chatBody');
-    const d=document.createElement('div'); d.className='msg '+(who==='me'?'me':'ai'); d.textContent=text; body.appendChild(d); body.scrollTop=body.scrollHeight;
-  }
-  const PRESETS={
-    photo:{ name:'小林摄影工作室', purpose:'展示作品 + 预约拍摄', ids:['structure-1','structure-5','structure-6','components-6','components-8','style-1'] },
-    restaurant:{ name:'小馆餐厅', purpose:'展示菜品 + 引导到店预约', ids:['structure-3','structure-5','components-6','components-8','style-1'] },
-    consult:{ name:'XX咨询', purpose:'展示服务 + 引导预约咨询', ids:['structure-3','structure-5','structure-6','structure-8','structure-9','components-8','style-1'] },
-    portfolio:{ name:'我的作品集', purpose:'展示个人作品', ids:['structure-1','structure-5','structure-6','components-7','style-2'] },
-  };
-  function applyPreset(key){
-    const p=PRESETS[key]; if(!p) return;
-    selected.clear(); p.ids.forEach(id=>{ if(itemById(id)) selected.add(id); });
-    proj.name=p.name; proj.purpose=p.purpose;
-    document.getElementById('projName').textContent=proj.name;
-    document.getElementById('projPurpose').textContent=proj.purpose;
-    updateAddr(); renderTab(); renderPreview(); renderPills();
-    appendMsg('ai','✅ 已为你应用「'+p.name+'」方案：已自动选中对应组件和风格，中间预览已更新。你可以继续微调，或点底部「生成完整 Prompt」。');
-    toast('已应用方案，预览已更新');
-  }
+  /* AI 聊天：右下角 Dify 悬浮气泡（真实AI），见页面底部 embed.min.js 配置 */
 
   /* ========== 引导层 ========== */
   function show(id){ document.getElementById(id).classList.add('show'); }
@@ -555,8 +554,7 @@
   function startConfig(){
     hide('onboardOverlay');
     try{ localStorage.setItem('hyr_ai_onboarded','1'); }catch(e){}
-    if(window.innerWidth>1024){ document.getElementById('chatInput').focus(); }
-    else { toast('先点左侧 ☰ 选组件，或直接看预览'); }
+    toast('开始配置：左侧选组件 → 中间看预览 → 底部生成 Prompt');
   }
   function skipOnboard(){ hide('onboardOverlay'); try{ localStorage.setItem('hyr_ai_onboarded','1'); }catch(e){} }
 
@@ -572,7 +570,7 @@
   try{ if(!localStorage.getItem('hyr_ai_onboarded')) show('onboardOverlay'); }catch(e){ show('onboardOverlay'); }
 </script>
 
-<!-- AI 数字分身：桌面端右栏为原生顾问，移动端保留 Dify 气泡（真实AI）。如想把右栏换成真实 Dify，可用 iframe 指向 http://118.89.116.235/chatbot/... -->
+<!-- AI 数字分身：右下角 Dify 悬浮气泡（真实AI，稳定可靠） -->
 <script>
   window.difyChatbotConfig = {
     token: 'QfzBwTFjkvRobafA',
@@ -582,11 +580,14 @@
 </script>
 <script src="http://118.89.116.235/embed.min.js" id="QfzBwTFjkvRobafA" defer></script>
 <style>
-  #dify-chatbot-bubble-button { background-color: #1B4332 !important; }
+  #dify-chatbot-bubble-button {
+    background-color: #1B4332 !important;
+    border: 2px solid #111 !important;
+    box-shadow: 4px 4px 0 #111 !important;
+    border-radius: 8px !important;
+  }
   #dify-chatbot-bubble-window { width: 24rem !important; height: 40rem !important; }
-  /* 桌面端（右栏已显示原生顾问）隐藏 Dify 气泡，避免重复 */
-  @media (min-width:1025px){ #dify-chatbot-bubble-button{ display:none !important; } }
-  @media (max-width:480px){ #dify-chatbot-bubble-window{ width: 92vw !important; } }
+  @media (max-width: 480px) { #dify-chatbot-bubble-window { width: 92vw !important; } }
 </style>
 </body>
 </html>
