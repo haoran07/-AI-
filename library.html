@@ -135,12 +135,12 @@
   .mask { position:fixed; inset:0; background:rgba(17,24,39,.4); backdrop-filter:blur(2px); z-index:250; display:none; }
   .mask.show { display:block; }
 
-  #backTop { position:fixed; right:28px; bottom:30px; width:48px; height:48px; border-radius:50%; background:var(--green); color:#fff; border:none; cursor:pointer; font-size:18px; box-shadow:0 12px 28px rgba(22,163,74,.32); opacity:0; pointer-events:none; transition:opacity .25s,transform .25s; z-index:150; }
+  #backTop { position:fixed; right:28px; bottom:90px; width:48px; height:48px; border-radius:50%; background:var(--green); color:#fff; border:none; cursor:pointer; font-size:18px; box-shadow:0 12px 28px rgba(22,163,74,.32); opacity:0; pointer-events:none; transition:opacity .25s,transform .25s; z-index:150; }
   #backTop.show { opacity:1; pointer-events:auto; }
   #backTop:hover { transform:translateY(-2px); }
 
   /* 加微信入口 */
-  #wxBtn { position:fixed; right:28px; bottom:90px; width:50px; height:50px; border-radius:50%; background:var(--accent); color:#fff; border:none; cursor:pointer; font-size:20px; box-shadow:0 12px 30px rgba(79,70,229,.38); z-index:150; display:flex; align-items:center; justify-content:center; animation:wxPulse 2.4s ease-in-out infinite; }
+  #wxBtn { position:fixed; right:28px; bottom:150px; width:50px; height:50px; border-radius:50%; background:var(--accent); color:#fff; border:none; cursor:pointer; font-size:20px; box-shadow:0 12px 30px rgba(79,70,229,.38); z-index:150; display:flex; align-items:center; justify-content:center; animation:wxPulse 2.4s ease-in-out infinite; }
   #wxBtn:hover { transform:scale(1.08); }
   @keyframes wxPulse { 0%,100% { box-shadow:0 12px 30px rgba(79,70,229,.38), 0 0 0 0 rgba(79,70,229,.35); } 50% { box-shadow:0 12px 30px rgba(79,70,229,.38), 0 0 0 12px rgba(79,70,229,0); } }
   #wxModal { position:fixed; inset:0; background:rgba(17,24,39,.6); backdrop-filter:blur(4px); z-index:600; display:none; align-items:center; justify-content:center; padding:20px; }
@@ -1808,9 +1808,7 @@
 <script src="http://118.89.116.235/embed.min.js" id="QfzBwTFjkvRobafA" defer></script>
 <style>
   #dify-chatbot-bubble-button {
-    right: 28px !important;
-    bottom: 150px !important;
-    background-color: #1C64F2 !important;
+    background-color: #1B4332 !important;
   }
   #dify-chatbot-bubble-window {
     width: 24rem !important;
