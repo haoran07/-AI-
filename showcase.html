@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>案例 · 浩然AI建站配置器</title>
+<style>
+  :root{
+    --green:#1B4332; --green2:#2D5A45; --green-soft:#E8F5E9; --green-softer:#F0F7F4;
+    --bg:#FAFAF5; --text:#1A1A1A; --muted:#666666; --faint:#888888; --border:#E7E7E2;
+    --shadow:0 4px 16px rgba(0,0,0,.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{text-decoration:none;color:inherit;} button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+  .navbar{position:sticky;top:0;z-index:100;height:56px;background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 20px;}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px;}
+  .logo .sq{width:28px;height:28px;border-radius:7px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;}
+  .logo .beta{font-size:10px;font-weight:700;color:var(--green);background:var(--green-soft);padding:2px 6px;border-radius:6px;margin-left:2px;}
+  .nav-links{display:flex;gap:4px;margin-left:8px;}
+  .nav-links a{font-size:13.5px;color:var(--muted);padding:6px 12px;border-radius:8px;font-weight:500;transition:.15s;}
+  .nav-links a:hover{color:var(--green);background:var(--green-softer);}
+  .nav-links a.active{color:var(--green);background:var(--green-softer);font-weight:600;}
+  .nav-right{margin-left:auto;}
+  .btn-primary{background:var(--green);color:#fff;padding:8px 16px;border-radius:8px;font-weight:600;font-size:13.5px;transition:.15s;}
+  .btn-primary:hover{background:var(--green2);}
+
+  .page{max-width:1000px;margin:0 auto;padding:40px 24px 70px;}
+  .hero{text-align:center;margin-bottom:36px;}
+  .hero h1{font-size:28px;font-weight:800;letter-spacing:-.02em;}
+  .hero p{color:var(--muted);margin-top:8px;font-size:14px;}
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+  .case{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);transition:.2s;}
+  .case:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.12);}
+  .shot{height:200px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .shot .mini{width:78%;height:150px;background:#fff;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.15);overflow:hidden;display:flex;flex-direction:column;}
+  .shot .mini .mbar{height:22px;background:#F1F1EC;border-bottom:1px solid #EAEAE4;display:flex;align-items:center;gap:4px;padding:0 8px;}
+  .shot .mini .mbar i{width:7px;height:7px;border-radius:50%;display:inline-block;}
+  .shot .mini .mbody{flex:1;display:flex;flex-direction:column;gap:6px;padding:12px;}
+  .shot .mini .mline{height:8px;border-radius:5px;background:#E8E8E2;}
+  .shot .mini .mtitle{height:14px;width:55%;border-radius:5px;background:#1B4332;opacity:.85;}
+  .shot .mini .mbtn{height:18px;width:34%;border-radius:5px;background:#1B4332;}
+  .shot .mini .mcards{display:flex;gap:6px;flex:1;}
+  .shot .mini .mcard{flex:1;border-radius:6px;background:#F1F1EC;border:1px solid #EAEAE4;}
+
+  /* 各案例背景 */
+  .shot.bg-glass{background:linear-gradient(135deg,#DDE9FF,#E8F5E9,#F5E8FF);}
+  .shot.bg-minimal{background:#F4F3EE;}
+  .shot.bg-green{background:linear-gradient(135deg,#E8F5E9,#F0F7F4);}
+  .shot.bg-editorial{background:linear-gradient(135deg,#F3EFE6,#EDE9DF);}
+  .shot.bg-dark{background:#15181A;}
+
+  .case .info{padding:16px 18px 20px;}
+  .case .info h3{font-size:16px;font-weight:800;}
+  .case .meta{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px;color:var(--faint);}
+  .case .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;}
+  .tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--green-soft);color:var(--green);}
+  .tag.style{background:#F1F1EC;color:var(--muted);}
+  .case .cta{display:inline-flex;align-items:center;gap:5px;margin-top:14px;font-size:13px;font-weight:600;color:var(--green);}
+
+  @media (max-width:720px){ .grid{grid-template-columns:1fr;} .hero h1{font-size:23px;} }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo"><span class="sq">浩</span>浩然AI建站配置器<span class="beta">Beta</span></div>
+  <div class="nav-links">
+    <a href="showcase.html" class="active">案例</a>
+    <a href="index.html">定价</a>
+    <a href="library.html">组件参考</a>
+  </div>
+  <div class="nav-right"><a class="btn-primary" href="index.html">开始配置</a></div>
+</nav>
+
+<div class="page">
+  <div class="hero">
+    <h1>用配置器做出来的真实案例</h1>
+    <p>每个案例都是「选组件 → 生成 Prompt → 交给 AI」几步完成，无需写代码</p>
+  </div>
+
+  <div class="grid">
+    <div class="case">
+      <div class="shot bg-glass">
+        <div class="mini"><div class="mbar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></div>
+          <div class="mbody"><div class="mtitle"></div><div class="mline" style="width:80%"></div><div class="mbtn"></div><div class="mcards"><div class="mcard"></div><div class="mcard"></div><div class="mcard"></div></div></div>
+        </div>
+      </div>
+      <div class="info">
+        <h3>小林摄影工作室</h3>
+        <div class="meta"><span>⚡ 5分钟配置</span><span>·</span><span>2026-08</span></div>
+        <div class="tags">
+          <span class="tag">Hero 首屏</span><span class="tag">作品网格</span><span class="tag">联系表单</span>
+          <span class="tag style">玻璃拟态</span>
+        </div>
+        <a class="cta" href="index.html">用这个模板配置 →</a>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="shot bg-minimal">
+        <div class="mini"><div class="mbar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></div>
+          <div class="mbody"><div class="mtitle" style="width:45%"></div><div class="mline" style="width:70%"></div><div class="mcards"><div class="mcard"></div><div class="mcard"></div><div class="mcard"></div></div></div>
+        </div>
+      </div>
+      <div class="info">
+        <h3>小馆餐厅</h3>
+        <div class="meta"><span>⚡ 4分钟配置</span><span>·</span><span>2026-08</span></div>
+        <div class="tags">
+          <span class="tag">落地页</span><span class="tag">轮播图</span><span class="tag">预约表单</span>
+          <span class="tag style">极简主义</span>
+        </div>
+        <a class="cta" href="index.html">用这个模板配置 →</a>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="shot bg-green">
+        <div class="mini"><div class="mbar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></div>
+          <div class="mbody"><div class="mtitle"></div><div class="mline" style="width:75%"></div><div class="mline" style="width:60%"></div><div class="mbtn" style="width:28%"></div></div>
+        </div>
+      </div>
+      <div class="info">
+        <h3>悦己美容 · 预约站</h3>
+        <div class="meta"><span>⚡ 6分钟配置</span><span>·</span><span>2026-08</span></div>
+        <div class="tags">
+          <span class="tag">落地页</span><span class="tag">表单 + 验证</span><span class="tag">FAQ</span>
+          <span class="tag style">极简 + 深绿</span>
+        </div>
+        <a class="cta" href="index.html">用这个模板配置 →</a>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="shot bg-editorial">
+        <div class="mini"><div class="mbar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i></div>
+          <div class="mbody"><div class="mtitle" style="width:50%;background:#2D2D2D"></div><div class="mline" style="width:85%"></div><div class="mcards"><div class="mcard"></div><div class="mcard"></div></div></div>
+        </div>
+      </div>
+      <div class="info">
+        <h3>个人作品集</h3>
+        <div class="meta"><span>⚡ 3分钟配置</span><span>·</span><span>2026-08</span></div>
+        <div class="tags">
+          <span class="tag">单页网站</span><span class="tag">Hero 首屏</span><span class="tag">图片灯箱</span>
+          <span class="tag style">编辑杂志风</span>
+        </div>
+        <a class="cta" href="index.html">用这个模板配置 →</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

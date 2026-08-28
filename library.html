@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>组件参考 · 浩然AI建站知识库（70个组件）</title>
+<script defer src="/_vercel/insights/script.js"></script>
+<style>
+  :root {
+    --bg: #F6F6F7; --card: #FFFFFF; --text: #111827; --muted: #6B7280; --faint: #9CA3AF;
+    --accent: #4F46E5; --accent-soft: #EEF2FF; --green: #16A34A; --green-soft: #F0FDF4;
+    --border: #ECECEF; --radius: 16px;
+    --shadow: 0 1px 2px rgba(17,24,39,.04), 0 12px 32px -12px rgba(17,24,39,.10);
+    --sidebar-w: 292px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); line-height:1.7; -webkit-font-smoothing:antialiased; font-size:15px; }
+
+  #progress { position:fixed; top:0; left:0; height:3px; background:var(--green); width:0; z-index:999; transition:width .08s linear; }
+
+  .navbar { position:sticky; top:0; z-index:100; height:60px; background:rgba(246,246,247,.8); backdrop-filter:blur(16px) saturate(160%); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:22px; padding:0 26px; }
+  .navbar .logo { font-weight:800; font-size:15.5px; letter-spacing:-.02em; white-space:nowrap; }
+  .navbar .logo em { color:var(--accent); font-style:normal; font-weight:600; font-size:13px; margin-left:4px; }
+  .navbar .links { display:flex; gap:2px; overflow-x:auto; }
+  .navbar .links a { font-size:13px; color:var(--muted); text-decoration:none; padding:7px 12px; border-radius:8px; white-space:nowrap; font-weight:500; }
+  .navbar .links a:hover { color:var(--text); background:var(--accent-soft); }
+
+  .sidebar { position:fixed; top:60px; left:0; bottom:0; width:var(--sidebar-w); background:var(--card); border-right:1px solid var(--border); overflow-y:auto; padding:20px 14px 40px; }
+  .sidebar .cat { margin-bottom:2px; }
+  .sidebar .cat-head { display:flex; align-items:center; gap:9px; width:100%; text-align:left; background:none; border:none; cursor:pointer; padding:9px 10px; border-radius:9px; font-size:13.5px; font-weight:700; color:var(--text); letter-spacing:-.01em; }
+  .sidebar .cat-head:hover { background:var(--bg); }
+  .sidebar .cat-head .n { width:21px; height:21px; border-radius:6px; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0; }
+  .sidebar .cat-head .caret { margin-left:auto; color:var(--faint); font-size:10px; transition:transform .2s; }
+  .sidebar .cat.open .caret { transform:rotate(90deg); }
+  .sidebar .sub { display:none; padding:2px 0 8px 31px; }
+  .sidebar .cat.open .sub { display:block; }
+  .sidebar .sub a { display:block; font-size:12.5px; color:var(--muted); text-decoration:none; padding:5px 9px; border-radius:6px; border-left:2px solid transparent; font-weight:400; }
+  .sidebar .sub a:hover { color:var(--text); background:var(--bg); }
+  .sidebar .sub a.active { color:var(--green); font-weight:600; border-left-color:var(--green); background:var(--green-soft); }
+
+  .main { margin-left:var(--sidebar-w); padding:0 56px 140px; max-width:1120px; }
+  .cat-hero { padding:64px 0 8px; }
+  .cat-hero .tag { display:inline-block; font-size:12px; font-weight:700; color:var(--accent); background:var(--accent-soft); padding:5px 13px; border-radius:999px; letter-spacing:.04em; }
+  .cat-hero h2 { font-size:40px; font-weight:800; letter-spacing:-.03em; margin:16px 0 8px; line-height:1.15; }
+  .cat-hero p { color:var(--muted); font-size:16px; max-width:640px; }
+
+  .demo-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin:28px 0; overflow:hidden; box-shadow:var(--shadow); }
+  .demo-card .head { padding:22px 26px 0; }
+  .demo-card .head .idx { font-size:11.5px; font-weight:800; color:var(--green); letter-spacing:.06em; text-transform:uppercase; }
+  .demo-card .head h3 { font-size:21px; font-weight:700; margin:4px 0 2px; letter-spacing:-.02em; line-height:1.3; }
+  .demo-card .head .en { font-size:12.5px; color:var(--faint); font-weight:500; }
+  .demo-card .stage { padding:26px; border-top:1px solid var(--border); background:linear-gradient(180deg,#FBFBFC,#F6F6F7); min-height:170px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .demo-card .note { padding:14px 26px; color:var(--muted); font-size:13.5px; border-top:1px solid var(--border); background:#FAFAFB; }
+  .demo-card .prompt { border-top:1px solid var(--border); background:#F8F9FB; }
+  .demo-card .prompt .ph { display:flex; align-items:center; justify-content:space-between; padding:11px 26px; }
+  .demo-card .prompt .ph b { font-size:12px; color:var(--muted); font-weight:600; letter-spacing:.03em; }
+  .demo-card .prompt .copy { font-size:12px; color:var(--accent); cursor:pointer; background:#fff; border:1px solid var(--border); padding:4px 14px; border-radius:7px; font-weight:600; }
+  .demo-card .prompt .copy:hover { background:var(--accent-soft); border-color:var(--accent); }
+  .demo-card .prompt pre { margin:0 26px 20px; background:#fff; border:1px solid var(--border); border-radius:10px; padding:14px 16px; font-size:12.5px; line-height:1.65; white-space:pre-wrap; word-break:break-word; color:#374151; font-family:ui-monospace,"SF Mono",Consolas,monospace; max-height:150px; overflow:auto; }
+
+  .mock { width:100%; border:1px solid var(--border); border-radius:12px; background:#fff; overflow:hidden; box-shadow:0 1px 3px rgba(17,24,39,.05); }
+  .mock .mbar { height:34px; background:#fff; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:6px; padding:0 12px; }
+  .mock .mbar .dot { width:8px; height:8px; border-radius:50%; }
+  .mock .mbar .addr { flex:1; margin-left:6px; height:18px; background:#F1F2F4; border-radius:5px; font-size:9px; color:var(--faint); display:flex; align-items:center; padding:0 8px; }
+  .mock .nav { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid var(--border); }
+  .mock .nav b { font-size:12px; font-weight:800; letter-spacing:-.01em; }
+  .mock .nav .l { display:flex; gap:12px; }
+  .mock .nav .l span { font-size:10.5px; color:var(--muted); }
+  .img { border-radius:9px; }
+  .g1 { background:linear-gradient(135deg,#6366F1,#8B5CF6); }
+  .g2 { background:linear-gradient(135deg,#10B981,#059669); }
+  .g3 { background:linear-gradient(135deg,#F59E0B,#F97316); }
+  .g4 { background:linear-gradient(135deg,#0EA5E9,#6366F1); }
+  .g5 { background:linear-gradient(135deg,#14B8A6,#0D9488); }
+  .btn { display:inline-block; background:var(--accent); color:#fff; font-size:11.5px; padding:7px 16px; border-radius:8px; font-weight:600; letter-spacing:.01em; }
+  .btn.green { background:var(--green); }
+  .btn.ghost { background:#fff; color:var(--text); border:1px solid var(--border); }
+  .btn.sm { padding:5px 12px; font-size:10.5px; }
+  .mh { font-size:15px; font-weight:800; letter-spacing:-.02em; line-height:1.25; }
+  .ms { font-size:11px; color:var(--muted); line-height:1.5; }
+  .ml { font-size:9.5px; color:var(--faint); letter-spacing:.04em; text-transform:uppercase; font-weight:600; }
+
+  .fgrid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; padding:20px; }
+  .fgrid .f { border:1px solid var(--border); border-radius:11px; padding:16px 14px; background:#fff; }
+  .fgrid .f .ico { width:34px; height:34px; border-radius:9px; background:var(--accent-soft); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:16px; }
+  .fgrid .f b { font-size:12.5px; display:block; margin-top:10px; font-weight:700; }
+  .fgrid .f p { font-size:10.5px; color:var(--muted); margin-top:4px; line-height:1.5; }
+
+  .timeline { position:relative; padding:14px 14px 14px 32px; }
+  .timeline::before { content:""; position:absolute; left:16px; top:16px; bottom:16px; width:2px; background:var(--green); opacity:.4; }
+  .timeline .t { position:relative; padding:10px 0; }
+  .timeline .t::before { content:""; position:absolute; left:-22px; top:18px; width:11px; height:11px; border-radius:50%; background:var(--green); border:2px solid #fff; box-shadow:0 0 0 2px var(--green); }
+  .timeline .t .yr { font-size:10px; font-weight:700; color:var(--green); letter-spacing:.05em; }
+  .timeline .t b { font-size:13px; display:block; margin-top:2px; }
+  .timeline .t p { font-size:11px; color:var(--muted); margin-top:3px; line-height:1.5; }
+
+  .acc { border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .acc .q { width:100%; text-align:left; background:#fff; border:none; border-bottom:1px solid var(--border); padding:14px 18px; font-size:13px; font-weight:600; cursor:pointer; display:flex; justify-content:space-between; align-items:center; color:var(--text); }
+  .acc .q:last-child { border-bottom:none; }
+  .acc .q .pm { color:var(--green); font-weight:700; font-size:15px; }
+  .acc .a { display:none; padding:14px 18px; background:#FAFAFB; font-size:12.5px; color:var(--muted); }
+  .acc .a.open { display:block; }
+
+  .tabs { width:100%; }
+  .tabs .tab-row { display:flex; gap:4px; border-bottom:1px solid var(--border); padding:0 16px; }
+  .tabs .tab-row button { background:none; border:none; padding:10px 15px; font-size:12.5px; cursor:pointer; color:var(--muted); border-bottom:2px solid transparent; font-weight:500; }
+  .tabs .tab-row button.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:700; }
+  .tabs .tab-panel { padding:18px 16px; }
+  .tabs .tab-panel .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+  .tabs .tab-panel .grid div { height:54px; border-radius:9px; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--accent); font-weight:600; }
+
+  .crumb { font-size:13px; color:var(--muted); padding:12px 0; font-weight:500; }
+  .crumb span { color:var(--text); font-weight:700; }
+  .crumb .sep { margin:0 6px; color:#D1D5DB; }
+
+  .mega { position:relative; }
+  .mega .trig { font-size:13px; cursor:pointer; background:var(--accent); color:#fff; border:none; padding:9px 16px; border-radius:9px; font-weight:600; }
+  .mega .panel { display:none; margin-top:10px; background:#fff; border:1px solid var(--border); border-radius:14px; box-shadow:0 24px 60px -12px rgba(17,24,39,.18); padding:20px; grid-template-columns:1fr 1fr 1fr 1.5fr; gap:18px; width:100%; max-width:560px; z-index:20; }
+  .mega .panel.show { display:grid; }
+  .mega .panel b { font-size:10.5px; color:var(--faint); display:block; margin-bottom:8px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
+  .mega .panel a { display:block; font-size:13px; color:var(--text); text-decoration:none; padding:4px 0; font-weight:500; }
+  .mega .panel a:hover { color:var(--accent); }
+  .mega .panel .feat { background:var(--accent-soft); border-radius:10px; padding:14px; font-size:11.5px; color:var(--accent); }
+
+  .pager { display:flex; gap:6px; align-items:center; justify-content:center; padding:10px; }
+  .pager button { width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:#fff; cursor:pointer; font-size:12px; color:var(--muted); font-weight:600; }
+  .pager button.on { background:var(--green); color:#fff; border-color:var(--green); }
+
+  .burger { display:none; }
+  .drawer { position:fixed; top:0; right:-300px; width:280px; height:100vh; background:#fff; box-shadow:-12px 0 40px rgba(0,0,0,.16); z-index:300; transition:right .28s cubic-bezier(.4,0,.2,1); padding:24px; }
+  .drawer.show { right:0; }
+  .drawer .close { background:none; border:none; font-size:22px; cursor:pointer; margin-bottom:18px; color:var(--muted); }
+  .drawer a { display:block; padding:12px 0; font-size:15px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--border); font-weight:500; }
+  .mask { position:fixed; inset:0; background:rgba(17,24,39,.4); backdrop-filter:blur(2px); z-index:250; display:none; }
+  .mask.show { display:block; }
+
+  #backTop { position:fixed; right:28px; bottom:30px; width:48px; height:48px; border-radius:50%; background:var(--green); color:#fff; border:none; cursor:pointer; font-size:18px; box-shadow:0 12px 28px rgba(22,163,74,.32); opacity:0; pointer-events:none; transition:opacity .25s,transform .25s; z-index:150; }
+  #backTop.show { opacity:1; pointer-events:auto; }
+  #backTop:hover { transform:translateY(-2px); }
+
+  /* 加微信入口 */
+  #wxBtn { position:fixed; right:28px; bottom:90px; width:50px; height:50px; border-radius:50%; background:var(--accent); color:#fff; border:none; cursor:pointer; font-size:20px; box-shadow:0 12px 30px rgba(79,70,229,.38); z-index:150; display:flex; align-items:center; justify-content:center; animation:wxPulse 2.4s ease-in-out infinite; }
+  #wxBtn:hover { transform:scale(1.08); }
+  @keyframes wxPulse { 0%,100% { box-shadow:0 12px 30px rgba(79,70,229,.38), 0 0 0 0 rgba(79,70,229,.35); } 50% { box-shadow:0 12px 30px rgba(79,70,229,.38), 0 0 0 12px rgba(79,70,229,0); } }
+  #wxModal { position:fixed; inset:0; background:rgba(17,24,39,.6); backdrop-filter:blur(4px); z-index:600; display:none; align-items:center; justify-content:center; padding:20px; }
+  #wxModal.show { display:flex; }
+  #wxModal .box { position:relative; background:#fff; border-radius:22px; padding:32px 28px 26px; width:320px; max-width:90vw; text-align:center; box-shadow:0 30px 80px rgba(0,0,0,.3); }
+  #wxModal .box .x { position:absolute; top:14px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:var(--muted); }
+  #wxModal .box img { width:200px; height:200px; object-fit:cover; border-radius:12px; border:1px solid var(--border); }
+  #wxModal .box h4 { font-size:17px; font-weight:800; margin-top:14px; letter-spacing:-.01em; }
+  #wxModal .box p { font-size:12.5px; color:var(--muted); margin-top:6px; line-height:1.6; }
+
+  /* AI 数字分身 */
+  #aiBtn { position:fixed; right:28px; bottom:150px; width:50px; height:50px; border-radius:50%; background:linear-gradient(135deg,#7C3AED,#4F46E5); color:#fff; border:none; cursor:pointer; font-size:22px; box-shadow:0 12px 30px rgba(124,58,237,.4); z-index:150; display:flex; align-items:center; justify-content:center; animation:wxPulse 2.4s ease-in-out infinite; }
+  #aiPanel { position:fixed; right:24px; bottom:24px; width:380px; height:560px; max-width:92vw; max-height:80vh; background:#fff; border-radius:18px; box-shadow:0 24px 70px rgba(0,0,0,.3); z-index:650; display:none; overflow:hidden; flex-direction:column; }
+  #aiPanel.show { display:flex; }
+  #aiPanel .h { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:linear-gradient(135deg,#7C3AED,#4F46E5); color:#fff; flex-shrink:0; }
+  #aiPanel .h b { font-size:14px; font-weight:700; }
+  #aiPanel .h .x { background:none; border:none; color:#fff; font-size:18px; cursor:pointer; }
+  #aiPanel iframe { flex:1; width:100%; border:none; }
+  @media (max-width:480px) { #aiPanel { right:8px; bottom:8px; width:calc(100vw - 16px); height:70vh; } }
+
+
+  /* ===== 03 组件 ===== */
+  .modal-mask { position:fixed; inset:0; background:rgba(17,24,39,.5); z-index:400; display:none; align-items:center; justify-content:center; }
+  .modal-mask.show { display:flex; }
+  .modal-box { background:#fff; border-radius:16px; padding:26px; width:360px; max-width:88vw; box-shadow:0 30px 80px rgba(0,0,0,.25); }
+  .modal-box h4 { font-size:16px; font-weight:800; }
+  .modal-box .fld { margin-top:14px; }
+  .modal-box .fld label { font-size:11px; color:var(--muted); display:block; margin-bottom:5px; }
+  .modal-box .fld input, .modal-box .fld textarea { width:100%; border:1px solid var(--border); border-radius:8px; padding:9px 11px; font-size:12px; font-family:inherit; }
+  .modal-box .fld textarea { resize:vertical; min-height:64px; }
+  .tooltip { position:relative; display:inline-block; }
+  .tooltip .tip { position:absolute; bottom:130%; left:50%; transform:translateX(-50%); background:#111827; color:#fff; font-size:11px; padding:5px 10px; border-radius:6px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .18s; }
+  .tooltip:hover .tip { opacity:1; }
+  #toastBox { position:fixed; top:76px; right:24px; z-index:500; display:flex; flex-direction:column; gap:10px; }
+  .toast { background:#111827; color:#fff; padding:12px 18px; border-radius:10px; font-size:13px; display:flex; align-items:center; gap:9px; box-shadow:0 12px 32px rgba(0,0,0,.2); animation:toastIn .3s ease; }
+  .toast .x { cursor:pointer; margin-left:8px; opacity:.6; }
+  @keyframes toastIn { from { opacity:0; transform:translateY(-8px); } }
+  .carousel { position:relative; width:100%; max-width:360px; }
+  .carousel .viewport { overflow:hidden; border-radius:12px; }
+  .carousel .track { display:flex; transition:transform .4s ease; }
+  .carousel .slide { flex:0 0 100%; height:120px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:800; }
+  .carousel .arr { position:absolute; top:50%; transform:translateY(-50%); width:32px; height:32px; border-radius:50%; background:#fff; border:1px solid var(--border); cursor:pointer; font-size:14px; box-shadow:var(--shadow); }
+  .carousel .arr.l { left:-8px; } .carousel .arr.r { right:-8px; }
+  .carousel .dots { display:flex; gap:6px; justify-content:center; margin-top:10px; }
+  .carousel .dots span { width:7px; height:7px; border-radius:50%; background:#D1D5DB; cursor:pointer; }
+  .carousel .dots span.on { background:var(--accent); width:18px; border-radius:4px; }
+  .lightbox-mask { position:fixed; inset:0; background:rgba(17,24,39,.82); z-index:450; display:none; align-items:center; justify-content:center; }
+  .lightbox-mask.show { display:flex; }
+  .lightbox-mask .lb-img { width:min(520px,86vw); height:min(320px,60vh); border-radius:14px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; font-weight:800; position:relative; }
+  .lightbox-mask .lb-close { position:absolute; top:-38px; right:0; background:none; border:none; color:#fff; font-size:24px; cursor:pointer; }
+  .form-field { margin-bottom:12px; }
+  .form-field label { font-size:11px; color:var(--muted); display:block; margin-bottom:5px; font-weight:600; }
+  .form-field input { width:100%; border:1px solid var(--border); border-radius:8px; padding:9px 11px; font-size:12px; font-family:inherit; }
+  .form-field input.err { border-color:#EF4444; }
+  .form-field .msg { font-size:10.5px; margin-top:4px; }
+  .form-field .msg.err { color:#EF4444; } .form-field .msg.ok { color:var(--green); }
+  .cmd-mask { position:fixed; inset:0; background:rgba(17,24,39,.4); z-index:460; display:none; align-items:flex-start; justify-content:center; padding-top:14vh; }
+  .cmd-mask.show { display:flex; }
+  .cmd-box { background:#fff; border-radius:14px; width:460px; max-width:88vw; box-shadow:0 30px 80px rgba(0,0,0,.25); overflow:hidden; }
+  .cmd-box .cmd-input { width:100%; border:none; border-bottom:1px solid var(--border); padding:15px 18px; font-size:14px; font-family:inherit; outline:none; }
+  .cmd-box .cmd-list { padding:8px; }
+  .cmd-box .cmd-item { padding:9px 12px; border-radius:8px; font-size:13px; display:flex; justify-content:space-between; cursor:pointer; }
+  .cmd-box .cmd-item:hover, .cmd-box .cmd-item.sel { background:var(--accent-soft); }
+  .cmd-box .cmd-item .k { font-size:10px; color:var(--faint); background:#F1F2F4; padding:2px 7px; border-radius:5px; }
+  .fab-wrap { position:relative; padding-top:104px; }
+  .fab-btn { width:52px; height:52px; border-radius:50%; background:var(--green); color:#fff; font-size:24px; border:none; cursor:pointer; box-shadow:0 10px 24px rgba(22,163,74,.35); }
+  .fab-menu { position:absolute; bottom:60px; right:0; display:none; flex-direction:column; gap:8px; align-items:flex-end; }
+  .fab-menu.show { display:flex; }
+  .fab-menu div { background:#111827; color:#fff; font-size:11.5px; padding:8px 14px; border-radius:8px; cursor:pointer; white-space:nowrap; }
+
+  /* ===== 04 动效 ===== */
+  .reveal-el { opacity:0; transform:translateY(30px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal-el.vis { opacity:1; transform:translateY(0); }
+  .parallax-box { position:relative; width:100%; max-width:460px; height:200px; border-radius:12px; overflow:hidden; }
+  .parallax-box .pb { position:absolute; inset:0; background:linear-gradient(180deg,#C7D2FE 0%, #A5B4FC 45%, #818CF8 100%); will-change:transform; }
+  .parallax-box .pb::after { content:""; position:absolute; left:0; right:0; bottom:0; height:58%; background:linear-gradient(0deg, rgba(49,46,129,.5), rgba(79,70,229,.15)); clip-path:polygon(0 100%, 14% 48%, 30% 74%, 48% 30%, 66% 68%, 84% 42%, 100% 62%, 100% 100%); }
+  .parallax-box .pm { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:70%; height:46px; background:rgba(255,255,255,.7); backdrop-filter:blur(6px); border-radius:10px; border:1px solid rgba(255,255,255,.8); will-change:transform; }
+  .parallax-box .pf { position:absolute; top:38%; left:50%; transform:translate(-50%,-50%); font-size:15px; font-weight:800; color:var(--accent); will-change:transform; }
+  .snap-track { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; padding:6px 0 12px; }
+  .snap-track::-webkit-scrollbar { display:none; }
+  .snap-card { flex:0 0 72%; scroll-snap-align:center; border:1px solid var(--border); border-radius:12px; padding:26px; background:#fff; text-align:center; }
+  .snap-card b { font-size:14px; color:var(--accent); }
+  .snap-card p { font-size:11px; color:var(--muted); margin-top:6px; }
+  .hscroll-track { display:flex; gap:12px; overflow-x:auto; scroll-behavior:smooth; padding:6px 0 12px; }
+  .hscroll-track::-webkit-scrollbar { display:none; }
+  .hcard { flex:0 0 210px; border:1px solid var(--border); border-radius:11px; overflow:hidden; background:#fff; }
+  .hcard .th { height:72px; }
+  .hcard .bd { padding:11px 13px; font-size:11.5px; font-weight:700; }
+  .hcard .bd span { display:block; font-size:9.5px; color:var(--muted); font-weight:400; margin-top:2px; }
+  .infinite-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+  .icard { border:1px solid var(--border); border-radius:10px; padding:14px; background:#fff; }
+  .icard .t { height:34px; border-radius:7px; margin-bottom:9px; }
+  .icard b { font-size:11px; }
+  .icard p { font-size:9.5px; color:var(--muted); margin-top:2px; }
+  .skel { height:70px; border-radius:10px; background:linear-gradient(90deg,#F1F2F4 25%,#E9EAEE 50%,#F1F2F4 75%); background-size:200% 100%; animation:shimmer 1.2s infinite; }
+  @keyframes shimmer { to { background-position:-200% 0; } }
+  .marquee-box { overflow:hidden; border:1px solid var(--border); border-radius:11px; background:#fff; padding:14px 0; }
+  .marquee-track { display:flex; gap:36px; width:max-content; animation:marquee 16s linear infinite; }
+  .marquee-box:hover .marquee-track { animation-play-state:paused; }
+  .marquee-track span { font-size:15px; font-weight:800; color:var(--faint); white-space:nowrap; }
+  .marquee-track span:nth-child(odd) { color:var(--accent); }
+  @keyframes marquee { to { transform:translateX(-50%); } }
+  .hover-card { width:200px; border:2px solid #E5E7EB; border-radius:12px; overflow:hidden; cursor:pointer; background:#fff; transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease; }
+  .hover-card:hover { transform:translateY(-4px); border-color:var(--green); box-shadow:0 14px 30px rgba(22,163,74,.16); }
+  .hover-card .th { height:80px; transition:transform .22s ease; }
+  .hover-card:hover .th { transform:scale(1.03); }
+  .hover-card .bd { padding:11px 13px; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:700; }
+  .hover-card .bd .ar { transition:transform .22s ease; color:var(--green); }
+  .hover-card:hover .bd .ar { transform:translateX(4px); }
+  .stagger-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:9px; }
+  .stag { border:1px solid var(--border); border-radius:10px; padding:15px 12px; background:#fff; text-align:center; opacity:0; transform:translateY(22px); transition:opacity .5s ease, transform .5s ease; }
+  .stag.show { opacity:1; transform:translateY(0); }
+  .stag .e { font-size:20px; } .stag b { font-size:11px; display:block; margin-top:6px; } .stag p { font-size:9.5px; color:var(--muted); margin-top:2px; }
+  .sd-wrap { display:flex; gap:20px; width:100%; }
+  .sd-line { position:relative; width:5px; background:#E5E7EB; border-radius:3px; }
+  .sd-fill { position:absolute; top:0; left:0; width:100%; background:var(--green); border-radius:3px; height:0; }
+  .sd-panels { flex:1; display:flex; flex-direction:column; gap:10px; }
+  .sd-panel { border:1px solid var(--border); border-radius:10px; padding:14px; background:#fff; opacity:.25; transition:opacity .35s, border-color .35s, background .35s; }
+  .sd-panel.on { opacity:1; border-color:var(--green); background:var(--green-soft); }
+  .sd-panel b { color:var(--accent); font-size:12px; }
+
+  /* ===== 05 加载 ===== */
+  .spinner { width:34px; height:34px; border:3px solid #E5E7EB; border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .pbar { width:100%; height:10px; background:#E9EAEE; border-radius:6px; overflow:hidden; }
+  .pbar .fill { height:100%; background:linear-gradient(90deg,var(--accent),#8B5CF6); border-radius:6px; transition:width .3s ease; }
+  .load-btn { background:var(--green); color:#fff; border:none; border-radius:9px; padding:11px 22px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:9px; min-width:120px; justify-content:center; transition:all .2s; }
+  .load-btn.loading { background:#86EFAC; color:#14532D; }
+  .load-btn .sp { width:14px; height:14px; border:2px solid currentColor; border-top-color:transparent; border-radius:50%; animation:spin .7s linear infinite; display:none; }
+  .load-btn.loading .sp { display:inline-block; }
+  .empty-box { text-align:center; padding:26px 16px; }
+  .empty-box .ic { font-size:34px; }
+  .empty-box b { font-size:14px; display:block; margin-top:8px; }
+  .empty-box p { font-size:11px; color:var(--muted); margin-top:5px; }
+  .state-card { border:1px solid var(--border); border-radius:12px; padding:20px; text-align:center; background:#fff; }
+  .state-card .ic { font-size:30px; }
+  .state-card b { font-size:13.5px; display:block; margin-top:8px; }
+  .state-card p { font-size:11px; color:var(--muted); margin-top:5px; }
+  .like-btn { font-size:22px; cursor:pointer; border:none; background:none; transition:transform .15s; }
+  .like-btn:hover { transform:scale(1.2); }
+  .val-field { width:100%; }
+  .val-field input { width:100%; border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:12.5px; font-family:inherit; }
+  .val-field input.ok { border-color:var(--green); }
+  .val-field input.bad { border-color:#EF4444; }
+  .val-field .m { font-size:11px; margin-top:5px; }
+
+  /* ===== 06 视觉风格 ===== */
+  .style-card { border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#fff; }
+  .glass-bg { background:radial-gradient(circle at 20% 30%, #14532D, #0F3D24); position:relative; padding:24px; }
+  .glass-panel { background:rgba(255,255,255,.14); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.25); border-radius:12px; padding:16px; color:#fff; }
+  .neo-card { border:3px solid #111827; border-radius:10px; padding:16px; background:#fff; box-shadow:6px 6px 0 #111827; }
+  .neo-btn { background:var(--green); color:#fff; border:3px solid #111827; border-radius:8px; padding:8px 16px; font-weight:800; box-shadow:4px 4px 0 #111827; font-size:12px; }
+  .dark-box { background:#0F172A; border-radius:12px; padding:20px; color:#E2E8F0; }
+  .dark-box b { color:#4ADE80; }
+  .dark-box p { color:#94A3B8; font-size:11px; }
+  .duo { border-radius:12px; overflow:hidden; }
+  .duo .row { display:flex; }
+  .duo .row div { flex:1; height:56px; filter:grayscale(1) sepia(1) hue-rotate(90deg) saturate(1.6); }
+  .mesh-bg { background:radial-gradient(circle at 30% 30%, #E0E7FF, transparent 50%), radial-gradient(circle at 75% 70%, #D1FAE5, transparent 50%), linear-gradient(135deg,#F6F6F7,#EFF6FF); border-radius:12px; padding:26px; }
+  .grain-box { background:#14532D; border-radius:12px; padding:22px; color:#F0FDF4; position:relative; }
+  .grain-box::after { content:""; position:absolute; inset:0; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.14'/%3E%3C/svg%3E"); border-radius:12px; pointer-events:none; }
+  .neu-panel { background:#E7E9EE; border-radius:14px; padding:22px; display:flex; gap:14px; justify-content:center; }
+  .neu-btn { width:52px; height:52px; border-radius:14px; background:#E7E9EE; box-shadow:6px 6px 12px #C4C7CF, -6px -6px 12px #FFFFFF; display:flex; align-items:center; justify-content:center; font-size:20px; cursor:pointer; color:#6B7280; }
+  .neu-btn:active { box-shadow:inset 5px 5px 10px #C4C7CF, inset -5px -5px 10px #FFFFFF; }
+
+  /* ===== 07 高级效果 ===== */
+  .cursor-demo { position:relative; width:100%; max-width:400px; height:180px; border:1px solid var(--border); border-radius:12px; background:#fff; overflow:hidden; cursor:none; }
+  .cursor-demo .img-zone { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:10px; }
+  .cursor-demo .img-zone div { width:70px; height:70px; border-radius:10px; }
+  .cursor-dot { position:absolute; width:16px; height:16px; border-radius:50%; background:var(--green); pointer-events:none; transform:translate(-50%,-50%); transition:width .2s, height .2s, background .2s; display:flex; align-items:center; justify-content:center; color:#fff; font-size:8px; font-weight:800; }
+  .cursor-dot.view { width:48px; height:48px; background:rgba(22,163,74,.85); }
+  .magnetic-btn { background:var(--accent); color:#fff; border:none; border-radius:11px; padding:13px 26px; font-size:14px; font-weight:700; cursor:pointer; transition:transform .18s ease; }
+  .tilt-card { width:220px; height:130px; border-radius:14px; background:linear-gradient(135deg,#6366F1,#8B5CF6); display:flex; align-items:center; justify-content:center; color:#fff; font-size:15px; font-weight:800; transform-style:preserve-3d; transition:transform .15s ease-out; box-shadow:0 16px 36px -8px rgba(99,102,241,.4); }
+  .spot-grid { position:relative; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:100%; max-width:420px; border-radius:12px; padding:14px; background:#0F172A; }
+  .spot-grid .cell { height:64px; border-radius:9px; background:#1E293B; }
+  .spot-glow { position:absolute; inset:0; border-radius:12px; background:radial-gradient(180px circle at var(--mx,50%) var(--my,50%), rgba(129,140,248,.85), rgba(99,102,241,.3) 45%, transparent 70%); pointer-events:none; }
+  .textmask { font-size:34px; font-weight:900; letter-spacing:-.02em; background:linear-gradient(135deg,#6366F1,#8B5CF6,#10B981); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent; }
+  .clip-box { width:100%; max-width:400px; height:130px; border-radius:12px; overflow:hidden; position:relative; }
+  .clip-box .under { position:absolute; inset:0; background:linear-gradient(135deg,#0EA5E9,#6366F1); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:800; }
+  .clip-box .cover { position:absolute; inset:0; background:var(--green); display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:800; clip-path:inset(0 0 0 0); transition:clip-path .5s ease; }
+  .clip-box:hover .cover { clip-path:inset(0 0 0 100%); }
+  .webgl-box { width:100%; max-width:400px; height:140px; border-radius:12px; background:radial-gradient(circle at 50% 60%, #1E1B4B, #0F172A); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .webgl-box .sphere { width:68px; height:68px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #C7D2FE, #6366F1 55%, #312E81); box-shadow:0 24px 60px rgba(99,102,241,.7), inset -8px -8px 20px rgba(0,0,0,.35); animation:float3d 4s ease-in-out infinite; }
+  @keyframes float3d { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-14px); } }
+  .vt-demo { display:flex; gap:8px; }
+  .vt-thumb { width:64px; height:64px; border-radius:10px; cursor:pointer; transition:transform .3s ease, box-shadow .3s ease; }
+  .vt-thumb:hover { transform:scale(1.12); box-shadow:0 12px 28px rgba(0,0,0,.2); z-index:2; }
+  .perf-list { width:100%; max-width:420px; }
+  .perf-list .row { display:flex; justify-content:space-between; align-items:center; padding:11px 0; border-bottom:1px solid var(--border); font-size:12.5px; }
+  .perf-list .row:last-child { border-bottom:none; }
+  .perf-list .ok { color:var(--green); font-weight:700; }
+  .perf-list .warn { color:#F59E0B; font-weight:700; }
+
+  /* 平板端 */
+  @media (max-width:1024px) and (min-width:861px) {
+    .main { padding:0 32px 120px; }
+  }
+
+  /* 手机端 / 小平板 */
+  @media (max-width:860px) {
+    .sidebar { display:none; }
+    .main { margin-left:0; padding:0 16px 90px; }
+    .burger { display:block; }
+    .navbar .links { display:none; }
+    .fgrid { grid-template-columns:1fr 1fr; }
+    .tabs .tab-panel .grid { grid-template-columns:1fr 1fr; }
+    .mega .panel { width:88vw; grid-template-columns:1fr 1fr; }
+    .cat-hero h2 { font-size:30px; }
+    .infinite-grid { grid-template-columns:1fr 1fr; }
+    .stagger-grid { grid-template-columns:1fr 1fr; }
+    .vt-demo { flex-wrap:wrap; }
+  }
+
+  /* 小手机 */
+  @media (max-width:480px) {
+    .cat-hero { padding:44px 0 8px; }
+    .cat-hero h2 { font-size:25px; }
+    .navbar { padding:0 14px; }
+    .infinite-grid { grid-template-columns:1fr; }
+    .demo-card .head { padding:18px 16px 0; }
+    .demo-card .head h3 { font-size:18px; }
+    .demo-card .stage { padding:18px 12px; }
+    .demo-card .note { padding:12px 16px; }
+    .demo-card .prompt pre { margin:0 12px 12px; }
+    .fgrid { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div class="mask" id="mask"></div>
+<div class="drawer" id="drawer">
+  <button class="close" onclick="closeDrawer()">✕</button>
+  <a href="index.html" style="color:var(--accent);font-weight:700">🧰 AI 建站配置器</a>
+  <a href="showcase.html" style="color:var(--accent);font-weight:700">案例</a>
+  <a href="#structure">01 页面结构</a>
+  <a href="#navigation">02 导航与切换</a>
+  <a href="#components">03 常用组件</a>
+  <a href="#motion">04 滚动与动作</a>
+  <a href="#loading">05 提示与加载</a>
+  <a href="#visual">06 视觉风格</a>
+  <a href="#advanced">07 高级效果</a>
+</div>
+
+<nav class="navbar">
+  <button class="burger"><span onclick="openDrawer()" style="font-size:20px">☰</span></button>
+  <div class="logo">浩然<em>· AI 建站知识库</em></div>
+  <div class="links" id="navLinks">
+    <a href="index.html" style="color:var(--accent);font-weight:700">🧰 配置器</a>
+    <a href="showcase.html">案例</a>
+    <a href="#structure">页面结构</a>
+    <a href="#navigation">导航切换</a>
+    <a href="#components">常用组件</a>
+    <a href="#motion">滚动动作</a>
+    <a href="#loading">提示加载</a>
+    <a href="#visual">视觉风格</a>
+    <a href="#advanced">高级效果</a>
+  </div>
+</nav>
+
+<aside class="sidebar" id="sidebar">
+  <a href="index.html" style="display:flex;align-items:center;gap:9px;padding:11px 10px;border-radius:9px;font-size:13.5px;font-weight:700;color:var(--accent);text-decoration:none;background:var(--accent-soft);margin-bottom:10px"><span class="n" style="width:21px;height:21px;border-radius:6px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">🧰</span>AI 建站配置器</a>
+  <div class="cat open">
+    <button class="cat-head" onclick="toggleCat(this)"><span class="n">1</span>页面结构<span class="caret">▶</span></button>
+    <div class="sub">
+      <a href="#s1">单页网站</a><a href="#s2">多页网站</a><a href="#s3">落地页</a><a href="#s4">案例研究页</a><a href="#s5">首屏 Hero</a><a href="#s6">功能网格</a><a href="#s7">固定叙事区</a><a href="#s8">时间线</a><a href="#s9">FAQ</a><a href="#s10">页脚 Footer</a>
+    </div>
+  </div>
+  <div class="cat open">
+    <button class="cat-head" onclick="toggleCat(this)"><span class="n">2</span>导航与切换<span class="caret">▶</span></button>
+    <div class="sub">
+      <a href="#n1">固定导航</a><a href="#n2">汉堡菜单</a><a href="#n3">面包屑</a><a href="#n4">锚点跳转</a><a href="#n5">标签切换</a><a href="#n6">侧边导航</a><a href="#n7">超级菜单</a><a href="#n8">底部导航</a><a href="#n9">分页</a><a href="#n10">返回顶部</a>
+    </div>
+  </div>
+  <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">3</span>常用组件<span class="caret">▶</span></button><div class="sub"><a href="#c1">模态框</a><a href="#c2">抽屉</a><a href="#c3">手风琴</a><a href="#c4">气泡提示</a><a href="#c5">轻提示</a><a href="#c6">轮播图</a><a href="#c7">图片灯箱</a><a href="#c8">表单</a><a href="#c9">命令面板</a><a href="#c10">悬浮按钮</a></div></div>
+  <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">4</span>滚动与动作<span class="caret">▶</span></button><div class="sub"><a href="#m1">滚动出现</a><a href="#m2">视差滚动</a><a href="#m3">阅读进度</a><a href="#m4">滚动吸附</a><a href="#m5">横向滚动</a><a href="#m6">无限滚动</a><a href="#m7">跑马灯</a><a href="#m8">悬停微交互</a><a href="#m9">错峰动画</a><a href="#m10">滚动驱动</a></div></div>
+  <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">5</span>提示与加载<span class="caret">▶</span></button><div class="sub"><a href="#l1">骨架屏</a><a href="#l2">懒加载</a><a href="#l3">加载转圈</a><a href="#l4">进度条</a><a href="#l5">加载按钮</a><a href="#l6">空状态</a><a href="#l7">错误状态</a><a href="#l8">重试状态</a><a href="#l9">乐观更新</a><a href="#l10">行内验证</a></div></div>
+  <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">6</span>视觉风格<span class="caret">▶</span></button><div class="sub"><a href="#v1">极简主义</a><a href="#v2">编辑杂志风</a><a href="#v3">瑞士风</a><a href="#v4">玻璃拟态</a><a href="#v5">新野兽派</a><a href="#v6">深色模式</a><a href="#v7">单色双色</a><a href="#v8">网格渐变</a><a href="#v9">颗粒噪点</a><a href="#v10">新拟态</a></div></div>
+  <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">7</span>高级效果<span class="caret">▶</span></button><div class="sub"><a href="#a1">自定义光标</a><a href="#a2">磁吸按钮</a><a href="#a3">3D倾斜</a><a href="#a4">聚光灯悬停</a><a href="#a5">文字蒙版</a><a href="#a6">裁切揭示</a><a href="#a7">WebGL</a><a href="#a8">视图过渡</a><a href="#a9">减少动态</a><a href="#a10">性能预算</a></div></div>
+</aside>
+
+<main class="main">
+
+<section id="structure">
+  <div class="cat-hero">
+    <span class="tag">01 · 页面结构 Page Structure</span>
+    <h2>页面结构</h2>
+    <p>决定用户先看到什么、接着看到什么，以及一个页面如何讲完一件事。</p>
+  </div>
+
+  <div class="demo-card" id="s1">
+    <div class="head"><div class="idx">01 · 单页网站</div><h3>Single-page Website</h3><div class="en">全塞一页，锚点跳转</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:460px">
+        <div class="mbar"><span class="dot" style="background:#FCA5A5"></span><span class="dot" style="background:#FCD34D"></span><span class="dot" style="background:#86EFAC"></span><div class="addr">haoran.design</div></div>
+        <div class="nav"><b>浩然</b><div class="l"><span>About</span><span>Work</span><span>Writing</span><span class="btn green sm">Contact</span></div></div>
+        <div style="padding:26px 22px">
+          <div class="ml">Hello, I'm</div>
+          <div class="mh">浩然 — AI-native<br>产品与体验设计</div>
+          <p class="ms" style="margin-top:8px;max-width:280px">我把想法变成能上线的网站，用 AI 加速从概念到交付的每一步。</p>
+          <div style="display:flex;gap:8px;margin-top:14px"><span class="btn sm">View Work</span><span class="btn ghost sm">About</span></div>
+        </div>
+        <div style="display:flex;gap:10px;padding:0 22px 22px">
+          <div class="g1 img" style="flex:1;height:64px;display:flex;align-items:flex-end;padding:8px"><span style="font-size:10px;color:#fff;font-weight:600">Selected Work</span></div>
+          <div class="g2 img" style="flex:1;height:64px;display:flex;align-items:flex-end;padding:8px"><span style="font-size:10px;color:#fff;font-weight:600">Writing</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">所有内容放同一页，滚动浏览，顶部导航通过 Anchor Links 平滑跳转，尊重 prefers-reduced-motion。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然制作一个单页个人作品网站，页面顺序为 Hero、About、Selected Work、Writing、Contact 和 Footer；顶部导航通过 Anchor Links 跳转到对应区块，使用平滑滚动但尊重 prefers-reduced-motion，每个区块都设置清晰的 id 和语义化标题。</pre></div>
+  </div>
+
+  <div class="demo-card" id="s2">
+    <div class="head"><div class="idx">02 · 多页网站</div><h3>Multi-page Website</h3><div class="en">每块独立网址，长期好扩展</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:520px">
+        <div class="mbar"><span class="dot" style="background:#FCA5A5"></span><span class="dot" style="background:#FCD34D"></span><span class="dot" style="background:#86EFAC"></span><div class="addr">haoran.design/work</div></div>
+        <div class="nav"><b>浩然</b><div class="l"><span style="color:var(--green);font-weight:700">Work</span><span>About</span><span>Journal</span><span>Contact</span></div></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:18px 20px">
+          <div><div class="g1 img" style="height:56px"></div><div style="font-size:11px;font-weight:700;margin-top:7px">AI 工具</div><div style="font-size:9.5px;color:var(--muted)">2025</div></div>
+          <div><div class="g4 img" style="height:56px"></div><div style="font-size:11px;font-weight:700;margin-top:7px">个人网站</div><div style="font-size:9.5px;color:var(--muted)">2025</div></div>
+          <div><div class="g5 img" style="height:56px"></div><div style="font-size:11px;font-weight:700;margin-top:7px">品牌落地页</div><div style="font-size:9.5px;color:var(--muted)">2024</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">不同内容拥有独立页面和网址，共享统一 Header/Footer，当前导航项 active，卡片点击进详情页。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>把浩然的网站设计为多页网站，包含 Home、Work、Project Detail、About、Journal、Article 和 Contact；所有页面共享统一的 Header 与 Footer，当前导航项显示 active 状态，项目卡片点击后进入独立详情页。</pre></div>
+  </div>
+
+  <div class="demo-card" id="s3">
+    <div class="head"><div class="idx">03 · 落地页</div><h3>Landing Page</h3><div class="en">只为一个目标</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:440px">
+        <div class="mbar"><span class="dot" style="background:#FCA5A5"></span><span class="dot" style="background:#FCD34D"></span><span class="dot" style="background:#86EFAC"></span><div class="addr">haoran.studio/ai-design</div></div>
+        <div style="padding:28px 24px;text-align:center">
+          <div class="ml">AI Design Service</div>
+          <div class="mh" style="margin-top:6px">让 AI 帮你把网站<br>做到能上线</div>
+          <p class="ms" style="margin-top:10px;max-width:300px;margin-left:auto;margin-right:auto">从 0 到上线的 AI 建站服务，帮你省掉 80% 的开发时间。</p>
+          <div style="margin-top:16px"><span class="btn green">预约一次沟通</span></div>
+        </div>
+        <div style="padding:0 24px 22px;display:flex;gap:10px">
+          <div style="flex:1;text-align:center;padding:12px 0;background:#F8FAFC;border-radius:9px"><div style="font-size:15px;font-weight:800">3</div><div style="font-size:9.5px;color:var(--muted)">精选案例</div></div>
+          <div style="flex:1;text-align:center;padding:12px 0;background:#F8FAFC;border-radius:9px"><div style="font-size:15px;font-weight:800">1-4周</div><div style="font-size:9.5px;color:var(--muted)">交付周期</div></div>
+          <div style="flex:1;text-align:center;padding:12px 0;background:#F8FAFC;border-radius:9px"><div style="font-size:15px;font-weight:800">∞</div><div style="font-size:9.5px;color:var(--muted)">持续优化</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">每部分都服务同一个行动，所有主按钮统一「预约一次沟通」，不加无关复杂导航。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 AI 设计服务制作一个 Landing Page，唯一目标是引导访客预约咨询；页面包含 Hero、服务价值、工作流程、三个案例、客户评价、FAQ 和最终 CTA，所有主要按钮统一使用"预约一次沟通"，不要加入与转化目标无关的复杂导航。</pre></div>
+  </div>
+
+  <div class="demo-card" id="s4">
+    <div class="head"><div class="idx">04 · 案例研究页</div><h3>Case Study Page</h3><div class="en">讲清过程，不止晒结果</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:480px">
+        <div class="mbar"><span class="dot" style="background:#FCA5A5"></span><span class="dot" style="background:#FCD34D"></span><span class="dot" style="background:#86EFAC"></span><div class="addr">haoran.design/case/ai-tool</div></div>
+        <div class="g4" style="height:84px;display:flex;align-items:center;justify-content:center;color:#fff"><div style="text-align:center"><div class="ml" style="color:rgba(255,255,255,.85)">Case Study</div><div style="font-size:15px;font-weight:800">AI 工具 · 从概念到上线</div></div></div>
+        <div style="display:flex;gap:14px;padding:18px 20px">
+          <div style="flex:1.5"><div style="font-size:11px;font-weight:700;margin-bottom:8px">背景与问题</div><div style="font-size:10px;color:var(--muted);line-height:1.6">客户需要一个能快速验证想法的 AI 原型工具，但传统开发周期太长。</div><div style="font-size:11px;font-weight:700;margin:12px 0 8px">关键决策</div><div style="font-size:10px;color:var(--muted);line-height:1.6">采用 AI 辅助生成界面，人工把控交互与视觉。</div></div>
+          <div style="width:86px;background:var(--accent-soft);border-radius:10px;padding:10px;font-size:9px;color:var(--accent);line-height:1.6">目录<br>背景<br>问题<br>过程<br>结果</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">背景→问题→过程→决策→结果，顶部大封面、窄正文栏、过程图全宽穿插、右侧 Sticky 目录。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然创建一个项目案例研究页，包含项目概览、背景问题、浩然的职责、设计过程、关键决策、最终方案、结果数据和复盘；顶部使用大封面，正文保持窄阅读宽度，过程图片可全宽穿插，桌面端右侧提供 Sticky Table of Contents。</pre></div>
+  </div>
+
+  <div class="demo-card" id="s5">
+    <div class="head"><div class="idx">05 · 首屏 Hero</div><h3>Hero Section</h3><div class="en">第一屏说清你是谁</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:500px">
+        <div class="mbar"><span class="dot" style="background:#FCA5A5"></span><span class="dot" style="background:#FCD34D"></span><span class="dot" style="background:#86EFAC"></span><div class="addr">haoran.design</div></div>
+        <div style="padding:30px 26px;display:flex;gap:18px;align-items:center">
+          <div style="flex:1.3">
+            <div class="mh" style="font-size:20px">浩然 designs and builds<br><span style="color:var(--accent)">AI-native</span> experiences.</div>
+            <p class="ms" style="margin-top:10px;max-width:260px">用 AI 把产品想法变成真实可用的网页体验。</p>
+            <div style="display:flex;gap:9px;margin-top:16px"><span class="btn sm">View Work</span><span class="btn ghost sm">Contact</span></div>
+          </div>
+          <div style="width:130px;height:110px;border-radius:14px;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:inset 0 0 0 1px rgba(79,70,229,.08)">✦</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">快速回答你是谁、做什么、下一步点哪，右侧抽象低饱和界面意象，别用图库人物。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的个人主页创建一个清晰的 Hero Section，主标题为"浩然 designs and builds AI-native experiences."，副标题控制在两行以内，包含 View Work 和 Contact 两个按钮；右侧使用抽象、低饱和的网页界面意象，不要使用办公桌、家居产品或商业图库人物。</pre></div>
+  </div>
+
+  <div class="demo-card" id="s6">
+    <div class="head"><div class="idx">06 · 功能网格</div><h3>Feature Grid</h3><div class="en">3-6 个模块并列介绍</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:500px">
+        <div class="nav"><b>能力</b><div class="l"><span>What I do</span></div></div>
+        <div class="fgrid">
+          <div class="f"><div class="ico">🎨</div><b>Design</b><p>产品与界面设计，追求清晰与美感。</p></div>
+          <div class="f"><div class="ico">💻</div><b>Frontend</b><p>响应式前端开发，性能与体验并重。</p></div>
+          <div class="f"><div class="ico">🤖</div><b>AI Prototyping</b><p>用 AI 快速验证产品想法。</p></div>
+          <div class="f"><div class="ico">✍️</div><b>Writing</b><p>技术写作，把复杂讲清楚。</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">图标+标题+两行说明，桌面四列、平板两列、手机单列，避免夸张阴影。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的 About 区块下方添加一个四列 Feature Grid，四项内容为 Design、Frontend、AI Prototyping 和 Writing，每项包含一个线性图标、标题和不超过两行的说明；桌面端四列，平板两列，手机单列，避免夸张阴影。</pre></div>
+  </div>
+
+  <div class="demo-card" id="s7">
+    <div class="head"><div class="idx">07 · 固定叙事区</div><h3>Sticky Storytelling</h3><div class="en">一侧固定，滚动讲故事</div></div>
+    <div class="stage">
+      <div style="display:flex;gap:16px;max-width:540px;width:100%">
+        <div style="width:38%;background:linear-gradient(180deg,#EEF2FF,#F5F3FF);border-radius:14px;padding:20px;align-self:flex-start;position:sticky;top:0">
+          <div class="ml" id="stickyTitle" style="color:var(--accent)">Discover</div>
+          <div style="font-size:14px;font-weight:800;margin-top:6px" id="stickyStage">探索阶段</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5" id="stickyDesc">理解需求与目标，明确项目边界。</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+          <div class="sp" data-t="Discover" data-s="探索阶段" data-d="理解需求与目标，明确项目边界。" style="height:130px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px"><div class="ml">Step 1</div><div style="font-size:14px;font-weight:800;margin-top:4px">Discover</div><div style="font-size:11px;color:var(--muted);margin-top:4px">探索与定义</div></div>
+          <div class="sp" data-t="Design" data-s="设计阶段" data-d="把想法落成界面与交互方案。" style="height:130px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px"><div class="ml">Step 2</div><div style="font-size:14px;font-weight:800;margin-top:4px">Design</div><div style="font-size:11px;color:var(--muted);margin-top:4px">设计与原型</div></div>
+          <div class="sp" data-t="Build" data-s="构建阶段" data-d="开发上线并持续迭代优化。" style="height:130px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px"><div class="ml">Step 3</div><div style="font-size:14px;font-weight:800;margin-top:4px">Build</div><div style="font-size:11px;color:var(--muted);margin-top:4px">构建与上线</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">左侧 Sticky 展示当前阶段，右侧滚动依次出现（滚动本卡片，左侧会跟着变）。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的项目详情页设计一个 Sticky Storytelling Section，桌面端左侧 38% 区域保持 Sticky 并展示当前阶段标题和说明，右侧依次滚动展示 Discover、Design、Build 三个内容面板；当前阶段进入视口时更新左侧文字，手机端取消 Sticky 并改为正常纵向排列。</pre></div>
+  </div>
+
+  <div class="demo-card" id="s8">
+    <div class="head"><div class="idx">08 · 时间线</div><h3>Timeline</h3><div class="en">一条线串起经历</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:460px">
+        <div class="nav"><b>经历</b><div class="l"><span>My Journey</span></div></div>
+        <div class="timeline">
+          <div class="t"><div class="yr">2025</div><b>独立开发者 · AI 建站</b><p>专注 AI-native 产品与个人品牌网站。</p></div>
+          <div class="t"><div class="yr">2024</div><b>产品设计师</b><p>负责从 0 到 1 的产品体验设计。</p></div>
+          <div class="t"><div class="yr">2023</div><b>开始用 AI 做网站</b><p>探索 vibe coding 与提示词工作流。</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">细绿线+圆节点，年份+事件+两行说明，桌面端内容在右侧，手机端单列。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的 About 页面添加一条 Vertical Timeline，每个节点包含年份、事件名称和两行说明；桌面端内容位于时间线右侧，手机端保持单列；使用细绿色线条和圆形节点，不要做成复杂路线地图。</pre></div>
+  </div>
+
+  <div class="demo-card" id="s9">
+    <div class="head"><div class="idx">09 · 常见问题</div><h3>FAQ Section</h3><div class="en">折叠面板消除疑虑</div></div>
+    <div class="stage">
+      <div class="acc" style="max-width:460px">
+        <button class="q" onclick="toggleAcc(this)">浩然接受什么项目？<span class="pm">+</span></button>
+        <div class="a">AI 建站、产品设计、工具开发、品牌落地页等。</div>
+        <button class="q" onclick="toggleAcc(this)">合作周期多久？<span class="pm">+</span></button>
+        <div class="a">视项目大小，通常 1-4 周交付第一版。</div>
+        <button class="q" onclick="toggleAcc(this)">是否提供开发？<span class="pm">+</span></button>
+        <div class="a">提供设计与前端开发，可交付上线。</div>
+      </div>
+    </div>
+    <div class="note">答案默认折叠，同一时间只展开一个，原生 button + aria-expanded。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的 Contact 页面之前添加 FAQ Section，包含 6 个问题，例如浩然接受什么项目、合作周期多久、是否提供开发、如何开始合作；答案默认折叠，同一时间只允许打开一个问题，使用原生 button 并正确设置 aria-expanded。</pre></div>
+  </div>
+
+  <div class="demo-card" id="s10">
+    <div class="head"><div class="idx">10 · 页脚</div><h3>Footer</h3><div class="en">收尾区，别浪费</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:560px;overflow:hidden">
+        <div style="background:#14532D;color:#F0FDF4;padding:26px;display:flex;gap:24px;flex-wrap:wrap">
+          <div style="flex:1.2;min-width:110px"><b style="font-size:14px">浩然</b><p style="font-size:10.5px;opacity:.75;margin-top:6px;line-height:1.5">AI-native 产品与体验，把想法做到能上线。</p></div>
+          <div><div class="ml" style="color:rgba(240,253,244,.6);margin-bottom:8px">Explore</div><div style="font-size:11px;line-height:2">Work<br>About<br>Journal</div></div>
+          <div><div class="ml" style="color:rgba(240,253,244,.6);margin-bottom:8px">Connect</div><div style="font-size:11px;line-height:2">Email<br>社交</div></div>
+          <div><div class="ml" style="color:rgba(240,253,244,.6);margin-bottom:8px">Elsewhere</div><div style="font-size:11px;line-height:2">GitHub<br>X</div></div>
+          <div style="min-width:130px"><div style="background:#fff;border-radius:8px;padding:9px 12px;font-size:10.5px;color:#14532D;font-weight:600">订阅 Newsletter</div></div>
+        </div>
+        <div style="padding:12px 26px;font-size:10px;color:var(--muted);display:flex;justify-content:space-between">© 2025 浩然 · <span>隐私 / 版权</span></div>
+      </div>
+    </div>
+    <div class="note">深绿背景+米白文字，左侧 Logo+简介，中间三组链接，右侧订阅框，底部版权。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的个人网站设计一个完整 Footer，左侧显示浩然 Logo 和一句简介，中间分为 Explore、Connect、Elsewhere 三组链接，右侧显示邮箱和 Newsletter 订阅框，底部显示版权与隐私链接；使用深绿色背景和米白文字，与页面主体形成明确收尾。</pre></div>
+  </div>
+</section>
+
+<section id="navigation">
+  <div class="cat-hero">
+    <span class="tag">02 · 导航与切换 Navigation</span>
+    <h2>导航与切换</h2>
+    <p>决定用户怎样在页面和内容之间移动：我在哪、我还能去哪、点击后会发生什么。</p>
+  </div>
+
+  <div class="demo-card" id="n1">
+    <div class="head"><div class="idx">01 · 固定导航</div><h3>Sticky Navbar</h3><div class="en">滚动也不消失</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:440px">
+        <div style="position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;z-index:5"><b style="font-size:12.5px">浩然</b><span style="font-size:10.5px;color:var(--muted)">Work · About · Contact</span><span class="btn green sm">Start</span></div>
+        <div style="height:150px;overflow-y:auto;padding:16px">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:10px">向下滚动内容，导航保持固定可见 ↑</div>
+          <div class="g1 img" style="height:44px;margin-bottom:9px"></div>
+          <div class="g2 img" style="height:44px;margin-bottom:9px"></div>
+          <div class="g4 img" style="height:44px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">初始透明，滚动 40px 后变米白+细边框+backdrop blur，高度稳定，移动端汉堡。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的网站添加 Sticky Navbar，初始状态使用透明背景，滚动超过 40px 后变为米白背景并增加细边框和轻微 backdrop blur；导航高度保持稳定，移动端使用 Hamburger Menu。</pre></div>
+  </div>
+
+  <div class="demo-card" id="n2">
+    <div class="head"><div class="idx">02 · 汉堡菜单</div><h3>Hamburger Menu</h3><div class="en">三条线，滑出 Drawer</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:260px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px"><b style="font-size:12px">浩然</b><button onclick="openDrawer()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--text)">☰</button></div>
+        <div style="height:70px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted)">点 ☰ 试试右侧滑出</div>
+      </div>
+    </div>
+    <div class="note">768px 以下三条线，点击右侧滑出 Drawer，锁定背景滚动，Esc/遮罩/焦点管理。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>浩然网站在 768px 以下使用 Hamburger Menu，右上角显示三条横线按钮，点击后从右侧滑出 Drawer，包含 Home、Work、About、Writing 和 Contact；打开后锁定背景滚动，支持 Esc 关闭、点击遮罩关闭和键盘焦点管理。</pre></div>
+  </div>
+
+  <div class="demo-card" id="n3">
+    <div class="head"><div class="idx">03 · 面包屑</div><h3>Breadcrumb</h3><div class="en">显示层级路径</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:440px;padding:18px 22px">
+        <div class="crumb">Home <span class="sep">›</span> Work <span class="sep">›</span> AI Tools <span class="sep">›</span> <span>Project Detail</span></div>
+        <div class="g4 img" style="height:76px;display:flex;align-items:center;justify-content:center;color:#fff"><div style="text-align:center"><div style="font-size:13px;font-weight:800">AI 工具项目详情</div><div style="font-size:10px;opacity:.85;margin-top:2px">当前页面</div></div></div>
+      </div>
+    </div>
+    <div class="note">顶部层级路径，最后一项不加链接，aria-current="page"，帮助理解当前位置。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的项目详情页顶部添加 Breadcrumb，路径为 Home › Work › AI Tools › Project Detail；使用 nav aria-label="Breadcrumb" 和有序列表，最后一项表示当前页面，不设置链接，并添加 aria-current="page"。</pre></div>
+  </div>
+
+  <div class="demo-card" id="n4">
+    <div class="head"><div class="idx">04 · 锚点跳转</div><h3>Anchor Link</h3><div class="en">点一下滚到对应区块</div></div>
+    <div class="stage">
+      <div style="max-width:440px;width:100%;text-align:center">
+        <div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px">
+          <a href="#s5" class="btn" style="text-decoration:none;font-size:11px">跳到 Hero</a>
+          <a href="#s8" class="btn green" style="text-decoration:none;font-size:11px">跳到时间线</a>
+        </div>
+        <div style="font-size:12px;color:var(--muted)">本页左侧目录、顶部导航全是锚点跳转，点击即平滑滚动并高亮</div>
+      </div>
+    </div>
+    <div class="note">About/Work/Writing/Contact 链接到对应 id，平滑滚动，预留 Sticky Header 高度，当前区块高亮。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的单页网站添加 Anchor Links，About、Work、Writing、Contact 分别链接到对应 section id；点击后平滑滚动，到达区块时预留 Sticky Header 高度，并让当前所在区块对应的导航项显示 active 状态。</pre></div>
+  </div>
+
+  <div class="demo-card" id="n5">
+    <div class="head"><div class="idx">05 · 标签切换</div><h3>Tabs</h3><div class="en">同区域一次看一个视图</div></div>
+    <div class="stage">
+      <div class="tabs" style="max-width:440px">
+        <div class="tab-row">
+          <button class="active" onclick="switchTab(this,'All')">All</button>
+          <button onclick="switchTab(this,'Web')">Web</button>
+          <button onclick="switchTab(this,'AI')">AI</button>
+          <button onclick="switchTab(this,'Experiments')">Experiments</button>
+        </div>
+        <div class="tab-panel"><div class="grid" id="tabGrid">
+          <div>AI 工具</div><div>个人网站</div><div>品牌页</div><div>原型</div><div>动效</div><div>写作站</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="note">切换只更新下方网格不刷新页面，tablist/tab/tabpanel 语义，支持方向键。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的作品区添加 Tabs，标签为 All、Web、AI、Experiments，默认显示 All；切换标签时只更新下方项目网格，不刷新整个页面；使用 tablist、tab 和 tabpanel 语义，支持左右方向键切换并显示清晰 active 状态。</pre></div>
+  </div>
+
+  <div class="demo-card" id="n6">
+    <div class="head"><div class="idx">06 · 侧边导航</div><h3>Sidebar Navigation</h3><div class="en">入口多、层级深用它</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:440px;display:flex">
+        <div style="width:132px;background:#F8FAFC;border-right:1px solid var(--border);padding:14px 10px;display:flex;flex-direction:column;gap:3px">
+          <div style="padding:8px 12px;font-size:11px;color:var(--muted);font-weight:500">Overview</div>
+          <div style="padding:8px 12px;font-size:11px;background:var(--green);color:#fff;border-radius:8px;font-weight:700">Projects</div>
+          <div style="padding:8px 12px;font-size:11px;color:var(--muted);font-weight:500">Posts</div>
+          <div style="padding:8px 12px;font-size:11px;color:var(--muted);font-weight:500">Media</div>
+          <div style="padding:8px 12px;font-size:11px;color:var(--muted);font-weight:500">Settings</div>
+        </div>
+        <div style="flex:1;padding:18px"><div style="font-size:12px;font-weight:800;margin-bottom:6px">创作后台</div><div style="font-size:11px;color:var(--muted)">当前页绿色高亮，二级菜单可折叠</div></div>
+      </div>
+    </div>
+    <div class="note">本页左侧侧边栏就是这个组件（绿色高亮 + 可折叠），桌面固定，手机收起 Drawer。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的创作后台添加 Sidebar Navigation，包含 Overview、Projects、Posts、Media、Analytics 和 Settings，当前页面使用绿色背景和图标强调，二级菜单允许折叠；桌面端固定显示，手机端收起为 Drawer。</pre></div>
+  </div>
+
+  <div class="demo-card" id="n7">
+    <div class="head"><div class="idx">07 · 超级菜单</div><h3>Mega Menu</h3><div class="en">多列大菜单 + 预览</div></div>
+    <div class="stage" style="overflow:visible;align-items:flex-start">
+      <div class="mega" style="max-width:440px;padding:12px">
+        <button class="trig" onclick="toggleMega()">Work ▾</button>
+        <div class="panel" id="megaPanel">
+          <div><b>Projects</b><a>AI 工具</a><a>个人网站</a><a>品牌页</a></div>
+          <div><b>Experiments</b><a>交互原型</a><a>动效实验</a></div>
+          <div><b>Resources</b><a>模板</a><a>文章</a></div>
+          <div class="feat"><b style="color:var(--accent)">⭐ Featured</b><br>精选项目预览</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">点击展开多列大菜单，三列 + 精选预览，键盘导航 + Esc，手机端改 Accordion。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>浩然网站的 Work 导航项使用 Mega Menu，展开后显示 Projects、Experiments、Resources 三列，并在右侧增加一个 Featured Project 预览；菜单通过点击打开，不依赖 hover，支持键盘导航和 Esc 关闭，手机端改为 Accordion Menu。</pre></div>
+  </div>
+
+  <div class="demo-card" id="n8">
+    <div class="head"><div class="idx">08 · 底部导航</div><h3>Bottom Navigation</h3><div class="en">手机底部 3-5 个入口</div></div>
+    <div class="stage">
+      <div class="mock" style="max-width:230px;border-radius:20px;overflow:hidden">
+        <div style="height:130px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#F8FAFC,#F1F5F9)"><div style="text-align:center"><div style="font-size:12px;font-weight:800">创作工具</div><div style="font-size:10px;color:var(--muted);margin-top:2px">移动端内容区</div></div></div>
+        <div style="display:flex;justify-content:space-around;padding:12px 8px 16px;border-top:1px solid var(--border);background:#fff">
+          <div style="text-align:center;font-size:9px;color:var(--muted)">🏠<br>Home</div>
+          <div style="text-align:center;font-size:9px;color:var(--green);font-weight:800">📁<br>Projects</div>
+          <div style="text-align:center;font-size:9px;color:var(--muted)">➕<br>Create</div>
+          <div style="text-align:center;font-size:9px;color:var(--muted)">📝<br>Notes</div>
+          <div style="text-align:center;font-size:9px;color:var(--muted)">👤<br>Profile</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">固定在手机底部，当前项绿色填充图标，考虑 safe-area，桌面端不显示。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的移动端创作工具添加 Bottom Navigation，固定在屏幕底部，包含 Home、Projects、Create、Notes 和 Profile，当前项使用绿色填充图标，并考虑 iPhone safe-area-inset-bottom；桌面端不显示该组件。</pre></div>
+  </div>
+
+  <div class="demo-card" id="n9">
+    <div class="head"><div class="idx">09 · 分页</div><h3>Pagination</h3><div class="en">长列表拆成多页</div></div>
+    <div class="stage">
+      <div style="max-width:380px;width:100%">
+        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+          <div style="padding:11px 14px;background:#fff;border:1px solid var(--border);border-radius:8px"><div style="font-size:12px;font-weight:700">用 AI 建站的 10 个心得</div><div style="font-size:10px;color:var(--muted);margin-top:2px">2025 · 阅读 5 分钟</div></div>
+          <div style="padding:11px 14px;background:#fff;border:1px solid var(--border);border-radius:8px"><div style="font-size:12px;font-weight:700">从想法到上线的一条龙流程</div><div style="font-size:10px;color:var(--muted);margin-top:2px">2025 · 阅读 8 分钟</div></div>
+        </div>
+        <div class="pager">
+          <button onclick="page(-1)">‹</button>
+          <button class="on" onclick="page(1)">1</button>
+          <button onclick="page(2)">2</button>
+          <button onclick="page(3)">3</button>
+          <button onclick="page(1)">›</button>
+        </div>
+      </div>
+    </div>
+    <div class="note">每页 10 篇，Previous/页码/Next，当前页明显状态，URL 保存 ?page=2 可刷新分享。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 Journal 文章列表添加 Pagination，每页显示 10 篇文章，底部显示 Previous、页码和 Next，当前页具有明显状态，并在 URL 查询参数中保存页码，例如 ?page=2；按钮使用真实链接，便于刷新、分享和返回。</pre></div>
+  </div>
+
+  <div class="demo-card" id="n10">
+    <div class="head"><div class="idx">10 · 返回顶部</div><h3>Back to Top</h3><div class="en">一键回到开头</div></div>
+    <div class="stage">
+      <div style="max-width:380px;width:100%;text-align:center;padding:16px">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px">本页右下角就有返回顶部按钮，滚下去试试 ↑</div>
+        <button class="btn green" onclick="window.scrollTo({top:0,behavior:'smooth'})">回到顶部 ↑</button>
+      </div>
+    </div>
+    <div class="note">滚动超 800px 淡入显示在右下角，aria-label="返回顶部"，reduced motion 取消平滑。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的长篇文章页添加 Back to Top 按钮，滚动超过 800px 后淡入显示并固定在右下角，点击后返回页面顶部；按钮提供 aria-label="返回顶部"，并在 reduced motion 模式下取消平滑动画。</pre></div>
+  </div>
+</section>
+
+<section id="components">
+  <div class="cat-hero"><span class="tag">03 · 常用组件 UI Components</span><h2>常用组件</h2><p>组件是页面中的局部交互单元，回答"点击、输入、展开、关闭和反馈应该如何发生"。</p></div>
+
+  <div class="demo-card" id="c1">
+    <div class="head"><div class="idx">01 · 模态框</div><h3>Modal</h3><div class="en">覆盖页面，先处理再走</div></div>
+    <div class="stage">
+      <div style="text-align:center"><button class="btn" onclick="openModal()">打开联系 Modal</button></div>
+    </div>
+    <div class="note">覆盖在当前页上的对话框，背景被遮罩，打开时焦点移到输入框，关闭后焦点返回触发按钮，Esc 关闭。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>浩然网站点击 Contact 后打开 Modal，Modal 内包含姓名、邮箱、项目类型和留言；打开时把键盘焦点移动到标题或第一个输入框，关闭后把焦点返回触发按钮；使用原生 dialog 和 showModal()，支持 Esc 关闭，并阻止背景内容被键盘访问。</pre></div>
+  </div>
+
+  <div class="demo-card" id="c2">
+    <div class="head"><div class="idx">02 · 抽屉</div><h3>Drawer</h3><div class="en">侧边滑出的面板</div></div>
+    <div class="stage">
+      <div style="text-align:center"><button class="btn green" onclick="openDrawer()">打开右侧 Drawer</button></div>
+    </div>
+    <div class="note">从侧边/底部滑出，桌面端 420px，主体仍可见但不可操作，手机端底部接近全屏。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>浩然的项目列表点击卡片后，从右侧打开一个 Project Detail Drawer，桌面端宽度为 420px，显示封面、简介、技术栈和访问链接；页面主体仍然可见但不可操作，手机端让 Drawer 从底部打开并接近全屏。</pre></div>
+  </div>
+
+  <div class="demo-card" id="c3">
+    <div class="head"><div class="idx">03 · 手风琴</div><h3>Accordion</h3><div class="en">点标题展开收起</div></div>
+    <div class="stage">
+      <div class="acc" style="max-width:440px">
+        <button class="q" onclick="toggleAcc(this)">如何开始合作？<span class="pm">+</span></button>
+        <div class="a">评论区扣「合集」进群，我会详细聊需求。</div>
+        <button class="q" onclick="toggleAcc(this)">交付包括哪些内容？<span class="pm">+</span></button>
+        <div class="a">设计与前端代码，可上线，含基础响应式。</div>
+        <button class="q" onclick="toggleAcc(this)">支持后续修改吗？<span class="pm">+</span></button>
+        <div class="a">支持，按次或按月提供迭代服务。</div>
+      </div>
+    </div>
+    <div class="note">多组标题纵向排列，点击展开/收起，同一时间只展开一个，aria-expanded + aria-controls。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 FAQ 创建 Accordion，每个标题使用 button，右侧显示加号或箭头，展开时更新 aria-expanded，并通过 aria-controls 关联内容面板；同一时间只展开一个项目，动画控制在 200ms 左右。</pre></div>
+  </div>
+
+  <div class="demo-card" id="c4">
+    <div class="head"><div class="idx">04 · 气泡提示</div><h3>Tooltip</h3><div class="en">悬停冒出一句说明</div></div>
+    <div class="stage">
+      <div style="display:flex;gap:22px">
+        <span class="tooltip"><span style="font-size:22px">🖼️</span><span class="tip">查看作品集</span></span>
+        <span class="tooltip"><span style="font-size:22px">💡</span><span class="tip">灵感来源</span></span>
+        <span class="tooltip"><span style="font-size:22px">🔗</span><span class="tip">复制链接</span></span>
+      </div>
+    </div>
+    <div class="note">悬停或键盘聚焦图标时出现一句话说明，不获得独立焦点，Esc 或离开后消失，触屏提供替代。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的项目卡片图标上添加 Tooltip，鼠标 hover 或键盘 focus 时显示，内容控制在一句话以内，Tooltip 不获得独立焦点，离开触发元素或按 Esc 后消失；不要只支持 hover，触屏设备需要提供可理解的替代方式。</pre></div>
+  </div>
+
+  <div class="demo-card" id="c5">
+    <div class="head"><div class="idx">05 · 轻提示</div><h3>Toast</h3><div class="en">角落短暂的状态消息</div></div>
+    <div class="stage">
+      <div style="display:flex;gap:10px"><button class="btn green" onclick="showToast('success','文章已保存')">成功 Toast</button><button class="btn ghost" onclick="showToast('error','保存失败，请重试')">错误 Toast</button></div>
+    </div>
+    <div class="note">操作后角落短暂提示，含图标+文字+关闭按钮，4 秒自动消失，错误 Toast 提供重试，aria-live 宣布。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>浩然后台保存文章后，在右上角显示 Success Toast"文章已保存"，Toast 包含状态图标、文字和关闭按钮，4 秒后自动消失；错误 Toast 不要快速自动消失，并提供重试操作；使用 aria-live 向辅助技术宣布状态。</pre></div>
+  </div>
+
+  <div class="demo-card" id="c6">
+    <div class="head"><div class="idx">06 · 轮播图</div><h3>Carousel</h3><div class="en">有限空间轮流展示</div></div>
+    <div class="stage">
+      <div class="carousel">
+        <div class="viewport"><div class="track" id="carTrack">
+          <div class="slide g1">Featured 01</div>
+          <div class="slide g2">Featured 02</div>
+          <div class="slide g4">Featured 03</div>
+          <div class="slide g5">Featured 04</div>
+        </div></div>
+        <button class="arr l" onclick="carMove(-1)">‹</button>
+        <button class="arr r" onclick="carMove(1)">›</button>
+        <div class="dots" id="carDots"><span class="on" onclick="carGo(0)"></span><span onclick="carGo(1)"></span><span onclick="carGo(2)"></span><span onclick="carGo(3)"></span></div>
+      </div>
+    </div>
+    <div class="note">一次展示 1 个主项目 + 下一项预览，Previous/Next + 序号，默认不自动播放，支持触摸和键盘。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然首页添加 Featured Projects Carousel，一次展示 1 个主项目和下一项目的一小部分预览，提供 Previous、Next 按钮和 01 / 05 序号；默认不自动播放，支持触摸滑动和键盘操作，用户启用 reduced motion 时取消滑行动画。</pre></div>
+  </div>
+
+  <div class="demo-card" id="c7">
+    <div class="head"><div class="idx">07 · 图片灯箱</div><h3>Lightbox</h3><div class="en">点缩略图放大原图</div></div>
+    <div class="stage">
+      <div style="display:flex;gap:10px">
+        <div class="g1 img" style="width:74px;height:74px;cursor:pointer" onclick="openLightbox('作品一')"></div>
+        <div class="g2 img" style="width:74px;height:74px;cursor:pointer" onclick="openLightbox('作品二')"></div>
+        <div class="g4 img" style="width:74px;height:74px;cursor:pointer" onclick="openLightbox('作品三')"></div>
+      </div>
+    </div>
+    <div class="note">点击缩略图在遮罩上放大原图，支持左右切换、Esc 关闭、图片标题，打开后锁定背景滚动。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 AI Gallery 添加 Lightbox，点击缩略图后全屏显示原图，支持左右切换、Esc 关闭和图片标题，打开后锁定背景滚动；缩略图使用 button 或 link 触发，所有图片提供准确的 alt 文本。</pre></div>
+  </div>
+
+  <div class="demo-card" id="c8">
+    <div class="head"><div class="idx">08 · 表单</div><h3>Form</h3><div class="en">完成联系/订阅/登录</div></div>
+    <div class="stage">
+      <div style="max-width:360px;width:100%">
+        <div class="form-field"><label>Name *</label><input placeholder="你的名字"></div>
+        <div class="form-field"><label>Email *</label><input id="demoEmail" placeholder="you@example.com" onblur="validateEmail(this)"><div class="msg" id="emailMsg"></div></div>
+        <div class="form-field"><label>Message</label><textarea style="width:100%;border:1px solid var(--border);border-radius:8px;padding:9px 11px;font-size:12px;font-family:inherit;resize:vertical;min-height:56px" placeholder="想聊点什么"></textarea></div>
+        <button class="btn green" style="width:100%" onclick="showToast('success','消息已发送')">Send Message</button>
+      </div>
+    </div>
+    <div class="note">每个输入框都有可见 label，必填项和错误清晰，提交中 loading，成功后 Toast，保留输入。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 Contact 页面创建一个可访问的联系表单，字段包括 Name、Email、Project Type、Budget Range 和 Message；每个输入框都有可见 label，必填项和错误信息清晰，提交中显示 loading 状态，成功后显示 Toast，并在确认提交成功前保留用户输入内容。</pre></div>
+  </div>
+
+  <div class="demo-card" id="c9">
+    <div class="head"><div class="idx">09 · 命令面板</div><h3>Command Palette</h3><div class="en">快捷键弹出的搜索面板</div></div>
+    <div class="stage">
+      <div style="text-align:center"><button class="btn" onclick="openCmd()">打开命令面板（或按 Ctrl+K）</button></div>
+    </div>
+    <div class="note">Command+K / Ctrl+K 打开，搜索并执行跳转/命令，上下键选择、Enter 执行、Esc 关闭，分组显示。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的网站添加 Command Palette，用户按 Command+K 或 Ctrl+K 后打开，可以搜索并执行 Go to Work、Open About、Read Journal、Toggle Theme 和 Contact 浩然；支持上下方向键选择、Enter 执行、Esc 关闭，并按页面与操作分组显示结果。</pre></div>
+  </div>
+
+  <div class="demo-card" id="c10">
+    <div class="head"><div class="idx">10 · 悬浮按钮</div><h3>Floating Action Button</h3><div class="en">角落固定的主操作</div></div>
+    <div class="stage">
+      <div class="fab-wrap">
+        <div class="fab-menu" id="fabMenu"><div onclick="showToast('success','新建项目')">＋ New Project</div><div onclick="showToast('success','新建文章')">✍ New Post</div><div onclick="showToast('success','上传图片')">🖼 Upload Image</div></div>
+        <button class="fab-btn" onclick="toggleFab()">＋</button>
+      </div>
+    </div>
+    <div class="note">加号固定在右下角，点击展开快捷操作，不遮挡底部导航，考虑移动端安全区域。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的项目后台右下角添加 Floating Action Button，使用加号图标并固定在视口右下角，点击后展开 New Project、New Post 和 Upload Image 三个快捷操作；按钮不能遮挡底部导航或重要内容，并考虑移动端安全区域。</pre></div>
+  </div>
+</section>
+<section id="motion">
+  <div class="cat-hero"><span class="tag">04 · 滚动与动作 Scroll & Motion</span><h2>滚动与动作</h2><p>决定页面如何"活起来"：内容何时出现、滚动时发生什么、怎样在不打断阅读的前提下建立节奏。</p></div>
+
+  <div class="demo-card" id="m1">
+    <div class="head"><div class="idx">01 · 滚动出现</div><h3>Scroll Reveal</h3><div class="en">淡入 + 上移 16px</div></div>
+    <div class="stage">
+      <div style="display:flex;gap:12px;max-width:440px;width:100%" id="revealWrap">
+        <div class="reveal-el" style="flex:1;border:1px solid var(--border);border-radius:11px;padding:16px;background:#fff"><div class="g1 img" style="height:44px"></div><b style="font-size:12px;display:block;margin-top:8px">项目一</b></div>
+        <div class="reveal-el" style="flex:1;border:1px solid var(--border);border-radius:11px;padding:16px;background:#fff"><div class="g2 img" style="height:44px"></div><b style="font-size:12px;display:block;margin-top:8px">项目二</b></div>
+        <div class="reveal-el" style="flex:1;border:1px solid var(--border);border-radius:11px;padding:16px;background:#fff"><div class="g4 img" style="height:44px"></div><b style="font-size:12px;display:block;margin-top:8px">项目三</b></div>
+      </div>
+    </div>
+    <div class="note">元素进入视口时淡入并上移 16px（滚到本卡片触发），时长 400-600ms，reduced motion 直接显示。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的个人网站添加 Scroll Reveal，标题、正文、项目卡片进入视口时淡入并向上移动 16px，动画时长控制在 400—600ms；同一组卡片使用轻微错峰，不要让整页所有元素同时动画；用户启用 prefers-reduced-motion 时取消位移动画，只保留即时显示或轻微淡入。</pre></div>
+  </div>
+
+  <div class="demo-card" id="m2">
+    <div class="head"><div class="idx">02 · 视差滚动</div><h3>Parallax</h3><div class="en">前中背景不同速度</div></div>
+    <div class="stage">
+      <div class="parallax-box" id="plBox">
+        <div class="pb" id="plBg"></div>
+        <div class="pf" id="plFg">前景标题</div>
+        <div class="pm" id="plMid"></div>
+      </div>
+    </div>
+    <div class="note">背景最慢/中层中速/前景接近正常（滚动本卡片感受三层速度差），移动端降低，reduced motion 关闭。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的首页 Hero 添加轻量 Parallax，背景抽象山形移动速度最慢，中层半透明网页面板使用中等速度，前景标题保持接近正常滚动速度；移动距离控制在较小范围，禁止大幅缩放和快速位移；移动端降低效果，reduced motion 模式下完全关闭视差。</pre></div>
+  </div>
+
+  <div class="demo-card" id="m3">
+    <div class="head"><div class="idx">03 · 阅读进度条</div><h3>Scroll Progress</h3><div class="en">顶部细线反映进度</div></div>
+    <div class="stage">
+      <div style="max-width:400px;width:100%">
+        <div class="ml" style="margin-bottom:8px">本页顶部那条绿线就是 —— 随滚动从左到右增长</div>
+        <div class="pbar"><div class="fill" id="m3fill" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center" id="m3num">0%</div>
+      </div>
+    </div>
+    <div class="note">3px 深绿线反映阅读百分比，或圆形百分比/侧边刻度，requestAnimationFrame 平滑更新。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的长篇文章页顶部添加 Scroll Progress Indicator，使用 3px 深绿色进度线，从左向右反映当前阅读百分比；导航栏保持 Sticky，进度条位于导航底部；不要遮挡内容，并使用 requestAnimationFrame 或 CSS Scroll-driven Animation 实现平滑更新。</pre></div>
+  </div>
+
+  <div class="demo-card" id="m4">
+    <div class="head"><div class="idx">04 · 滚动吸附</div><h3>Scroll Snap</h3><div class="en">滚动后自动对齐</div></div>
+    <div class="stage">
+      <div class="snap-track" style="max-width:440px">
+        <div class="snap-card"><b>卡片 1</b><p>scroll-snap-align: center</p></div>
+        <div class="snap-card"><b>卡片 2</b><p>自动对齐到中心</p></div>
+        <div class="snap-card"><b>卡片 3</b><p>保留自然惯性</p></div>
+        <div class="snap-card"><b>卡片 4</b><p>像翻页一样</p></div>
+      </div>
+    </div>
+    <div class="note">横向容器 scroll-snap-type: x mandatory，卡片 center 对齐，保留惯性，别劫持整页滚动。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的精选作品区添加 CSS Scroll Snap，横向容器使用 scroll-snap-type: x mandatory，每个项目卡片使用 scroll-snap-align: center；允许触摸滑动和触控板滚动，保留自然惯性；不要劫持整个页面滚动，桌面端同时提供上一项和下一项按钮。</pre></div>
+  </div>
+
+  <div class="demo-card" id="m5">
+    <div class="head"><div class="idx">05 · 横向滚动</div><h3>Horizontal Scroll</h3><div class="en">沿水平方向浏览</div></div>
+    <div class="stage">
+      <div style="max-width:460px;width:100%">
+        <div class="hscroll-track" id="hsTrack">
+          <div class="hcard"><div class="th g1"></div><div class="bd">项目档案 01<span>露出下一张提示继续</span></div></div>
+          <div class="hcard"><div class="th g2"></div><div class="bd">项目档案 02<span>支持触摸和触控板</span></div></div>
+          <div class="hcard"><div class="th g4"></div><div class="bd">项目档案 03<span>左右箭头切换</span></div></div>
+          <div class="hcard"><div class="th g5"></div><div class="bd">项目档案 04<span>键盘可聚焦</span></div></div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:4px"><button class="btn ghost sm" onclick="hsScroll(-220)">← 左</button><button class="btn ghost sm" onclick="hsScroll(220)">右 →</button></div>
+      </div>
+    </div>
+    <div class="note">桌面端露出下一张卡一角作提示，支持触控板+触摸+左右箭头，卡片键盘可聚焦。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的项目档案创建 Horizontal Scroll，桌面端展示 3.5 张卡片，让下一张卡片露出一部分作为继续浏览提示；支持触控板和触摸滑动，并提供左右箭头；卡片保持键盘可聚焦，手机端使用自然横向滚动。</pre></div>
+  </div>
+
+  <div class="demo-card" id="m6">
+    <div class="head"><div class="idx">06 · 无限滚动</div><h3>Infinite Scroll</h3><div class="en">到底自动加载下一批</div></div>
+    <div class="stage">
+      <div style="max-width:440px;width:100%">
+        <div class="infinite-grid" id="infGrid"></div>
+        <div id="infSentinel"></div>
+        <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:10px" id="infStatus">继续滚动加载更多…</div>
+      </div>
+    </div>
+    <div class="note">接近底部自动加载，sentinel + IntersectionObserver，Skeleton 过渡，保存滚动位置。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 AI 灵感流实现 Infinite Scroll，每次加载 12 个项目，在列表底部设置 sentinel，并使用 IntersectionObserver 在 sentinel 接近视口时请求下一页；加载期间显示 Skeleton；加载失败时显示 Retry 按钮；保存滚动位置，避免返回页面时丢失当前位置。</pre></div>
+  </div>
+
+  <div class="demo-card" id="m7">
+    <div class="head"><div class="idx">07 · 跑马灯</div><h3>Marquee</h3><div class="en">内容持续横向移动</div></div>
+    <div class="stage">
+      <div class="marquee-box" style="max-width:460px">
+        <div class="marquee-track">
+          <span>Design</span><span>Frontend</span><span>AI Prototyping</span><span>Writing</span><span>Creative Tools</span>
+          <span>Design</span><span>Frontend</span><span>AI Prototyping</span><span>Writing</span><span>Creative Tools</span>
+        </div>
+      </div>
+    </div>
+    <div class="note">两组内容无缝循环，慢速移动，鼠标悬停暂停，reduced motion 改换行列表。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然首页的 Hero 下方添加一个循环 Marquee，内容为 Design、Frontend、AI Prototyping、Writing、Creative Tools；两组内容无缝衔接，移动速度缓慢；鼠标悬停时暂停；内容必须在动画关闭时仍可阅读，reduced motion 模式下改为普通换行标签列表。</pre></div>
+  </div>
+
+  <div class="demo-card" id="m8">
+    <div class="head"><div class="idx">08 · 悬停微交互</div><h3>Hover Micro-interaction</h3><div class="en">确认"这个可以点"</div></div>
+    <div class="stage">
+      <div style="display:flex;gap:16px">
+        <div class="hover-card"><div class="th g1"></div><div class="bd">项目卡片<span class="ar">→</span></div></div>
+        <div class="hover-card"><div class="th g2"></div><div class="bd">项目卡片<span class="ar">→</span></div></div>
+      </div>
+    </div>
+    <div class="note">上移 4px、边框变绿、图放大 1.03、箭头右移，180-240ms ease-out，focus-visible 同等反馈。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的项目卡片添加 Hover Micro-interaction，鼠标进入时卡片上移 4px，边框由浅灰变为深绿色，封面图轻微放大到 1.03，右下角箭头向右移动 4px；动画使用 180—240ms ease-out；键盘 focus-visible 状态提供同等清晰反馈，不要只依赖 hover。</pre></div>
+  </div>
+
+  <div class="demo-card" id="m9">
+    <div class="head"><div class="idx">09 · 错峰动画</div><h3>Staggered Animation</h3><div class="en">同组元素依次进入</div></div>
+    <div class="stage">
+      <div class="stagger-grid" id="staggerGrid" style="max-width:460px">
+        <div class="stag"><div class="e">🎨</div><b>Design</b><p>0ms 进入</p></div>
+        <div class="stag"><div class="e">💻</div><b>Frontend</b><p>70ms 进入</p></div>
+        <div class="stag"><div class="e">🤖</div><b>AI Proto</b><p>140ms 进入</p></div>
+        <div class="stag"><div class="e">✍️</div><b>Writing</b><p>210ms 进入</p></div>
+      </div>
+    </div>
+    <div class="note">每隔 70ms 依次淡入+上移（滚到本卡片触发），总等待不超 300ms，重复滚动不反复播。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的四张能力卡片添加 Staggered Entrance，第一张进入视口后开始动画，其余卡片每隔 70ms 依次淡入并上移 12px；总等待时间不要超过 300ms；重复滚动时不要反复播放；reduced motion 模式下让所有卡片直接显示。</pre></div>
+  </div>
+
+  <div class="demo-card" id="m10">
+    <div class="head"><div class="idx">10 · 滚动驱动</div><h3>Scroll-driven Animation</h3><div class="en">动画进度由滚动决定</div></div>
+    <div class="stage">
+      <div class="sd-wrap" id="sdRoot" style="max-width:440px">
+        <div class="sd-line"><div class="sd-fill" id="sdFill"></div></div>
+        <div class="sd-panels">
+          <div class="sd-panel"><b>原型 1 · Discover</b><p style="font-size:11px;color:var(--muted)">滚动到 1/3 点亮</p></div>
+          <div class="sd-panel"><b>原型 2 · Design</b><p style="font-size:11px;color:var(--muted)">滚动到 2/3 点亮</p></div>
+          <div class="sd-panel"><b>原型 3 · Build</b><p style="font-size:11px;color:var(--muted)">滚到底点亮</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">滚动经过本区，左侧进度线增长、右侧面板依次点亮，用 animation-timeline 或 IntersectionObserver。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的项目案例页使用 Scroll-driven Animation，滚动经过 Process 章节时，左侧进度线随章节阅读进度增长，右侧三个原型面板依次从低透明度变为完全可见；优先使用 CSS animation-timeline 和 view()，为不支持的浏览器提供 IntersectionObserver 降级方案，并尊重 reduced motion。</pre></div>
+  </div>
+</section>
+<section id="loading">
+  <div class="cat-hero"><span class="tag">05 · 提示与加载 Feedback & Loading</span><h2>提示与加载</h2><p>决定用户等待时看到什么、出错时怎么办、操作完成后如何确认。</p></div>
+
+  <div class="demo-card" id="l1">
+    <div class="head"><div class="idx">01 · 骨架屏</div><h3>Skeleton Screen</h3><div class="en">灰色占位，减少跳动</div></div>
+    <div class="stage">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:440px;width:100%">
+        <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+      </div>
+    </div>
+    <div class="note">加载前显示与最终布局相似的灰色占位，尺寸一致，低对比灰绿，完成后淡入替换。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的项目列表设计 Skeleton Screen，骨架结构必须与最终卡片尺寸一致，包含封面占位、标题线、两行文字和标签占位；使用低对比度灰绿色，不要显示虚假文字；内容加载完成后使用短暂淡入替换，避免布局位移。</pre></div>
+  </div>
+
+  <div class="demo-card" id="l2">
+    <div class="head"><div class="idx">02 · 懒加载</div><h3>Lazy Loading</h3><div class="en">接近视口才加载</div></div>
+    <div class="stage">
+      <div style="max-width:440px;width:100%">
+        <div style="display:flex;gap:8px;margin-bottom:8px"><div class="g1 img" style="flex:1;height:44px"></div><div class="g2 img" style="flex:1;height:44px"></div></div>
+        <div class="ml" style="margin:8px 0">首屏以下资源用 loading="lazy"，接近视口才加载</div>
+        <div class="g4 img" style="height:44px"></div>
+      </div>
+    </div>
+    <div class="note">首屏 Hero 正常加载，首屏以下 img/iframe 设 lazy，预设宽高避免布局跳动，重要图提供 srcset。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的作品集实现 Lazy Loading，首屏 Hero 图片正常加载，不要设置 lazy；首屏以下的 img 和 iframe 使用 loading="lazy"；为图片预先设置 width、height 或 aspect-ratio，避免布局跳动；重要项目封面提供合适的 srcset 和 sizes，不要把所有资源都延迟加载。</pre></div>
+  </div>
+
+  <div class="demo-card" id="l3">
+    <div class="head"><div class="idx">03 · 加载转圈</div><h3>Loading Spinner</h3><div class="en">短请求的循环图标</div></div>
+    <div class="stage">
+      <div style="display:flex;align-items:center;gap:12px"><div class="spinner"></div><span style="font-size:13px;color:var(--muted)">正在加载项目…</span></div>
+    </div>
+    <div class="note">只出现在局部区域，不遮罩整页，配文字说明，超 8 秒追加说明+取消，reduced motion 改静态图标。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>浩然网站提交短请求时显示 Loading Spinner，Spinner 只出现在正在更新的局部区域，不要遮罩整个页面；同时显示"正在加载项目"文字；超过 8 秒后追加更明确的等待说明和取消入口；动画在 reduced motion 模式下改为静态状态图标。</pre></div>
+  </div>
+
+  <div class="demo-card" id="l4">
+    <div class="head"><div class="idx">04 · 进度条</div><h3>Progress Bar</h3><div class="en">0-100% 建立预期</div></div>
+    <div class="stage">
+      <div style="max-width:400px;width:100%">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px"><span id="pbLabel">导出中…</span><span id="pbPct">0%</span></div>
+        <div class="pbar"><div class="fill" id="pbFill" style="width:0%"></div></div>
+        <div style="margin-top:12px;text-align:center"><button class="btn ghost sm" onclick="startProgress()">开始导出</button></div>
+      </div>
+    </div>
+    <div class="note">显示 0-100% + 阶段名 + 取消，只向前不倒退，完成切 Success，失败保留进度+Retry。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 AI 图片导出任务添加 Determinate Progress Bar，显示 0—100% 进度、当前阶段名称和取消按钮；进度条只向前移动，不要伪造倒退；完成后切换为 Success State，失败后保留当前进度并显示 Retry；使用 role="progressbar" 提供可访问状态。</pre></div>
+  </div>
+
+  <div class="demo-card" id="l5">
+    <div class="head"><div class="idx">05 · 加载按钮</div><h3>Loading Button</h3><div class="en">提交后按钮变处理中</div></div>
+    <div class="stage">
+      <div style="text-align:center"><button class="load-btn" id="loadBtn" onclick="simulateLoad(this)"><span class="sp"></span><span class="txt">Send Message</span></button></div>
+    </div>
+    <div class="note">点击后禁用重复提交、文字变 Sending… + Spinner，宽度不变避免跳动，成功 Sent，失败恢复+原因。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>浩然的联系表单点击 Send Message 后，把按钮切换为 Loading Button：禁用重复提交，文字改为"Sending…"并显示小型 Spinner；保持按钮宽度不变，避免界面跳动；请求成功后显示"Sent"，失败后恢复可点击状态并显示错误原因。</pre></div>
+  </div>
+
+  <div class="demo-card" id="l6">
+    <div class="head"><div class="idx">06 · 空状态</div><h3>Empty State</h3><div class="en">没内容时给下一步</div></div>
+    <div class="stage">
+      <div class="empty-box" style="max-width:340px">
+        <div class="ic">📂</div>
+        <b>还没有项目</b>
+        <p>创建第一个项目，展示你的作品。</p>
+        <div style="margin-top:12px"><button class="btn green sm" onclick="showToast('success','创建项目')">创建第一个项目</button></div>
+      </div>
+    </div>
+    <div class="note">不是一片空白，解释为什么为空 + 给下一步行动，筛选无结果改"没有匹配的项目"+清除筛选。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的新项目页面设计 Empty State，中心显示一个简洁抽象图形、标题"还没有项目"、一句说明和"创建第一个项目"按钮；如果是筛选导致无结果，改为"没有匹配的项目"，并提供清除筛选按钮；不要使用消极或责备用户的文案。</pre></div>
+  </div>
+
+  <div class="demo-card" id="l7">
+    <div class="head"><div class="idx">07 · 错误状态</div><h3>Error State</h3><div class="en">说清原因 + 重试</div></div>
+    <div class="stage">
+      <div class="state-card" style="max-width:340px">
+        <div class="ic">⚠️</div>
+        <b>项目暂时无法加载</b>
+        <p>网络似乎出了点问题，请稍后重试。</p>
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:center"><button class="btn sm" onclick="showToast('info','重试加载')">Retry</button><a href="#" style="font-size:11px;color:var(--muted);align-self:center">返回项目列表</a></div>
+      </div>
+    </div>
+    <div class="note">清晰标题+简短原因+Retry+返回链接，保留已加载内容，role="alert" 通知辅助技术。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的项目加载失败设计 Error State，显示清晰标题"项目暂时无法加载"、简短原因、Retry 按钮和返回项目列表链接；保留已经加载的其他内容，不要清空整个页面；错误信息使用图标、文字和颜色共同表达，并通过 role="alert" 或合适的 live region 通知辅助技术。</pre></div>
+  </div>
+
+  <div class="demo-card" id="l8">
+    <div class="head"><div class="idx">08 · 重试状态</div><h3>Retry State</h3><div class="en">失败后单独重试</div></div>
+    <div class="stage">
+      <div style="max-width:360px;width:100%;border:1px solid var(--border);border-radius:12px;background:#fff;padding:14px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="g1 img" style="width:48px;height:48px;flex-shrink:0"></div>
+          <div style="flex:1"><div style="font-size:12px;font-weight:700">project-cover.png</div><div style="font-size:11px;color:#EF4444;margin-top:2px">上传失败</div></div>
+          <button class="btn sm" onclick="showToast('success','重试上传')">Retry</button>
+          <button class="btn ghost sm" onclick="showToast('info','已移除')">Remove</button>
+        </div>
+      </div>
+    </div>
+    <div class="note">保留缩略图+文件名，标"上传失败"，Retry 只重传该文件，成功后切完成，不要求重选全部。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>浩然的图片上传失败后显示 Retry State，保留失败文件的缩略图和文件名，标出"上传失败"，提供 Retry 和 Remove 两个操作；点击 Retry 后只重新上传该文件，并切换为进度状态；成功后替换为完成状态，不要要求用户重新选择所有文件。</pre></div>
+  </div>
+
+  <div class="demo-card" id="l9">
+    <div class="head"><div class="idx">09 · 乐观更新</div><h3>Optimistic UI</h3><div class="en">先假设成功，再后台请求</div></div>
+    <div class="stage">
+      <div style="display:flex;align-items:center;gap:10px"><button class="like-btn" id="likeBtn" onclick="toggleLike()">♡</button><span style="font-size:13px;font-weight:700" id="likeCount">128</span></div>
+    </div>
+    <div class="note">点击后立刻切换状态+更新计数，后台再请求，失败恢复原状态+提示+重试，高风险操作别用。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>浩然的项目收藏按钮使用 Optimistic UI，点击后立刻把图标切换为已收藏并更新计数，同时后台发送请求；请求失败时恢复原状态，显示非阻塞错误提示并提供重试；不要把支付、删除账号等不可逆或高风险操作做成乐观更新。</pre></div>
+  </div>
+
+  <div class="demo-card" id="l10">
+    <div class="head"><div class="idx">10 · 行内验证</div><h3>Inline Validation</h3><div class="en">输入时在字段旁提示</div></div>
+    <div class="stage">
+      <div class="val-field" style="max-width:340px">
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px;font-weight:600">Email *</label>
+        <input id="valEmail" placeholder="you@example.com" onblur="valEmail(this)">
+        <div class="m" id="valMsg" style="color:var(--muted)">输入邮箱，blur 后检查格式</div>
+      </div>
+    </div>
+    <div class="note">blur 后检查格式，错误显示在字段下方+说明修正方法，正确显示确认，别在首字符时报错。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 Contact Form 添加 Inline Validation，邮箱字段在 blur 后检查格式，错误信息显示在输入框下方并说明如何修正；输入正确后显示简洁确认状态；不要在用户输入第一个字符时立刻报错；提交失败时把焦点移动到第一个错误字段，并在顶部提供错误摘要。</pre></div>
+  </div>
+</section>
+<section id="visual">
+  <div class="cat-hero"><span class="tag">06 · 视觉风格 Visual Styles</span><h2>视觉风格</h2><p>决定页面给人的第一印象：克制还是张扬、像杂志还是像工具、轻盈通透还是厚重直接。</p></div>
+
+  <div class="demo-card" id="v1">
+    <div class="head"><div class="idx">01 · 极简主义</div><h3>Minimalism</h3><div class="en">留白 + 字体层级，少即是多</div></div>
+    <div class="stage">
+      <div class="style-card" style="max-width:460px;padding:34px 30px;background:#FAFAF7">
+        <div class="ml">Portfolio</div>
+        <div style="font-size:26px;font-weight:800;letter-spacing:-.03em;margin-top:8px;line-height:1.2">浩然</div>
+        <p style="font-size:12px;color:var(--muted);margin-top:10px;max-width:260px">设计与代码，做克制的、有理由的设计。</p>
+        <div style="margin-top:20px"><a style="color:#14532D;font-size:12.5px;font-weight:700;text-decoration:underline">查看精选项目 →</a></div>
+      </div>
+    </div>
+    <div class="note">米白底+黑字+单一深绿强调，大留白+清晰排版，无渐变、无发光、无装饰图标。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然设计一个 Minimalist Portfolio，使用米白背景、黑色正文和单一深绿色强调色，限制字体、圆角和阴影种类；首页只保留姓名、身份、精选项目和联系入口；通过大留白和清晰排版建立层级，不要加入多余渐变、发光效果或装饰图标。</pre></div>
+  </div>
+
+  <div class="demo-card" id="v2">
+    <div class="head"><div class="idx">02 · 编辑杂志风</div><h3>Editorial Design</h3><div class="en">像一本独立杂志</div></div>
+    <div class="stage">
+      <div class="style-card" style="max-width:480px">
+        <div class="ml" style="padding:20px 24px 0">Journal · No. 01</div>
+        <div style="padding:6px 24px 0;font-size:26px;font-weight:900;letter-spacing:-.02em;line-height:1.2;font-family:Georgia,serif">把想法做成<br>能上线的网站</div>
+        <div class="g4" style="height:70px;margin:16px 24px 0;border-radius:0"></div>
+        <div style="padding:16px 24px 22px;display:flex;gap:14px">
+          <p style="font-size:11px;color:var(--muted);line-height:1.7;flex:1"><span style="font-size:24px;font-weight:900;float:left;line-height:1;margin:2px 6px 0 0;font-family:Georgia,serif">设</span>计与代码之间，藏着把想法落地的路径。这篇文章聊聊我的工作流。</p>
+          <div style="width:90px;border-left:2px solid var(--green);padding-left:10px;font-size:11px;color:var(--green);font-family:Georgia,serif;font-style:italic">"好的设计，是让复杂变得简单。"</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">超大标题+窄正文栏+跨栏图片+首字下沉+pull quote，别把每段装进卡片。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 Journal 设计 Editorial Layout，使用超大文章标题、窄正文栏、跨栏图片、章节编号、首字下沉和 pull quote；正文保持舒适行长和行高；不要把每段内容都放进卡片，让页面更接近现代独立杂志。</pre></div>
+  </div>
+
+  <div class="demo-card" id="v3">
+    <div class="head"><div class="idx">03 · 瑞士风</div><h3>Swiss Style</h3><div class="en">严格网格，理性精确</div></div>
+    <div class="stage">
+      <div class="style-card" style="max-width:460px;background:#FAFAF7">
+        <div style="display:grid;grid-template-columns:70px 1fr 1fr 1fr;border-bottom:1px solid #111827;padding:10px 20px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase">#<span>项目</span><span>年份</span><span>角色</span></div>
+        <div style="display:grid;grid-template-columns:70px 1fr 1fr 1fr;padding:12px 20px;border-bottom:1px solid #E5E7EB;font-size:12px">01<span>AI 工具</span><span>2025</span><span>设计</span></div>
+        <div style="display:grid;grid-template-columns:70px 1fr 1fr 1fr;padding:12px 20px;border-bottom:1px solid #E5E7EB;font-size:12px">02<span>个人网站</span><span>2025</span><span>开发</span></div>
+        <div style="display:grid;grid-template-columns:70px 1fr 1fr 1fr;padding:12px 20px;font-size:12px">03<span>品牌落地页</span><span>2024</span><span>全案</span></div>
+      </div>
+    </div>
+    <div class="note">12 列网格+左对齐无衬线+编号+细分隔线，米白/黑/深绿三色，信息对齐排列。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的作品索引使用 Swiss Style，采用严格的 12 列网格、左对齐无衬线字体、明显编号和细分隔线；颜色仅使用米白、黑和深绿色；项目信息按年份、类别和角色对齐排列，避免装饰性手写字体与复杂阴影。</pre></div>
+  </div>
+
+  <div class="demo-card" id="v4">
+    <div class="head"><div class="idx">04 · 玻璃拟态</div><h3>Glassmorphism</h3><div class="en">半透明玻璃悬浮感</div></div>
+    <div class="stage">
+      <div class="glass-bg" style="max-width:460px;border-radius:12px">
+        <div style="display:flex;gap:12px">
+          <div class="glass-panel" style="flex:1"><b style="font-size:13px">AI 工具</b><p style="font-size:10.5px;opacity:.85;margin-top:5px">backdrop blur 16px 面板</p></div>
+          <div class="glass-panel" style="flex:1"><b style="font-size:13px">数据面板</b><p style="font-size:10.5px;opacity:.85;margin-top:5px">低透明白 + 细亮边框</p></div>
+        </div>
+        <div class="glass-panel" style="margin-top:12px"><b style="font-size:13px">Hero 标题</b><p style="font-size:10.5px;opacity:.85;margin-top:5px">正文保持高对比度，别全透明</p></div>
+      </div>
+    </div>
+    <div class="note">深绿背景上叠加半透明面板，backdrop-filter blur(16px)，低透明白+细亮边框，克制不霓虹。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 AI 工具首页添加克制的 Glassmorphism，深绿色抽象背景上叠加两到三层半透明面板，使用 backdrop-filter: blur(16px)、低透明白色背景和细亮边框；正文区域保持高对比度，不要让所有卡片都透明，也不要使用过度霓虹发光。</pre></div>
+  </div>
+
+  <div class="demo-card" id="v5">
+    <div class="head"><div class="idx">05 · 新野兽派</div><h3>Neo-brutalism</h3><div class="en">粗边框 + 硬阴影，原始感</div></div>
+    <div class="stage">
+      <div style="max-width:460px;background:#FFE66D;padding:20px;border-radius:12px">
+        <div class="neo-card" style="margin-bottom:12px"><b style="font-size:16px">实验项目</b><p style="font-size:11px;color:var(--muted);margin-top:5px">粗黑边框 + 硬阴影，保留原始感</p></div>
+        <button class="neo-btn">深绿重点按钮</button>
+      </div>
+    </div>
+    <div class="note">粗黑边框+硬阴影（无模糊）+大字号+深绿按钮，清晰网格与可读性，系统但好玩。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的实验项目页使用 Neo-brutalist Style，采用粗黑边框、硬阴影、大字号标题和深绿色重点按钮；组件保持清晰网格与可读性，避免装饰性手写字体与复杂阴影。</pre></div>
+  </div>
+
+  <div class="demo-card" id="v6">
+    <div class="head"><div class="idx">06 · 深色模式</div><h3>Dark Mode</h3><div class="en">深底浅字，降低强光</div></div>
+    <div class="stage">
+      <div class="dark-box" style="max-width:460px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><b style="font-size:13px">创作后台</b><span style="font-size:11px">🌙</span></div>
+        <p>背景避免纯黑（#0F172A），正文柔和浅灰，深绿调整为更亮的可见色。</p>
+        <div style="display:flex;gap:8px;margin-top:14px"><div style="flex:1;height:44px;background:#1E293B;border-radius:8px"></div><div style="flex:1;height:44px;background:#1E293B;border-radius:8px"></div></div>
+      </div>
+    </div>
+    <div class="note">不是简单反转黑白，重新调整对比度/阴影/边框/图片，表单滚动条同步 color-scheme。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然网站实现完整 Dark Mode，使用 prefers-color-scheme 读取系统偏好，并提供手动切换和本地保存；深色背景避免纯黑，正文使用柔和浅灰，深绿色调整为更亮的可见色；表单、滚动条和原生控件同步 color-scheme；检查两种模式下的对比度和图片表现。</pre></div>
+  </div>
+
+  <div class="demo-card" id="v7">
+    <div class="head"><div class="idx">07 · 单色与双色</div><h3>Monochrome / Duotone</h3><div class="en">一两种颜色控全场</div></div>
+    <div class="stage">
+      <div style="max-width:440px;width:100%">
+        <div class="duo"><div class="row"><div class="g1"></div><div class="g2"></div><div class="g4"></div></div><div class="row"><div class="g5"></div><div class="g3"></div><div class="g2"></div></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:10px;text-align:center">图片转低饱和绿双色调，靠明度/面积建层次</div>
+      </div>
+    </div>
+    <div class="note">全站米白+黑+深绿，图片转低饱和绿双色调，hover 恢复少量原色，层级清楚。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的个人网站使用 Monochrome + Duotone 视觉系统，全站以米白、黑和深绿色构成，项目图片转换为低饱和绿色双色调，鼠标悬停后恢复少量原色；保证文字、边框和按钮层级清楚，不要让所有元素使用相同深浅。</pre></div>
+  </div>
+
+  <div class="demo-card" id="v8">
+    <div class="head"><div class="idx">08 · 网格渐变</div><h3>Gradient Mesh</h3><div class="en">柔和色块交融的空间感</div></div>
+    <div class="stage">
+      <div class="mesh-bg" style="max-width:460px">
+        <div class="ml">Hero Background</div>
+        <div style="font-size:22px;font-weight:800;margin-top:8px;line-height:1.25">低饱和渐变的<br>空间感背景</div>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px">文字区域保持平静，标题对比足够</p>
+        <div style="margin-top:14px"><span class="btn sm">View Work</span></div>
+      </div>
+    </div>
+    <div class="note">米白/灰绿/深绿色团边缘模糊交融，比线性自然，文字区平静，动画幅度小，移动端静态。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然首页 Hero 创建低饱和 Gradient Mesh 背景，使用米白、灰绿和深绿色的柔和色团，边缘模糊并缓慢漂移；文字区域保持相对平静，确保标题对比度；动画幅度很小，移动端使用静态背景，reduced motion 模式下关闭。</pre></div>
+  </div>
+
+  <div class="demo-card" id="v9">
+    <div class="head"><div class="idx">09 · 颗粒与噪点</div><h3>Grain / Noise Texture</h3><div class="en">细颗粒的印刷质感</div></div>
+    <div class="stage">
+      <div class="grain-box" style="max-width:440px">
+        <b style="font-size:15px">品牌 Hero</b>
+        <p style="font-size:11px;opacity:.85;margin-top:6px">深绿背景上叠加轻噪点，减少塑料感，文字保持清晰。</p>
+      </div>
+    </div>
+    <div class="note">纯色/渐变上叠细颗粒，透明度低，不影响文字清晰，表单正文区不加明显颗粒。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然网站的米白背景和深绿色 Hero 上添加非常轻的 Grain Texture，噪点透明度保持低，使用可重复的小型纹理或 CSS/SVG filter，不影响文字清晰度；不要给表单和正文区域增加明显颗粒；移动端控制纹理资源大小，避免使用超大背景图片。</pre></div>
+  </div>
+
+  <div class="demo-card" id="v10">
+    <div class="head"><div class="idx">10 · 新拟态</div><h3>Neumorphism / Soft UI</h3><div class="en">同色亮暗阴影，凸起凹下</div></div>
+    <div class="stage">
+      <div class="neu-panel" style="max-width:360px">
+        <div class="neu-btn">▶</div><div class="neu-btn">🔊</div><div class="neu-btn">🎵</div>
+      </div>
+    </div>
+    <div class="note">同色亮暗阴影让按钮凸起/凹下，仅用于小控件，保留清晰文字/图标/focus outline，按下状态明确。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的实验性音乐控制器使用局部 Neumorphism，仅对播放、音量和模式按钮使用同色亮暗阴影，保留清晰文字、图标和 focus outline；主要导航、表单与长文本不要使用新拟态；按下状态需要通过阴影、位置和颜色共同表达。</pre></div>
+  </div>
+</section>
+<section id="advanced">
+  <div class="cat-hero"><span class="tag">07 · 高级效果 Advanced Effects</span><h2>高级效果</h2><p>高级效果不等于更复杂，同时考虑表现力、可访问性、兼容性和性能。</p></div>
+
+  <div class="demo-card" id="a1">
+    <div class="head"><div class="idx">01 · 自定义光标</div><h3>Custom Cursor</h3><div class="en">光标变成绿色圆点</div></div>
+    <div class="stage">
+      <div class="cursor-demo" id="cursorDemo">
+        <div class="img-zone"><div class="g1"></div><div class="g2"></div><div class="g4"></div></div>
+        <div class="cursor-dot" id="cursorDot"></div>
+      </div>
+    </div>
+    <div class="note">默认小绿点，悬停项目扩展显示 View，进入画廊显示 Drag，触屏不启用，无延迟不遮挡。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的桌面作品画廊添加 Custom Cursor，默认显示小型绿色圆点，悬停项目图片时扩展并显示"View"，进入横向画廊时显示"Drag"；保留原生光标作为可用后备，触屏设备不启用；不要让自定义光标产生明显延迟，也不要遮挡表单与正文。</pre></div>
+  </div>
+
+  <div class="demo-card" id="a2">
+    <div class="head"><div class="idx">02 · 磁吸按钮</div><h3>Magnetic Button</h3><div class="en">光标靠近，按钮被吸引</div></div>
+    <div class="stage">
+      <div style="padding:30px"><button class="magnetic-btn" id="magBtn">View Work</button></div>
+    </div>
+    <div class="note">光标靠近时内容最多偏移 6px，离开快速回位，按钮本身不逃离点击区，触屏/减动效关闭。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然首页的 View Work 按钮添加轻量 Magnetic Effect，只有当光标距离按钮较近时，按钮内容最多偏移 6px，鼠标离开后快速回到原位；按钮本身不能逃离点击区域；触屏和 reduced motion 模式下关闭磁吸，只保留普通 hover 状态。</pre></div>
+  </div>
+
+  <div class="demo-card" id="a3">
+    <div class="head"><div class="idx">03 · 3D 倾斜卡片</div><h3>3D Tilt Card</h3><div class="en">随光标轻微旋转</div></div>
+    <div class="stage">
+      <div style="padding:26px;perspective:600px"><div class="tilt-card" id="tiltCard">Featured Project</div></div>
+    </div>
+    <div class="note">光标移动时 rotateX/rotateY 最多 5deg，封面/文字/高光分层，离开平滑归位，移动端关闭。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 Featured Project 卡片添加 3D Tilt，光标移动时 rotateX 和 rotateY 最大不超过 5deg，封面、文字和高光使用很小的 Z 轴层次；鼠标离开后平滑归位；移动端和 reduced motion 模式关闭倾斜，卡片点击区域保持稳定。</pre></div>
+  </div>
+
+  <div class="demo-card" id="a4">
+    <div class="head"><div class="idx">04 · 聚光灯悬停</div><h3>Spotlight Hover</h3><div class="en">局部柔光斑突出区域</div></div>
+    <div class="stage">
+      <div class="spot-grid" id="spotGrid">
+        <div class="spot-glow" id="spotGlow"></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+        <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+      </div>
+    </div>
+    <div class="note">鼠标位置控制径向渐变光斑，只覆盖当前卡片附近，亮度克制，焦点进入提供静态高亮。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的深色功能网格上添加 Spotlight Hover，使用鼠标位置控制径向渐变，光斑范围只覆盖当前卡片附近，亮度克制；焦点进入卡片时提供静态高亮替代；不要使用持续追踪的强烈发光，也不要降低文字对比度。</pre></div>
+  </div>
+
+  <div class="demo-card" id="a5">
+    <div class="head"><div class="idx">05 · 文字蒙版</div><h3>Image / Text Mask</h3><div class="en">图片只显示在文字内</div></div>
+    <div class="stage">
+      <div style="text-align:center;padding:16px"><div class="textmask">MAKE IDEAS VISIBLE</div></div>
+    </div>
+    <div class="note">低饱和抽象纹理只显示在文字内部，background-clip:text，回退深绿实心，标题可选择可读。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然首页标题"MAKE IDEAS VISIBLE"添加 Text Mask，低饱和抽象动画只显示在文字内部；在不支持 background-clip: text 的环境中回退为深绿色实心文字；标题必须保持可选择、可读和语义化，不要把重要文字只做成图片。</pre></div>
+  </div>
+
+  <div class="demo-card" id="a6">
+    <div class="head"><div class="idx">06 · 裁切揭示</div><h3>Clip-path Reveal</h3><div class="en">像幕布打开一样展开</div></div>
+    <div class="stage">
+      <div class="clip-box">
+        <div class="under">项目封面 · 完整显示</div>
+        <div class="cover">hover 揭示</div>
+      </div>
+    </div>
+    <div class="note">从 inset(0 100% 0 0) 过渡到完整，500ms，只播一次，reduced motion 直接显示完整图。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的项目封面添加 Clip-path Reveal，图片进入视口时从 inset(0 100% 0 0) 过渡到完整显示，持续 500ms；动画只播放一次；为不支持或 reduced motion 用户直接显示完整图片；不要同时叠加大幅位移和缩放。</pre></div>
+  </div>
+
+  <div class="demo-card" id="a7">
+    <div class="head"><div class="idx">07 · WebGL / Three.js Hero</div><h3>WebGL Hero</h3><div class="en">GPU 渲染实时 3D</div></div>
+    <div class="stage">
+      <div class="webgl-box">
+        <div class="sphere" id="webglSphere"></div>
+      </div>
+    </div>
+    <div class="note">低多边形球体 + 半透明平面，跟随鼠标轻微视差（此处为 CSS 降级示意），页面隐藏暂停渲染。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的首页制作一个轻量 Three.js Hero，场景包含一个低多边形抽象球体和三层半透明界面平面，跟随鼠标产生非常轻微视差；限制几何体数量、纹理尺寸和像素比；页面隐藏时暂停渲染；移动端使用简化场景，低性能或 WebGL 不可用时显示静态海报图。</pre></div>
+  </div>
+
+  <div class="demo-card" id="a8">
+    <div class="head"><div class="idx">08 · 视图过渡</div><h3>View Transitions</h3><div class="en">新旧内容平滑衔接</div></div>
+    <div class="stage">
+      <div class="vt-demo" style="max-width:440px">
+        <div class="vt-thumb g1"></div><div class="vt-thumb g2"></div><div class="vt-thumb g4"></div><div class="vt-thumb g5"></div>
+      </div>
+    </div>
+    <div class="note">卡片封面与详情 Hero 共享 view-transition-name，从卡片位置自然扩展，300-450ms，不支持正常导航。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>浩然的项目卡片点击后使用 View Transition 进入详情页，卡片封面与详情页 Hero 共享 view-transition-name，让图片从卡片位置自然扩展；过渡控制在 300—450ms；浏览器不支持时正常导航；不要让过渡影响焦点、阅读位置或返回按钮行为，并在 reduced motion 下跳过动画。</pre></div>
+  </div>
+
+  <div class="demo-card" id="a9">
+    <div class="head"><div class="idx">09 · 减少动态</div><h3>Reduced Motion</h3><div class="en">尊重系统减动效</div></div>
+    <div class="stage">
+      <div style="max-width:440px;width:100%;display:flex;align-items:center;gap:14px">
+        <div style="width:46px;height:26px;border-radius:999px;background:var(--green);position:relative;cursor:pointer" onclick="toggleMotion(this)"><div style="position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s" id="motionKnob"></div></div>
+        <div><b style="font-size:13px">减少动态效果</b><p style="font-size:11px;color:var(--muted);margin-top:2px">关闭视差/磁吸/3D/自动跑马灯，功能仍可用</p></div>
+      </div>
+    </div>
+    <div class="note">关闭 Parallax、磁吸、3D Tilt、自动 Marquee，Reveal 改直接显示，不隐藏内容、不丢状态反馈。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然网站完整支持 prefers-reduced-motion: reduce，关闭 Parallax、磁吸按钮、3D Tilt、自动 Marquee 和大范围页面过渡；Scroll Reveal 改为直接显示或短淡入；Carousel 停止自动播放；所有功能仍可操作，不能因为关闭动画而隐藏内容或丢失状态反馈。</pre></div>
+  </div>
+
+  <div class="demo-card" id="a10">
+    <div class="head"><div class="idx">10 · 性能预算</div><h3>Performance Budget</h3><div class="en">给效果设上限</div></div>
+    <div class="stage">
+      <div class="perf-list">
+        <div class="row"><span>首屏 JS</span><span class="ok">162KB ✓</span></div>
+        <div class="row"><span>首屏图片</span><span class="ok">已压缩 ✓</span></div>
+        <div class="row"><span>字体家族</span><span class="ok">2 个 ✓</span></div>
+        <div class="row"><span>Lighthouse 分数</span><span class="warn">待检查</span></div>
+      </div>
+    </div>
+    <div class="note">移动端首屏 JS 控制在 170KB gzip 内，图片现代格式压缩，CI 跑 Lighthouse，超预算提示优化。</div>
+    <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的个人网站制定 Performance Budget：移动端首屏 JavaScript 尽量控制在 170KB gzip 以内，首屏关键图片使用现代格式并严格压缩，WebGL 场景延迟到需要时加载，字体不超过两个家族和必要字重；在 CI 中运行 Lighthouse 或等价检查，超过预算时提示优化，不要为了动画牺牲核心内容加载。</pre></div>
+  </div>
+</section>
+
+</main>
+
+<button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<button id="wxBtn" onclick="toggleWx()">📱</button>
+
+<div id="wxModal" onclick="if(event.target===this)toggleWx()">
+  <div class="box">
+    <button class="x" onclick="toggleWx()">✕</button>
+    <img src="9edee0894289c5fc4186482404d74e13.jpg" alt="扫码联系博主">
+    <h4>联系博主</h4>
+    <p>做网站 or 学建站，扫码加微信详聊<br>备注「教程」或「接单」</p>
+  </div>
+</div>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function toggleWx() { document.getElementById('wxModal').classList.toggle('show'); }
+
+  const progress = document.getElementById('progress');
+  const backTop = document.getElementById('backTop');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    progress.style.width = (max > 0 ? h.scrollTop / max * 100 : 0) + '%';
+    backTop.classList.toggle('show', h.scrollTop > 800);
+  }, { passive:true });
+
+  function toggleCat(btn) { btn.parentElement.classList.toggle('open'); }
+
+  function copyText(text, ok, fail) {
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      var done = false;
+      try { done = document.execCommand('copy'); } catch (e) { done = false; }
+      document.body.removeChild(ta);
+      if (done) { ok && ok(); } else { fail && fail(); }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { ok && ok(); }).catch(fallback);
+    } else {
+      fallback();
+    }
+  }
+  function copyP(btn) {
+    const pre = btn.closest('.prompt').querySelector('pre').innerText;
+    copyText(pre,
+      function () { btn.textContent = '已复制 ✓'; setTimeout(function () { btn.textContent = '复制'; }, 1500); },
+      function () { btn.textContent = '复制失败'; setTimeout(function () { btn.textContent = '复制'; }, 1500); });
+  }
+
+  function toggleAcc(btn) {
+    const acc = btn.closest('.acc');
+    const ans = btn.nextElementSibling;
+    const isOpen = ans.classList.contains('open');
+    acc.querySelectorAll('.a').forEach(a => a.classList.remove('open'));
+    acc.querySelectorAll('.pm').forEach(p => p.textContent = '+');
+    if (!isOpen) { ans.classList.add('open'); btn.querySelector('.pm').textContent = '−'; }
+  }
+
+  function switchTab(btn, name) {
+    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const grid = document.getElementById('tabGrid');
+    const map = { All:['AI 工具','个人网站','品牌页','原型','动效','写作站'], Web:['官网','博客','落地页'], AI:['AI 工具','AI 原型','AI 写作','AI 图库'], Experiments:['动效','3D','交互'] };
+    grid.innerHTML = map[name].map(x => `<div>${x}</div>`).join('');
+  }
+
+  function toggleMega() { document.getElementById('megaPanel').classList.toggle('show'); }
+
+  function page(p) { document.querySelectorAll('#n9 .pager button').forEach(b => b.classList.remove('on')); event.target.classList.add('on'); }
+
+  function openDrawer() { document.getElementById('drawer').classList.add('show'); document.getElementById('mask').classList.add('show'); document.body.style.overflow='hidden'; }
+  function closeDrawer() { document.getElementById('drawer').classList.remove('show'); document.getElementById('mask').classList.remove('show'); document.body.style.overflow=''; }
+  document.getElementById('mask').addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+  const subLinks = document.querySelectorAll('.sidebar .sub a');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        subLinks.forEach(a => a.classList.remove('active'));
+        const target = document.querySelector(`.sidebar .sub a[href="#${en.target.id}"]`);
+        if (target) target.classList.add('active');
+      }
+    });
+  }, { rootMargin:'-20% 0px -70% 0px' });
+  document.querySelectorAll('.demo-card').forEach(c => io.observe(c));
+
+  const sps = document.querySelectorAll('#s7 .sp');
+  const stickyTitle = document.getElementById('stickyTitle');
+  const stickyStage = document.getElementById('stickyStage');
+  const stickyDesc = document.getElementById('stickyDesc');
+  const spIO = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        stickyTitle.textContent = en.target.dataset.t;
+        stickyStage.textContent = en.target.dataset.s;
+        stickyDesc.textContent = en.target.dataset.d;
+      }
+    });
+  }, { threshold: 0.6 });
+  sps.forEach(sp => spIO.observe(sp));
+
+  if (window.innerWidth <= 860) document.querySelector('.burger').style.display = 'block';
+
+  /* ===== 03 组件 ===== */
+  function openModal() {
+    let m = document.getElementById('contactModal');
+    if (!m) {
+      m = document.createElement('div');
+      m.className = 'modal-mask'; m.id = 'contactModal';
+      m.innerHTML = `<div class="modal-box"><h4>联系浩然</h4>
+        <div class="fld"><label>姓名</label><input placeholder="你的名字"></div>
+        <div class="fld"><label>邮箱</label><input placeholder="you@example.com"></div>
+        <div class="fld"><label>项目类型</label><input placeholder="如：AI 建站"></div>
+        <div class="fld"><label>留言</label><textarea placeholder="想聊点什么"></textarea></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px"><button class="btn ghost sm" onclick="closeModal()">取消</button><button class="btn green sm" onclick="closeModal();showToast('success','已发送')">发送</button></div></div>`;
+      m.onclick = e => { if (e.target === m) closeModal(); };
+      document.body.appendChild(m);
+    }
+    m.classList.add('show'); document.body.style.overflow='hidden';
+  }
+  function closeModal() { const m=document.getElementById('contactModal'); if(m){m.classList.remove('show');} document.body.style.overflow=''; }
+
+  function showToast(type, text) {
+    let box = document.getElementById('toastBox');
+    if (!box) { box = document.createElement('div'); box.id='toastBox'; document.body.appendChild(box); }
+    const ic = type==='success' ? '✓' : type==='error' ? '⚠' : 'ℹ';
+    const t = document.createElement('div'); t.className='toast';
+    t.innerHTML = `<span style="color:${type==='success'?'#4ADE80':type==='error'?'#F87171':'#93C5FD'}">${ic}</span>${text}<span class="x" onclick="this.parentElement.remove()">✕</span>`;
+    box.appendChild(t);
+    setTimeout(()=>{ if(t.parentElement) t.remove(); }, 4000);
+  }
+
+  let carIdx = 0;
+  const carTrack = document.getElementById('carTrack');
+  const carDots = document.getElementById('carDots').children;
+  function carGo(i) { carIdx = i; carTrack.style.transform = `translateX(-${i*100}%)`; [...carDots].forEach((d,k)=>d.classList.toggle('on',k===i)); }
+  function carMove(d) { carGo((carIdx + d + carDots.length) % carDots.length); }
+
+  function openLightbox(title) {
+    let lb = document.getElementById('lb');
+    if (!lb) { lb = document.createElement('div'); lb.className='lightbox-mask'; lb.id='lb';
+      lb.innerHTML = `<div class="lb-img g1"><span id="lbTitle">作品</span><button class="lb-close" onclick="closeLightbox()">✕</button></div>`;
+      lb.onclick = e => { if (e.target === lb) closeLightbox(); };
+      document.body.appendChild(lb);
+    }
+    document.getElementById('lbTitle').textContent = title;
+    lb.classList.add('show'); document.body.style.overflow='hidden';
+  }
+  function closeLightbox() { const lb=document.getElementById('lb'); if(lb)lb.classList.remove('show'); document.body.style.overflow=''; }
+
+  function validateEmail(el) {
+    const msg = document.getElementById('emailMsg');
+    const v = el.value.trim();
+    if (!v) { el.classList.remove('err'); msg.textContent=''; return; }
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    el.classList.toggle('err', !ok);
+    msg.textContent = ok ? '✓ 格式正确' : '请输入有效的邮箱地址';
+    msg.className = 'msg ' + (ok ? 'ok' : 'err');
+  }
+
+  function openCmd() {
+    let c = document.getElementById('cmd');
+    if (!c) {
+      c = document.createElement('div'); c.className='cmd-mask'; c.id='cmd';
+      c.innerHTML = `<div class="cmd-box"><input class="cmd-input" placeholder="搜索或输入命令…">
+        <div class="cmd-list"><div class="cmd-item sel">Go to Work <span class="k">↵</span></div><div class="cmd-item">Open About <span class="k">↵</span></div><div class="cmd-item">Read Journal <span class="k">↵</span></div><div class="cmd-item">Toggle Theme <span class="k">↵</span></div><div class="cmd-item">Contact 浩然 <span class="k">↵</span></div></div></div>`;
+      c.onclick = e => { if (e.target === c) closeCmd(); };
+      document.body.appendChild(c);
+    }
+    c.classList.add('show');
+  }
+  function closeCmd() { const c=document.getElementById('cmd'); if(c)c.classList.remove('show'); }
+  document.addEventListener('keydown', e => { if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='k') { e.preventDefault(); document.getElementById('cmd') && document.getElementById('cmd').classList.contains('show') ? closeCmd() : openCmd(); } });
+
+  function toggleFab() { document.getElementById('fabMenu').classList.toggle('show'); }
+
+  /* ===== 04 动效 ===== */
+  const revealIO2 = new IntersectionObserver(es => es.forEach(e => { e.target.classList.toggle('vis', e.isIntersecting); }), { threshold:.1 });
+  document.querySelectorAll('.reveal-el').forEach(el => revealIO2.observe(el));
+
+  const staggerIO = new IntersectionObserver(es => es.forEach(e => {
+    const cards = e.target.querySelectorAll('.stag');
+    if (e.isIntersecting) cards.forEach((s,i)=>setTimeout(()=>s.classList.add('show'), i*90));
+    else cards.forEach(s=>s.classList.remove('show'));
+  }), { threshold:.15 });
+  document.querySelectorAll('.stagger-grid').forEach(g => staggerIO.observe(g));
+
+  const sdRoot = document.getElementById('sdRoot');
+  const sdFill = document.getElementById('sdFill');
+  const sdPanels = sdRoot.querySelectorAll('.sd-panel');
+  function onScrollDriven() {
+    const r = sdRoot.getBoundingClientRect(); const vh = window.innerHeight;
+    let p = (vh - r.top) / (r.height + vh); p = Math.max(0, Math.min(1, p));
+    sdFill.style.height = (p*100) + '%';
+    const k = p * sdPanels.length;
+    sdPanels.forEach((panel,i)=>panel.classList.toggle('on', k > i + 0.4));
+  }
+
+  function hsScroll(dx) { document.getElementById('hsTrack').scrollBy({left:dx, behavior:'smooth'}); }
+
+  const infGrid = document.getElementById('infGrid'); const infSentinel = document.getElementById('infSentinel'); const infStatus = document.getElementById('infStatus');
+  const pal = ['#6366F1','#10B981','#F59E0B','#0EA5E9','#14B8A6','#8B5CF6'];
+  let infBatch = 0, infLoading = false;
+  function addInfCard(i) { const d=document.createElement('div'); d.className='icard'; d.innerHTML=`<div class="t" style="background:linear-gradient(135deg,${pal[i%6]},${pal[(i+1)%6]})"></div><b>灵感 #${i+1}</b><p>AI 生成 · 第 ${infBatch+1} 批</p>`; infGrid.appendChild(d); }
+  function seedInf(n) { for(let i=0;i<n;i++) addInfCard(i); infBatch++; }
+  seedInf(6);
+  const infIO = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting && !infLoading) {
+    infLoading = true; infStatus.textContent = '加载中…';
+    const sk = document.createElement('div'); sk.className='skel'; sk.style.gridColumn='span 3'; infGrid.appendChild(sk);
+    setTimeout(()=>{ sk.remove(); for(let i=0;i<6;i++) addInfCard(infBatch*6+i); infBatch++; infStatus.textContent='继续滚动加载更多…'; infLoading=false; }, 800);
+  }}), { rootMargin:'120px' });
+  infIO.observe(infSentinel);
+
+  /* ===== 05 加载 ===== */
+  let pbTimer = null;
+  function startProgress() {
+    const fill = document.getElementById('pbFill'); const pct = document.getElementById('pbPct'); const label = document.getElementById('pbLabel');
+    let p = 0; if (pbTimer) clearInterval(pbTimer);
+    label.textContent = '导出中…';
+    pbTimer = setInterval(() => {
+      p += Math.random()*12 + 4; if (p >= 100) { p = 100; clearInterval(pbTimer); label.textContent = '✓ 导出完成'; }
+      fill.style.width = p + '%'; pct.textContent = Math.round(p) + '%';
+    }, 250);
+  }
+
+  function simulateLoad(btn) {
+    btn.classList.add('loading'); btn.querySelector('.txt').textContent = 'Sending…';
+    setTimeout(()=>{ btn.classList.remove('loading'); btn.querySelector('.txt').textContent = 'Sent ✓'; showToast('success','消息已发送'); setTimeout(()=>btn.querySelector('.txt').textContent='Send Message', 1800); }, 1800);
+  }
+
+  let liked = false;
+  function toggleLike() {
+    liked = !liked;
+    document.getElementById('likeBtn').textContent = liked ? '♥' : '♡';
+    document.getElementById('likeBtn').style.color = liked ? '#EF4444' : '#111827';
+    document.getElementById('likeCount').textContent = 128 + (liked ? 1 : 0);
+  }
+
+  function valEmail(el) {
+    const msg = document.getElementById('valMsg');
+    const v = el.value.trim();
+    if (!v) { el.classList.remove('ok','bad'); msg.textContent='输入邮箱，blur 后检查格式'; msg.style.color='var(--muted)'; return; }
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    el.classList.toggle('ok', ok); el.classList.toggle('bad', !ok);
+    msg.textContent = ok ? '✓ 邮箱格式正确' : '✗ 请输入有效的邮箱，例如 you@example.com';
+    msg.style.color = ok ? 'var(--green)' : '#EF4444';
+  }
+
+  /* ===== 07 高级效果 ===== */
+  const cursorDemo = document.getElementById('cursorDemo'); const cursorDot = document.getElementById('cursorDot');
+  if (window.matchMedia('(hover:hover)').matches) {
+    cursorDemo.addEventListener('mousemove', e => {
+      const r = cursorDemo.getBoundingClientRect();
+      cursorDot.style.left = (e.clientX - r.left) + 'px'; cursorDot.style.top = (e.clientY - r.top) + 'px';
+      const onImg = e.target.classList.contains('g1') || e.target.classList.contains('g2') || e.target.classList.contains('g4');
+      cursorDot.classList.toggle('view', onImg); cursorDot.textContent = onImg ? 'View' : '';
+    });
+  }
+
+  const magBtn = document.getElementById('magBtn');
+  if (window.matchMedia('(hover:hover)').matches && !reduceMotion) {
+    magBtn.parentElement.addEventListener('mousemove', e => {
+      const r = magBtn.getBoundingClientRect();
+      let dx = (e.clientX - (r.left + r.width/2)) / 7;
+      let dy = (e.clientY - (r.top + r.height/2)) / 7;
+      dx = Math.max(-18, Math.min(18, dx));
+      dy = Math.max(-18, Math.min(18, dy));
+      magBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    magBtn.parentElement.addEventListener('mouseleave', () => magBtn.style.transform = 'translate(0,0)');
+  }
+
+  const tiltCard = document.getElementById('tiltCard');
+  if (window.matchMedia('(hover:hover)').matches && !reduceMotion) {
+    tiltCard.parentElement.addEventListener('mousemove', e => {
+      const r = tiltCard.getBoundingClientRect();
+      const rx = ((e.clientY - r.top)/r.height - .5) * -18;
+      const ry = ((e.clientX - r.left)/r.width - .5) * 18;
+      tiltCard.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    });
+    tiltCard.parentElement.addEventListener('mouseleave', () => tiltCard.style.transform = 'rotateX(0) rotateY(0)');
+  }
+
+  const spotGrid = document.getElementById('spotGrid');
+  spotGrid.addEventListener('mousemove', e => {
+    const r = spotGrid.getBoundingClientRect();
+    spotGrid.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+    spotGrid.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+  });
+
+  const webglSphere = document.getElementById('webglSphere');
+  webglSphere.parentElement.addEventListener('mousemove', e => {
+    const r = webglSphere.parentElement.getBoundingClientRect();
+    webglSphere.style.marginLeft = ((e.clientX-r.left-r.width/2)/6) + 'px';
+    webglSphere.style.marginTop = ((e.clientY-r.top-r.height/2)/6) + 'px';
+  });
+  webglSphere.parentElement.addEventListener('mouseleave', () => { webglSphere.style.marginLeft = '0'; webglSphere.style.marginTop = '0'; });
+
+  function toggleMotion(sw) {
+    const knob = document.getElementById('motionKnob');
+    const on = knob.style.left !== '23px';
+    knob.style.left = on ? '23px' : '3px';
+    sw.style.background = on ? 'var(--green)' : '#CBD5E1';
+    showToast('info', on ? '已开启减少动态' : '已关闭减少动态');
+  }
+
+  /* 视差 + 局部进度条 + 滚动驱动，挂到全局 scroll */
+  const plBox = document.getElementById('plBox');
+  const m3fill = document.getElementById('m3fill');
+  const m3num = document.getElementById('m3num');
+  window.addEventListener('scroll', () => {
+    if (!reduceMotion && plBox) {
+      const r = plBox.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0) {
+        const delta = ((r.top + r.height/2) - innerHeight/2) / (innerHeight/2 + r.height/2);
+        const bg = document.getElementById('plBg'), mid = document.getElementById('plMid'), fg = document.getElementById('plFg');
+        bg.style.transform = `translateY(${(-delta*30).toFixed(1)}px)`;
+        mid.style.transform = `translate(-50%,-50%) translateY(${(-delta*60).toFixed(1)}px)`;
+        fg.style.transform = `translate(-50%,-50%) translateY(${(-delta*90).toFixed(1)}px)`;
+      }
+    }
+    if (m3fill) {
+      const h = document.documentElement; const max = h.scrollHeight - h.clientHeight; const p = max>0?h.scrollTop/max:0;
+      m3fill.style.width = (p*100)+'%'; m3num.textContent = Math.round(p*100)+'%';
+    }
+    if (sdRoot) onScrollDriven();
+  }, { passive:true });
+</script>
+
+
+<!-- AI 数字分身（悬浮气泡） -->
+<script>
+  window.difyChatbotConfig = {
+    token: 'QfzBwTFjkvRobafA',
+    baseUrl: 'http://118.89.116.235',
+    inputs: {},
+    systemVariables: {},
+    userVariables: {}
+  }
+</script>
+<script src="http://118.89.116.235/embed.min.js" id="QfzBwTFjkvRobafA" defer></script>
+<style>
+  #dify-chatbot-bubble-button {
+    right: 28px !important;
+    bottom: 150px !important;
+    background-color: #1C64F2 !important;
+  }
+  #dify-chatbot-bubble-window {
+    width: 24rem !important;
+    height: 40rem !important;
+  }
+  @media (max-width: 480px) {
+    #dify-chatbot-bubble-window { width: 92vw !important; }
+  }
+</style>
+
+</body>
+</html>
