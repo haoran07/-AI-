@@ -6,10 +6,10 @@
 <title>浩然AI建站配置器 · 3分钟配出专业网站</title>
 <style>
   :root{
-    --green:#1B4332; --green2:#2D5A45; --green-soft:#E8F5E9; --green-softer:#F0F7F4;
-    --bg:#FAF9F4; --panel:#FFFFFF; --preview-bg:#ECECE6;
-    --text:#111111; --muted:#555555; --faint:#777777; --border:#111111;
-    --radius:8px; --shadow:4px 4px 0 #111111;
+    --green:#4ADE80; --green2:#86EFAC; --green-soft:#15351F; --green-softer:#1A3D26;
+    --bg:#14171A; --panel:#1E2225; --preview-bg:#0F1113;
+    --text:#E8E8E8; --muted:#9BA0A5; --faint:#6B7075; --border:#2A2F33;
+    --radius:12px; --shadow:0 1px 3px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.5);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{height:100%;}
@@ -191,40 +191,66 @@
   }
 </style>
 <style>
-  /* ===== 新野兽派 Neo-brutalism 覆盖 ===== */
-  body{background:#FAF9F4;}
-  .navbar{background:#fff;border-bottom:2px solid #111;}
-  .navbar .logo .sq{border:2px solid #111;box-shadow:3px 3px 0 #111;}
-  .nav-links a:hover{color:#111;background:#E8F5E9;}
-  .btn-primary{border:2px solid #111;box-shadow:3px 3px 0 #111;border-radius:6px;font-weight:800;}
-  .btn-primary:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 #111;}
-  .btn-primary:active{transform:translate(3px,3px);box-shadow:none;}
-  .proj-card{border:2px solid #111;box-shadow:3px 3px 0 #111;background:#E8F5E9;}
-  .tabs{border-bottom:2px solid #111;}
-  .tabs button.active{color:#111;border-bottom:3px solid #111;}
-  .cat-head{color:#111;font-weight:800;}
-  .ccard{border:2px solid #111;border-radius:6px;box-shadow:2px 2px 0 #111;}
-  .ccard:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 #111;border-color:#111;}
-  .ccard.on{background:#E8F5E9;box-shadow:2px 2px 0 #111;}
-  .ccard .help{background:#111;color:#fff;}
-  .left-foot{border-top:2px solid #111;}
-  .browser{border:3px solid #111;border-radius:8px;box-shadow:8px 8px 0 rgba(0,0,0,.85)!important;}
-  .browser .bar{border-bottom:2px solid #111;background:#F5F5EE;}
-  .pv-badge{background:#111;color:#fff;border-radius:4px;}
-  .pv-btn{border:2px solid #111;box-shadow:2px 2px 0 #111;border-radius:5px;font-weight:700;}
-  .pv-btn.ghost{background:#fff;color:#1B4332;}
-  .genbar .inner{border:2px solid #111;box-shadow:4px 4px 0 #111!important;border-radius:10px;}
-  .pill{border:1.5px solid #111;box-shadow:1px 1px 0 #111;background:#E8F5E9;}
-  #aiBtn{border:2px solid #111;box-shadow:4px 4px 0 #111;border-radius:8px;font-weight:800;}
-  #aiPanel{border:3px solid #111;box-shadow:8px 8px 0 rgba(0,0,0,.85)!important;border-radius:10px;}
-  #aiPanel .aiPanel-head{border-bottom:2px solid #111;}
-  .modal{border:3px solid #111;box-shadow:8px 8px 0 rgba(0,0,0,.85)!important;border-radius:12px;}
-  .btn-ghost{border:2px solid #111;box-shadow:2px 2px 0 #111;background:#fff;border-radius:8px;}
-  .field input,.field textarea{border:2px solid #111;border-radius:6px;background:#fff;}
-  .prompt-box{border:2px solid #111;background:#F5F5EE;border-radius:8px;}
-  .step .n{border:2px solid #111;box-shadow:2px 2px 0 #111;background:#fff;color:#111;}
-  #ccTip{background:#111;color:#fff;border-radius:8px;box-shadow:4px 4px 0 rgba(0,0,0,.4);}
-  .toast{border:2px solid #111;box-shadow:4px 4px 0 #111;}
+  /* ===== 深色模式 Dark Mode 覆盖 ===== */
+  body{background:#14171A;color:#E8E8E8;color-scheme:dark;}
+  .navbar{background:rgba(20,23,26,.85);border-bottom:1px solid #2A2F33;}
+  .navbar .logo{color:#E8E8E8;}
+  .navbar .logo .sq{background:#4ADE80;color:#0B1410;box-shadow:none;}
+  .nav-links a{color:#9BA0A5;}
+  .nav-links a:hover{color:#E8E8E8;background:#1E2225;}
+  .btn-primary{background:#4ADE80;color:#0B1410;border:none;box-shadow:none;font-weight:600;}
+  .btn-primary:hover{background:#86EFAC;}
+  .left{background:#1E2225;border-right:1px solid #2A2F33;}
+  .proj-card{background:#1A3D26;border:1px solid #2A2F33;box-shadow:none;}
+  .proj-card .k{color:#9BA0A5;}
+  .proj-card .v{color:#4ADE80;}
+  .proj-card .edit{color:#4ADE80;border-color:#4ADE80;}
+  .proj-card .tip{color:#6B7075;}
+  .tabs{border-bottom:1px solid #2A2F33;}
+  .tabs button{color:#9BA0A5;}
+  .tabs button.active{color:#4ADE80;border-bottom-color:#4ADE80;}
+  .cat-head{color:#9BA0A5;}
+  .cat-head .cnt{color:#6B7075;}
+  .ccard{background:#1E2225;border:1px solid #2A2F33;box-shadow:none;border-radius:9px;}
+  .ccard .nm{color:#E8E8E8;}
+  .ccard:hover{transform:none;border-color:#4ADE80;}
+  .ccard.on{background:#15351F;border-color:#4ADE80;box-shadow:none;}
+  .ccard .help{background:#2A2F33;color:#9BA0A5;}
+  .left-foot{border-top:1px solid #2A2F33;}
+  .left-foot a{color:#4ADE80;}
+  .center{background:#0F1113;}
+  .center-head .tt{color:#9BA0A5;}
+  .center-head .hint{color:#6B7075;}
+  .browser{background:#1E2225;border:none;box-shadow:0 10px 30px rgba(0,0,0,.5)!important;border-radius:14px;}
+  .browser .bar{background:#1A1E20;border-bottom:1px solid #2A2F33;}
+  .browser .addr{background:#2A2F33;color:#9BA0A5;}
+  #pvBody{background:#14171A;color:#E8E8E8;}
+  .pv-empty{color:#6B7075;}
+  .pv-block{border-bottom:1px solid #23282B;}
+  .pv-badge{background:#15351F;color:#4ADE80;border-radius:20px;}
+  .pv-title{color:#E8E8E8;}
+  .pv-sub{color:#9BA0A5;}
+  .pv-bar{background:#2A2F33;}
+  .pv-cell{background:#1A1E20;border-color:#2A2F33;}
+  .pv-input{background:#1A1E20;border-color:#2A2F33;color:#E8E8E8;}
+  .pv-btn{background:#4ADE80;color:#0B1410;border:none;box-shadow:none;font-weight:600;}
+  .pv-btn.ghost{background:transparent;color:#4ADE80;border:1px solid #4ADE80;}
+  .genbar .inner{background:#1E2225;border:none;box-shadow:0 6px 20px rgba(0,0,0,.5)!important;border-radius:14px;}
+  .pill{background:#15351F;color:#4ADE80;border:none;box-shadow:none;}
+  .pill.placeholder{background:#23282B;color:#6B7075;}
+  .modal{background:#1E2225;border:none;box-shadow:0 18px 50px rgba(0,0,0,.6)!important;border-radius:18px;}
+  .modal h2{color:#E8E8E8;}
+  .modal .sub{color:#9BA0A5;}
+  .prompt-box{background:#14171A;border:1px solid #2A2F33;color:#E8E8E8;}
+  .field label{color:#9BA0A5;}
+  .field input,.field textarea{background:#14171A;border:1px solid #2A2F33;color:#E8E8E8;}
+  .btn-ghost{background:#23282B;color:#9BA0A5;border:1px solid #2A2F33;box-shadow:none;}
+  .step b{color:#E8E8E8;}
+  .step span{color:#9BA0A5;}
+  .step .n{background:#15351F;color:#4ADE80;box-shadow:none;}
+  #ccTip{background:#0B0D0E;color:#E8E8E8;border-radius:9px;box-shadow:0 6px 18px rgba(0,0,0,.5);}
+  #ccTip b{color:#4ADE80;}
+  .toast{background:#E8E8E8;color:#14171A;border:none;box-shadow:0 6px 18px rgba(0,0,0,.4);}
 </style>
 </head>
 <body>
@@ -582,9 +608,6 @@
 <style>
   #dify-chatbot-bubble-button {
     background-color: #1B4332 !important;
-    border: 2px solid #111 !important;
-    box-shadow: 4px 4px 0 #111 !important;
-    border-radius: 8px !important;
   }
   #dify-chatbot-bubble-window { width: 24rem !important; height: 40rem !important; }
   @media (max-width: 480px) { #dify-chatbot-bubble-window { width: 92vw !important; } }

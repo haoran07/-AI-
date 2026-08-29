@@ -6,9 +6,9 @@
 <title>案例 · 浩然AI建站配置器</title>
 <style>
   :root{
-    --green:#1B4332; --green2:#2D5A45; --green-soft:#E8F5E9; --green-softer:#F0F7F4;
-    --bg:#FAFAF5; --text:#1A1A1A; --muted:#666666; --faint:#888888; --border:#E7E7E2;
-    --shadow:0 4px 16px rgba(0,0,0,.08);
+    --green:#4ADE80; --green2:#86EFAC; --green-soft:#15351F; --green-softer:#1A3D26;
+    --bg:#14171A; --text:#E8E8E8; --muted:#9BA0A5; --faint:#6B7075; --border:#2A2F33;
+    --shadow:0 8px 24px -14px rgba(0,0,0,.5);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
@@ -60,6 +60,37 @@
   .case .cta{display:inline-flex;align-items:center;gap:5px;margin-top:14px;font-size:13px;font-weight:600;color:var(--green);}
 
   @media (max-width:720px){ .grid{grid-template-columns:1fr;} .hero h1{font-size:23px;} }
+</style>
+<style>
+  /* ===== 深色模式 Dark Mode 覆盖 ===== */
+  body{background:#14171A;color:#E8E8E8;color-scheme:dark;}
+  .navbar{background:rgba(20,23,26,.85);border-bottom:1px solid #2A2F33;}
+  .navbar .logo{color:#E8E8E8;}
+  .navbar .logo .sq{background:#4ADE80;color:#0B1410;}
+  .navbar .logo .beta{color:#4ADE80;background:#15351F;}
+  .nav-links a{color:#9BA0A5;}
+  .nav-links a:hover,.nav-links a.active{color:#4ADE80;background:#1A3D26;}
+  .btn-primary{background:#4ADE80;color:#0B1410;}
+  .btn-primary:hover{background:#86EFAC;}
+  .hero h1{color:#E8E8E8;}
+  .hero p{color:#9BA0A5;}
+  .case{background:#1E2225;border:1px solid #2A2F33;box-shadow:0 8px 24px -14px rgba(0,0,0,.5);}
+  .case:hover{box-shadow:0 12px 30px rgba(0,0,0,.5);}
+  .case .info h3{color:#E8E8E8;}
+  .case .meta{color:#6B7075;}
+  .tag{background:#15351F;color:#4ADE80;}
+  .tag.style{background:#23282B;color:#9BA0A5;}
+  .case .cta{color:#4ADE80;}
+  .shot .mini{background:#1E2225;box-shadow:0 6px 20px rgba(0,0,0,.4);}
+  .shot .mini .mbar{background:#1A1E20;border-bottom:1px solid #2A2F33;}
+  .shot .mini .mline{background:#2A2F33;}
+  .shot .mini .mtitle{background:#4ADE80;}
+  .shot .mini .mbtn{background:#4ADE80;}
+  .shot .mini .mcard{background:#14171A;border:1px solid #2A2F33;}
+  .shot.bg-glass{background:linear-gradient(135deg,#1A2E24,#15351F,#1A2E2E);}
+  .shot.bg-minimal{background:#16181A;}
+  .shot.bg-green{background:linear-gradient(135deg,#15351F,#1A3D26);}
+  .shot.bg-editorial{background:linear-gradient(135deg,#1E2225,#16181A);}
 </style>
 </head>
 <body>
