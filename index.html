@@ -252,6 +252,7 @@
   #ccTip b{color:#4ADE80;}
   .toast{background:#E8E8E8;color:#14171A;border:none;box-shadow:0 6px 18px rgba(0,0,0,.4);}
 </style>
+<link rel="stylesheet" href="auth.css">
 </head>
 <body>
 
@@ -265,14 +266,75 @@
     <a href="library.html">组件参考</a>
   </div>
   <div class="nav-right">
-    <button class="btn-login" id="loginBtn" onclick="openAuth()">登录</button>
-    <div class="user-box" id="userBox" style="display:none;">
-      <span class="user-name" id="userName"></span>
-      <button class="btn-logout" onclick="doLogout()">退出</button>
-    </div>
-    <button class="btn-primary" onclick="startConfig()">开始配置</button>
+    <button class="btn-primary nav-login" onclick="__auth.show()">登录 / 免费试用</button>
+    <button class="btn-primary nav-upgrade" onclick="openPay()">🔓 升级付费 · 99元</button>
   </div>
 </nav>
+
+<style>
+  #landing{display:block;max-width:960px;margin:0 auto;padding:56px 24px 80px;}
+  .workbench{display:none;}
+  body.trial #landing, body.paid #landing{display:none;}
+  body.trial .workbench, body.paid .workbench{display:flex;}
+  .nav-login{display:none;}
+  body.visitor .nav-login{display:inline-block;}
+  .nav-upgrade{display:none;}
+  body.trial .nav-upgrade{display:inline-block;}
+  .landing-hero{text-align:center;padding:20px 0 36px;}
+  .landing-badge{display:inline-block;font-size:12px;font-weight:700;color:#4ADE80;background:#15351F;padding:5px 14px;border-radius:999px;margin-bottom:18px;}
+  .landing-hero h1{font-size:38px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:#E8E8E8;}
+  .landing-hero p{color:#9BA0A5;font-size:16px;margin-top:14px;max-width:640px;margin-left:auto;margin-right:auto;}
+  .landing-cta{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap;}
+  .landing-cta .btn-primary{font-size:15px;padding:12px 24px;}
+  .landing-cta .btn-ghost{font-size:14px;padding:12px 20px;border:1px solid #2A2F33;border-radius:9px;color:#9BA0A5;background:#1E2225;font-weight:600;text-decoration:none;}
+  .landing-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:40px 0;}
+  .lstep{background:#1E2225;border:1px solid #2A2F33;border-radius:14px;padding:22px 20px;}
+  .lstep .n{width:26px;height:26px;border-radius:50%;background:#15351F;color:#4ADE80;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+  .lstep b{display:block;font-size:15px;color:#E8E8E8;}
+  .lstep span{font-size:13px;color:#9BA0A5;margin-top:4px;display:block;}
+  .landing-features{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0 40px;}
+  .lfeat{background:#1E2225;border:1px solid #2A2F33;border-radius:14px;padding:20px;text-align:center;}
+  .lfeat b{display:block;font-size:15px;color:#E8E8E8;margin:8px 0 4px;}
+  .lfeat span{font-size:12.5px;color:#9BA0A5;}
+  .landing-pricing{display:flex;justify-content:center;margin:20px 0;}
+  .price-card{background:#1E2225;border:1px solid #4ADE80;border-radius:18px;padding:32px 40px;text-align:center;max-width:360px;}
+  .price-card .pt{font-size:13px;color:#9BA0A5;}
+  .price-card .pp{font-size:48px;font-weight:800;color:#4ADE80;margin:8px 0;}
+  .price-card .pd{font-size:13px;color:#9BA0A5;margin-bottom:20px;line-height:1.7;}
+  @media (max-width:720px){ .landing-steps,.landing-features{grid-template-columns:1fr;} .landing-hero h1{font-size:28px;} }
+</style>
+
+<!-- 价值介绍落地页（访客可见） -->
+<section id="landing">
+  <div class="landing-hero">
+    <div class="landing-badge">🚀 AI 建站配置器</div>
+    <h1>3 分钟，用 AI 配出你的专业网站</h1>
+    <p>不懂代码也能做网站：选组件 → 实时预览 → 一键生成 Prompt → 交给 AI</p>
+    <div class="landing-cta">
+      <button class="btn-primary" onclick="__auth.show()">免费试用</button>
+      <a class="btn-ghost" href="showcase.html">看看 10 大行业案例 →</a>
+    </div>
+  </div>
+  <div class="landing-steps">
+    <div class="lstep"><span class="n">1</span><b>告诉 AI 你的想法</b><span>填网站名字、用途</span></div>
+    <div class="lstep"><span class="n">2</span><b>点选组件与风格</b><span>70 个组件随便配</span></div>
+    <div class="lstep"><span class="n">3</span><b>实时预览 + 一键生成</b><span>复制 Prompt 交给 AI</span></div>
+  </div>
+  <div class="landing-features">
+    <div class="lfeat">🧩<b>70 个组件</b><span>页面/导航/组件/动效全都有</span></div>
+    <div class="lfeat">👁️<b>实时预览</b><span>选完立刻看到效果</span></div>
+    <div class="lfeat">⚡<b>一键 Prompt</b><span>生成精准建站指令</span></div>
+    <div class="lfeat">🤖<b>AI 顾问</b><span>随时解答你的疑问</span></div>
+  </div>
+  <div class="landing-pricing">
+    <div class="price-card">
+      <div class="pt">永久买断</div>
+      <div class="pp">¥99</div>
+      <div class="pd">解锁全部 70 组件 + 无限生成 + AI 顾问 + 10 大行业案例模板</div>
+      <button class="btn-primary" onclick="__auth.show()">登录后购买</button>
+    </div>
+  </div>
+</section>
 
 <!-- 三栏工作台 -->
 <div class="workbench">
@@ -376,42 +438,50 @@
 </div>
 
 <style>
-  .auth-tabs{display:flex;border-bottom:1px solid #2A2F33;margin-bottom:16px;}
-  .auth-tabs button{flex:1;padding:10px;font-size:14px;font-weight:600;color:#9BA0A5;border-bottom:2px solid transparent;background:none;cursor:pointer;}
-  .auth-tabs button.active{color:#4ADE80;border-bottom-color:#4ADE80;}
-  .auth-msg{margin-top:12px;font-size:13px;color:#F87171;display:none;}
-  .auth-msg.ok{color:#4ADE80;}
-  .btn-login{background:transparent;color:#4ADE80;border:1px solid #4ADE80;padding:7px 14px;border-radius:8px;font-weight:600;font-size:13.5px;cursor:pointer;}
-  .btn-login:hover{background:#15351F;}
-  .user-box{display:flex;align-items:center;gap:8px;}
-  .user-name{font-size:13.5px;color:#E8E8E8;font-weight:600;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;}
-  .btn-logout{background:#23282B;color:#9BA0A5;border:1px solid #2A2F33;padding:6px 12px;border-radius:8px;font-size:12.5px;cursor:pointer;}
-  .btn-logout:hover{background:#2A2F33;}
-  #authOverlay{background:rgba(20,23,26,.55);backdrop-filter:blur(16px);z-index:2000;}
-  .locked #dify-chatbot-bubble-button{display:none !important;}
+  .pay-price{font-size:40px;font-weight:800;color:#4ADE80;}
+  .pay-price span{font-size:14px;color:#9BA0A5;font-weight:400;}
+  .pay-list{margin:14px 0;background:#14171A;border:1px solid #2A2F33;border-radius:10px;padding:14px 16px;font-size:13px;color:#E8E8E8;line-height:2;}
+  .pay-close{position:absolute;top:14px;right:16px;background:none;border:none;color:#9BA0A5;font-size:22px;cursor:pointer;line-height:1;z-index:10;}
+  .pay-qr{display:flex;gap:12px;margin:14px 0;}
+  .pay-qr-box{flex:1;background:#14171A;border:1px solid #2A2F33;border-radius:10px;padding:18px 14px;text-align:center;cursor:pointer;color:#E8E8E8;transition:.15s;}
+  .pay-qr-box:hover{border-color:#4ADE80;background:#15351F;}
+  .pay-qr-box span{font-size:13px;font-weight:600;display:block;margin-bottom:6px;}
+  .pay-qr-box i{font-size:11px;color:#6B7075;font-style:normal;}
+  .pay-note{font-size:12px;color:#9BA0A5;text-align:center;margin:10px 0;line-height:1.6;}
 </style>
 
-<!-- 登录 / 注册 -->
-<div class="overlay" id="authOverlay">
-  <div class="modal" style="width:400px;">
-    <div class="mh"><h2 id="authTitle">登录</h2><div class="sub">手机号即账号，登录后可保存你的配置</div></div>
+<!-- 付费解锁 -->
+<div class="overlay" id="payOverlay">
+  <div class="modal" style="width:440px;position:relative;">
+    <button class="pay-close" onclick="closePay()">✕</button>
+    <div class="mh"><h2>🔓 解锁全部功能</h2><div class="sub">99 元买断，永久使用，一次付费终身有效</div></div>
     <div class="mb">
-      <div class="auth-tabs">
-        <button class="active" id="tabLogin" onclick="switchAuth('login')">登录</button>
-        <button id="tabReg" onclick="switchAuth('register')">注册</button>
+      <div class="pay-price">¥99 <span>永久买断</span></div>
+      <div class="pay-list">
+        <div>✅ 全部 70 个组件</div>
+        <div>✅ 无限次生成 Prompt</div>
+        <div>✅ AI 建站顾问</div>
+        <div>✅ 10 大行业案例模板</div>
       </div>
-      <div id="loginForm">
-        <div class="field"><label>手机号</label><input id="loginPhone" inputmode="numeric" placeholder="请输入手机号"></div>
-        <div class="field"><label>密码</label><input id="loginPwd" type="password" placeholder="请输入密码"></div>
-        <button class="btn-primary" style="width:100%;margin-top:16px;" onclick="doLogin()">登录</button>
+      <div class="pay-qr">
+        <button class="pay-qr-box" onclick="showQR('wechat')"><span>💚 微信收款码</span><i>点击查看大图</i></button>
+        <button class="pay-qr-box" onclick="showQR('alipay')"><span>💙 支付宝收款码</span><i>点击查看大图</i></button>
       </div>
-      <div id="regForm" style="display:none;">
-        <div class="field"><label>昵称</label><input id="regNick" placeholder="怎么称呼你"></div>
-        <div class="field"><label>手机号</label><input id="regPhone" inputmode="numeric" placeholder="手机号作为登录账号"></div>
-        <div class="field"><label>密码</label><input id="regPwd" type="password" placeholder="设置密码（至少 6 位）"></div>
-        <button class="btn-primary" style="width:100%;margin-top:16px;" onclick="doRegister()">注册</button>
-      </div>
-      <div class="auth-msg" id="authMsg"></div>
+      <div class="pay-note">付款后加微信「浩然」发付款截图，领取激活码</div>
+      <div class="field"><label>输入激活码</label><input id="redeemCode" placeholder="例如 HAORAN-VIP-99"></div>
+      <button class="btn-primary" style="width:100%;margin-top:12px;" onclick="doRedeem()">激活解锁</button>
+    </div>
+  </div>
+</div>
+
+<!-- 收款码弹窗 -->
+<div class="overlay" id="qrOverlay" onclick="if(event.target===this)hideQR()">
+  <div class="modal" style="width:320px;position:relative;">
+    <button class="pay-close" onclick="hideQR()">✕</button>
+    <div class="mh"><h2 id="qrTitle">微信收款码</h2></div>
+    <div class="mb" style="text-align:center;">
+      <img id="qrImg" src="" alt="收款码" style="width:250px;height:250px;object-fit:contain;border-radius:12px;display:block;margin:0 auto;background:#fff;">
+      <p style="margin-top:14px;font-size:13px;color:#9BA0A5;">请扫码支付 99 元</p>
     </div>
   </div>
 </div>
@@ -481,6 +551,7 @@
   function hideTip(){ var t=document.getElementById('ccTip'); if(t) t.style.display='none'; }
 
   function toggleItem(id){
+    if(window.__auth && window.__auth.isTrial() && FREE_ITEMS.indexOf(id) < 0){ openPay(); return; }
     const it=itemById(id); if(!it) return;
     if(isRadio(id)){
       const group = (it.cat==='style') ? 'style' : 'structure-type';
@@ -597,6 +668,11 @@
     return lines.join('\n');
   }
   function openPrompt(){
+    if(window.__auth && window.__auth.isTrial()){
+      var n = parseInt(localStorage.getItem('hyr_gen_count')||'0', 10);
+      if(n >= 1){ openPay(); return; }
+      localStorage.setItem('hyr_gen_count', String(n+1));
+    }
     const t=buildPrompt();
     if(!t){ toast('请先在左侧选择一些组件'); return; }
     document.getElementById('promptText').textContent=t;
@@ -638,6 +714,23 @@
   function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2200); }
   function toggleLeft(){ document.getElementById('leftPanel').classList.toggle('open'); }
   function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  /* ========== 付费 & 试用 ========== */
+  const FREE_ITEMS = ['structure-5', 'structure-6', 'components-8'];
+  function openPay(){ show('payOverlay'); }
+  function closePay(){ hide('payOverlay'); }
+  function doRedeem(){
+    var code = document.getElementById('redeemCode').value;
+    if(window.__auth && window.__auth.redeem(code)){ closePay(); toast('激活成功！已解锁全部功能 ✓'); }
+    else { toast('激活码错误，请检查'); }
+  }
+  function showQR(type){
+    if(type === 'wechat'){ document.getElementById('qrTitle').textContent='微信收款码'; document.getElementById('qrImg').src='微信收款码.png'; }
+    else { document.getElementById('qrTitle').textContent='支付宝收款码'; document.getElementById('qrImg').src='支付宝收款码.jpg'; }
+    show('qrOverlay');
+  }
+  function hideQR(){ hide('qrOverlay'); }
+  window.onAuthChange = function(){ renderTab(); };
 
   /* ========== 初始化 ========== */
   updateAddr();
@@ -751,13 +844,6 @@
     document.body.classList.toggle('locked', !u.nick);
   }
 
-  refreshAuthUI();
-  if(!currentUser().nick){
-    switchAuth('login');
-    show('authOverlay');
-  } else {
-    try{ if(!localStorage.getItem('hyr_ai_onboarded')) show('onboardOverlay'); }catch(e){}
-  }
 </script>
 
 <!-- AI 数字分身：右下角 Dify 悬浮气泡（真实AI，稳定可靠） -->
@@ -776,5 +862,6 @@
   #dify-chatbot-bubble-window { width: 24rem !important; height: 40rem !important; }
   @media (max-width: 480px) { #dify-chatbot-bubble-window { width: 92vw !important; } }
 </style>
+<script src="auth.js"></script>
 </body>
 </html>

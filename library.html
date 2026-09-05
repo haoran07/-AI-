@@ -951,7 +951,46 @@
     <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的项目后台右下角添加 Floating Action Button，使用加号图标并固定在视口右下角，点击后展开 New Project、New Post 和 Upload Image 三个快捷操作；按钮不能遮挡底部导航或重要内容，并考虑移动端安全区域。</pre></div>
   </div>
 </section>
-<section id="motion">
+
+<!-- 付费墙 -->
+<div class="paywall" id="paywall">
+  <div class="paywall-box">
+    <div class="pw-icon">🔒</div>
+    <h3>后面的 40 个组件需要付费解锁</h3>
+    <p>你已经看完了免费的 30 个组件（页面结构 / 导航与切换 / 常用组件）。<br>付费 99 元买断，解锁全部 70 个组件、无限生成 Prompt、AI 顾问。</p>
+    <button class="pw-btn" onclick="openPay()">🔓 立即解锁（99元）</button>
+  </div>
+</div>
+
+<!-- 付费弹窗 -->
+<div class="pw-overlay" id="payOverlay" onclick="if(event.target===this)closePay()">
+  <div class="pw-card">
+    <button class="pw-close" onclick="closePay()">✕</button>
+    <h3 style="font-size:19px;font-weight:800;color:#E8E8E8;">🔓 解锁全部功能</h3>
+    <p style="font-size:13px;color:#9BA0A5;margin-top:6px;">99 元买断，永久使用</p>
+    <div style="font-size:40px;font-weight:800;color:#4ADE80;margin-top:8px;">¥99 <span style="font-size:14px;color:#9BA0A5;font-weight:400;">永久买断</span></div>
+    <div class="pw-list"><div>✅ 全部 70 个组件</div><div>✅ 无限次生成 Prompt</div><div>✅ AI 建站顾问</div><div>✅ 10 大行业案例模板</div></div>
+    <div class="pw-qr">
+      <button class="pw-qr-box" onclick="showQR('wechat')"><span>💚 微信收款码</span><i>点击查看</i></button>
+      <button class="pw-qr-box" onclick="showQR('alipay')"><span>💙 支付宝收款码</span><i>点击查看</i></button>
+    </div>
+    <p style="font-size:12px;color:#9BA0A5;text-align:center;">付款后加微信「浩然」发截图，领激活码</p>
+    <div class="pw-field"><label>输入激活码</label><input id="redeemCode" placeholder="例如 HAORAN-VIP-99"></div>
+    <button class="pw-btn" onclick="doRedeem()">激活解锁</button>
+  </div>
+</div>
+
+<!-- 收款码弹窗 -->
+<div class="pw-overlay" id="qrOverlay" onclick="if(event.target===this)hideQR()">
+  <div class="pw-card" style="width:320px;text-align:center;">
+    <button class="pw-close" onclick="hideQR()">✕</button>
+    <h3 style="font-size:17px;font-weight:800;color:#E8E8E8;" id="qrTitle">微信收款码</h3>
+    <img id="qrImg" src="" alt="收款码" style="width:250px;height:250px;object-fit:contain;border-radius:12px;background:#fff;display:block;margin:14px auto 0;">
+    <p style="margin-top:14px;font-size:13px;color:#9BA0A5;">请扫码支付 99 元</p>
+  </div>
+</div>
+
+<section id="motion" class="paid-section">
   <div class="cat-hero"><span class="tag">04 · 滚动与动作 Scroll & Motion</span><h2>滚动与动作</h2><p>决定页面如何"活起来"：内容何时出现、滚动时发生什么、怎样在不打断阅读的前提下建立节奏。</p></div>
 
   <div class="demo-card" id="m1">
@@ -1093,7 +1132,7 @@
     <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>在浩然的项目案例页使用 Scroll-driven Animation，滚动经过 Process 章节时，左侧进度线随章节阅读进度增长，右侧三个原型面板依次从低透明度变为完全可见；优先使用 CSS animation-timeline 和 view()，为不支持的浏览器提供 IntersectionObserver 降级方案，并尊重 reduced motion。</pre></div>
   </div>
 </section>
-<section id="loading">
+<section id="loading" class="paid-section">
   <div class="cat-hero"><span class="tag">05 · 提示与加载 Feedback & Loading</span><h2>提示与加载</h2><p>决定用户等待时看到什么、出错时怎么办、操作完成后如何确认。</p></div>
 
   <div class="demo-card" id="l1">
@@ -1217,7 +1256,7 @@
     <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的 Contact Form 添加 Inline Validation，邮箱字段在 blur 后检查格式，错误信息显示在输入框下方并说明如何修正；输入正确后显示简洁确认状态；不要在用户输入第一个字符时立刻报错；提交失败时把焦点移动到第一个错误字段，并在顶部提供错误摘要。</pre></div>
   </div>
 </section>
-<section id="visual">
+<section id="visual" class="paid-section">
   <div class="cat-hero"><span class="tag">06 · 视觉风格 Visual Styles</span><h2>视觉风格</h2><p>决定页面给人的第一印象：克制还是张扬、像杂志还是像工具、轻盈通透还是厚重直接。</p></div>
 
   <div class="demo-card" id="v1">
@@ -1354,7 +1393,7 @@
     <div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>为浩然的实验性音乐控制器使用局部 Neumorphism，仅对播放、音量和模式按钮使用同色亮暗阴影，保留清晰文字、图标和 focus outline；主要导航、表单与长文本不要使用新拟态；按下状态需要通过阴影、位置和颜色共同表达。</pre></div>
   </div>
 </section>
-<section id="advanced">
+<section id="advanced" class="paid-section">
   <div class="cat-hero"><span class="tag">07 · 高级效果 Advanced Effects</span><h2>高级效果</h2><p>高级效果不等于更复杂，同时考虑表现力、可访问性、兼容性和性能。</p></div>
 
   <div class="demo-card" id="a1">
@@ -1840,5 +1879,45 @@
 </style>
 
 <script src="auth.js"></script>
+<style>
+  .paid-section{display:block;}
+  body.locked .paid-section{display:none;}
+  .paywall{display:none;padding:20px 16px 50px;}
+  body.locked .paywall{display:block;}
+  .paywall-box{max-width:560px;margin:0 auto;background:#1E2225;border:1px solid #2A2F33;border-radius:16px;padding:40px 30px;text-align:center;}
+  .pw-icon{font-size:42px;margin-bottom:12px;}
+  .paywall-box h3{font-size:21px;font-weight:800;color:#E8E8E8;}
+  .paywall-box p{font-size:14px;color:#9BA0A5;margin:12px 0 22px;line-height:1.8;}
+  .pw-btn{width:100%;margin-top:12px;background:#4ADE80;color:#0B1410;padding:12px;border-radius:9px;font-weight:700;font-size:14px;border:none;cursor:pointer;font-family:inherit;}
+  .pw-btn:hover{background:#86EFAC;}
+  .pw-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
+  .pw-overlay.show{display:flex;}
+  .pw-card{background:#1E2225;border:1px solid #2A2F33;border-radius:16px;padding:24px 26px;width:440px;max-width:100%;max-height:90vh;overflow:auto;position:relative;color:#E8E8E8;}
+  .pw-close{position:absolute;top:12px;right:14px;background:none;border:none;color:#9BA0A5;font-size:22px;cursor:pointer;line-height:1;padding:0 4px;}
+  .pw-list{margin:14px 0;background:#14171A;border:1px solid #2A2F33;border-radius:10px;padding:12px 16px;font-size:13px;line-height:2;}
+  .pw-qr{display:flex;gap:12px;margin:14px 0;}
+  .pw-qr-box{flex:1;background:#14171A;border:1px solid #2A2F33;border-radius:10px;padding:16px 14px;text-align:center;cursor:pointer;color:#E8E8E8;}
+  .pw-qr-box:hover{border-color:#4ADE80;background:#15351F;}
+  .pw-qr-box span{font-size:13px;font-weight:600;display:block;margin-bottom:6px;}
+  .pw-qr-box i{font-size:11px;color:#6B7075;font-style:normal;}
+  .pw-field{margin-top:12px;}
+  .pw-field label{display:block;font-size:12px;color:#9BA0A5;margin-bottom:5px;font-weight:600;}
+  .pw-field input{width:100%;border:1px solid #2A2F33;border-radius:8px;padding:10px 12px;font-size:13px;background:#14171A;color:#E8E8E8;box-sizing:border-box;font-family:inherit;}
+</style>
+<script>
+  function openPay(){ document.getElementById('payOverlay').classList.add('show'); }
+  function closePay(){ document.getElementById('payOverlay').classList.remove('show'); }
+  function showQR(type){
+    if(type==='wechat'){ document.getElementById('qrTitle').textContent='微信收款码'; document.getElementById('qrImg').src='微信收款码.png'; }
+    else { document.getElementById('qrTitle').textContent='支付宝收款码'; document.getElementById('qrImg').src='支付宝收款码.jpg'; }
+    document.getElementById('qrOverlay').classList.add('show');
+  }
+  function hideQR(){ document.getElementById('qrOverlay').classList.remove('show'); }
+  function doRedeem(){
+    var code = document.getElementById('redeemCode').value;
+    if(window.__auth && window.__auth.redeem(code)){ closePay(); showToast('success', '激活成功！已解锁全部组件 ✓'); }
+    else { showToast('error', '激活码错误，请检查'); }
+  }
+</script>
 </body>
 </html>
