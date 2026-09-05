@@ -7,7 +7,7 @@
   // 激活码已迁移到 Supabase（服务端校验 + 自动标记已用）
 
   function email(p){ return (p||'').trim() + '@haoxixi.com'; }
-  function cur(){ try{ return { nick: localStorage.getItem('hyr_nick')||'', token: localStorage.getItem('hyr_token')||'', paid: localStorage.getItem('hyr_paid')||'' }; }catch(e){ return {nick:'',token:'',paid:''}; } }
+  function cur(){ try{ return { nick: localStorage.getItem('hyr_nick')||'', phone: localStorage.getItem('hyr_phone')||'', token: localStorage.getItem('hyr_token')||'', paid: localStorage.getItem('hyr_paid')||'' }; }catch(e){ return {nick:'',phone:'',token:'',paid:''}; } }
   function $(id){ return document.getElementById(id); }
 
   // 注入登录门
@@ -61,8 +61,8 @@
     },
     show: function(){ A.switchAuth('login'); $('authOverlay').style.display = 'flex'; },
     hide: function(){ $('authOverlay').style.display = 'none'; },
-    save: function(j, nick){
-      try{ localStorage.setItem('hyr_token', j.access_token||''); localStorage.setItem('hyr_refresh', j.refresh_token||''); localStorage.setItem('hyr_nick', nick||''); }catch(e){}
+    save: function(j, nick, phone){
+      try{ localStorage.setItem('hyr_token', j.access_token||''); localStorage.setItem('hyr_refresh', j.refresh_token||''); localStorage.setItem('hyr_nick', nick||''); if(phone) localStorage.setItem('hyr_phone', phone); }catch(e){}
     },
     register: async function(){
       var nick = $('regNick').value.trim(), phone = $('regPhone').value.trim(), pwd = $('regPwd').value;
@@ -71,7 +71,7 @@
       if(pwd.length < 6){ A.msg('密码至少 6 位'); return; }
       var r = await fetch(SUPABASE_URL + '/auth/v1/signup', { method:'POST', headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'}, body: JSON.stringify({ email: email(phone), password: pwd, data: { nickname: nick, phone: phone } }) });
       var j = await r.json();
-      if(j.access_token){ A.save(j, nick); A.msg('注册成功，已登录', true); A.refresh(); setTimeout(A.hide, 600); }
+      if(j.access_token){ A.save(j, nick, phone); A.msg('注册成功，已登录', true); A.refresh(); setTimeout(A.hide, 600); }
       else { A.msg(j.msg || j.error_description || '注册失败，请重试'); }
     },
     login: async function(){
@@ -80,9 +80,9 @@
       var r = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', { method:'POST', headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'}, body: JSON.stringify({ email: email(phone), password: pwd }) });
       var j = await r.json();
       if(j.access_token){
-        var nick = '';
-        try { var u = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+j.access_token} }).then(function(x){ return x.json(); }); nick = (u.user_metadata && u.user_metadata.nickname) || phone; } catch(e){ nick = phone; }
-        A.save(j, nick); A.msg('登录成功', true); A.refresh(); setTimeout(A.hide, 600);
+        var nick = '', phone2 = phone;
+        try { var u = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+j.access_token} }).then(function(x){ return x.json(); }); nick = (u.user_metadata && u.user_metadata.nickname) || phone; phone2 = (u.user_metadata && u.user_metadata.phone) || phone; } catch(e){ nick = phone; }
+        A.save(j, nick, phone2); A.msg('登录成功', true); A.refresh(); setTimeout(A.hide, 600);
       } else { A.msg(j.error_description || '登录失败，请检查手机号或密码'); }
     },
     logout: function(){
@@ -96,7 +96,7 @@
         var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/redeem_code', {
           method:'POST',
           headers:{ 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
-          body: JSON.stringify({ p_code: code })
+          body: JSON.stringify({ p_code: code, p_user: (cur().phone || cur().nick || '未登录') })
         });
         var j = await r.json();
         if(j && j.ok === true){
