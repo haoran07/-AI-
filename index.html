@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -739,114 +739,7 @@
   renderTab(); renderPreview(); renderPills();
 </script>
 
-<script>
-  /* ========== 登录 / 注册（Supabase） ========== */
-  // TODO: 替换成你的 Supabase 项目地址和 anon key
-  const SUPABASE_URL = 'https://ysslreesusynfbrgxnew.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlzc2xyZWVzdXN5bmZicmd4bmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0NjcwNDgsImV4cCI6MjEwNDA0MzA0OH0.UUObV7HAjVZ_I6YsT2tWRAjwx0YsQvRoiElHQFMzHwk';
 
-  function authEmail(phone){ return (phone||'').trim() + '@haoxixi.com'; }
-
-  async function doRegister(){
-    var nick = document.getElementById('regNick').value.trim();
-    var phone = document.getElementById('regPhone').value.trim();
-    var pwd = document.getElementById('regPwd').value;
-    if(!nick || !phone || !pwd){ showAuthMsg('请填写完整信息'); return; }
-    if(!/^1\d{10}$/.test(phone)){ showAuthMsg('请输入正确的 11 位手机号'); return; }
-    if(pwd.length < 6){ showAuthMsg('密码至少 6 位'); return; }
-    var r = await fetch(SUPABASE_URL + '/auth/v1/signup', {
-      method:'POST',
-      headers:{ 'apikey':SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
-      body: JSON.stringify({ email: authEmail(phone), password: pwd, data: { nickname: nick, phone: phone } })
-    });
-    var j = await r.json();
-    if(j.access_token){
-      saveSession(j, nick);
-      showAuthMsg('注册成功，已自动登录', true);
-      refreshAuthUI(); setTimeout(closeAuth, 800);
-    } else {
-      showAuthMsg(j.msg || j.error_description || '注册失败，请重试');
-    }
-  }
-
-  async function doLogin(){
-    var phone = document.getElementById('loginPhone').value.trim();
-    var pwd = document.getElementById('loginPwd').value;
-    if(!phone || !pwd){ showAuthMsg('请填写手机号和密码'); return; }
-    var r = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
-      method:'POST',
-      headers:{ 'apikey':SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
-      body: JSON.stringify({ email: authEmail(phone), password: pwd })
-    });
-    var j = await r.json();
-    if(j.access_token){
-      var nick = '';
-      try {
-        var u = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{ 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+j.access_token } }).then(function(x){return x.json();});
-        nick = (u.user_metadata && u.user_metadata.nickname) || phone;
-      } catch(e){ nick = phone; }
-      saveSession(j, nick);
-      showAuthMsg('登录成功', true);
-      refreshAuthUI(); setTimeout(closeAuth, 800);
-    } else {
-      showAuthMsg(j.error_description || '登录失败，请检查手机号或密码');
-    }
-  }
-
-  function saveSession(j, nick){
-    try{
-      localStorage.setItem('hyr_token', j.access_token || '');
-      localStorage.setItem('hyr_refresh', j.refresh_token || '');
-      localStorage.setItem('hyr_nick', nick || '');
-    }catch(e){}
-  }
-  function doLogout(){
-    try{ localStorage.removeItem('hyr_token'); localStorage.removeItem('hyr_refresh'); localStorage.removeItem('hyr_nick'); }catch(e){}
-    refreshAuthUI(); toast('已退出登录');
-    switchAuth('login');
-    show('authOverlay');
-  }
-  function currentUser(){
-    try{ return { nick: localStorage.getItem('hyr_nick')||'', token: localStorage.getItem('hyr_token')||'' }; }catch(e){ return {nick:'',token:''}; }
-  }
-
-  function openAuth(){ switchAuth('login'); show('authOverlay'); }
-  function closeAuth(){ hide('authOverlay'); }
-  function switchAuth(mode){
-    document.getElementById('loginForm').style.display = (mode==='login') ? '' : 'none';
-    document.getElementById('regForm').style.display = (mode==='register') ? '' : 'none';
-    document.getElementById('tabLogin').classList.toggle('active', mode==='login');
-    document.getElementById('tabReg').classList.toggle('active', mode==='register');
-    document.getElementById('authTitle').textContent = (mode==='login') ? '登录' : '注册';
-    hideAuthMsg();
-  }
-  function showAuthMsg(msg, ok){
-    var m = document.getElementById('authMsg');
-    m.textContent = msg; m.style.display = 'block';
-    m.className = 'auth-msg' + (ok ? ' ok' : '');
-  }
-  function hideAuthMsg(){
-    var m = document.getElementById('authMsg');
-    m.style.display = 'none'; m.className = 'auth-msg';
-  }
-
-  function refreshAuthUI(){
-    var u = currentUser();
-    var btn = document.getElementById('loginBtn');
-    var box = document.getElementById('userBox');
-    var name = document.getElementById('userName');
-    if(u.nick){
-      btn.style.display = 'none';
-      box.style.display = 'flex';
-      name.textContent = '👤 ' + u.nick;
-    } else {
-      btn.style.display = '';
-      box.style.display = 'none';
-    }
-    document.body.classList.toggle('locked', !u.nick);
-  }
-
-</script>
 
 <!-- AI 数字分身：右下角 Dify 悬浮气泡（真实AI，稳定可靠） -->
 <script>
