@@ -387,6 +387,8 @@
   .user-name{font-size:13.5px;color:#E8E8E8;font-weight:600;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;}
   .btn-logout{background:#23282B;color:#9BA0A5;border:1px solid #2A2F33;padding:6px 12px;border-radius:8px;font-size:12.5px;cursor:pointer;}
   .btn-logout:hover{background:#2A2F33;}
+  #authOverlay{background:rgba(20,23,26,.55);backdrop-filter:blur(16px);z-index:2000;}
+  .locked #dify-chatbot-bubble-button{display:none !important;}
 </style>
 
 <!-- 登录 / 注册 -->
@@ -640,7 +642,6 @@
   /* ========== 初始化 ========== */
   updateAddr();
   renderTab(); renderPreview(); renderPills();
-  try{ if(!localStorage.getItem('hyr_ai_onboarded')) show('onboardOverlay'); }catch(e){ show('onboardOverlay'); }
 </script>
 
 <script>
@@ -707,6 +708,8 @@
   function doLogout(){
     try{ localStorage.removeItem('hyr_token'); localStorage.removeItem('hyr_refresh'); localStorage.removeItem('hyr_nick'); }catch(e){}
     refreshAuthUI(); toast('已退出登录');
+    switchAuth('login');
+    show('authOverlay');
   }
   function currentUser(){
     try{ return { nick: localStorage.getItem('hyr_nick')||'', token: localStorage.getItem('hyr_token')||'' }; }catch(e){ return {nick:'',token:''}; }
@@ -745,9 +748,16 @@
       btn.style.display = '';
       box.style.display = 'none';
     }
+    document.body.classList.toggle('locked', !u.nick);
   }
 
   refreshAuthUI();
+  if(!currentUser().nick){
+    switchAuth('login');
+    show('authOverlay');
+  } else {
+    try{ if(!localStorage.getItem('hyr_ai_onboarded')) show('onboardOverlay'); }catch(e){}
+  }
 </script>
 
 <!-- AI 数字分身：右下角 Dify 悬浮气泡（真实AI，稳定可靠） -->
