@@ -1913,10 +1913,12 @@
     document.getElementById('qrOverlay').classList.add('show');
   }
   function hideQR(){ document.getElementById('qrOverlay').classList.remove('show'); }
-  function doRedeem(){
+  async function doRedeem(){
     var code = document.getElementById('redeemCode').value;
-    if(window.__auth && window.__auth.redeem(code)){ closePay(); showToast('success', '激活成功！已解锁全部组件 ✓'); }
-    else { showToast('error', '激活码错误，请检查'); }
+    if(!window.__auth){ showToast('error', '请稍后重试'); return; }
+    var r = await window.__auth.redeem(code);
+    if(r && r.ok){ closePay(); showToast('success', r.msg); }
+    else { showToast('error', (r && r.msg) || '激活码错误'); }
   }
 </script>
 </body>

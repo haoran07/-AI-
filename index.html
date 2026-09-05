@@ -719,10 +719,12 @@
   const FREE_ITEMS = ['structure-5', 'structure-6', 'components-8'];
   function openPay(){ show('payOverlay'); }
   function closePay(){ hide('payOverlay'); }
-  function doRedeem(){
+  async function doRedeem(){
     var code = document.getElementById('redeemCode').value;
-    if(window.__auth && window.__auth.redeem(code)){ closePay(); toast('激活成功！已解锁全部功能 ✓'); }
-    else { toast('激活码错误，请检查'); }
+    if(!window.__auth){ toast('请稍后重试'); return; }
+    var r = await window.__auth.redeem(code);
+    if(r && r.ok){ closePay(); toast(r.msg); }
+    else { toast((r && r.msg) || '激活码错误'); }
   }
   function showQR(type){
     if(type === 'wechat'){ document.getElementById('qrTitle').textContent='微信收款码'; document.getElementById('qrImg').src='微信收款码.png'; }

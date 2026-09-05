@@ -4,8 +4,7 @@
 (function(){
   var SUPABASE_URL = 'https://ysslreesusynfbrgxnew.supabase.co';
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlzc2xyZWVzdXN5bmZicmd4bmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg0NjcwNDgsImV4cCI6MjEwNDA0MzA0OH0.UUObV7HAjVZ_I6YsT2tWRAjwx0YsQvRoiElHQFMzHwk';
-  // 兑换码（改这里换你的码；更安全的做法是后面接 Supabase 兑换码表）
-  var MASTER_CODES = ['HAORAN-VIP-99'];
+  // 激活码已迁移到 Supabase（服务端校验 + 自动标记已用）
 
   function email(p){ return (p||'').trim() + '@haoxixi.com'; }
   function cur(){ try{ return { nick: localStorage.getItem('hyr_nick')||'', token: localStorage.getItem('hyr_token')||'', paid: localStorage.getItem('hyr_paid')||'' }; }catch(e){ return {nick:'',token:'',paid:''}; } }
@@ -90,15 +89,25 @@
       try{ localStorage.removeItem('hyr_token'); localStorage.removeItem('hyr_refresh'); localStorage.removeItem('hyr_nick'); }catch(e){}
       A.refresh();
     },
-    // 兑换码解锁
-    redeem: function(code){
+    // 兑换码解锁（Supabase 服务端校验 + 原子标记已用，前端看不到码）
+    redeem: async function(code){
       code = (code||'').trim().toUpperCase();
-      if(MASTER_CODES.indexOf(code) >= 0){
-        try{ localStorage.setItem('hyr_paid', '1'); }catch(e){}
-        A.refresh();
-        return true;
+      try{
+        var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/redeem_code', {
+          method:'POST',
+          headers:{ 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
+          body: JSON.stringify({ p_code: code })
+        });
+        var j = await r.json();
+        if(j && j.ok === true){
+          try{ localStorage.setItem('hyr_paid','1'); }catch(e){}
+          A.refresh();
+          return { ok:true, msg: j.msg || '激活成功' };
+        }
+        return { ok:false, msg: (j && j.msg) || '激活码错误' };
+      }catch(e){
+        return { ok:false, msg:'网络错误，请重试' };
       }
-      return false;
     },
     isPaid: function(){ return cur().paid === '1'; },
     isTrial: function(){ return !!cur().nick && cur().paid !== '1'; },
