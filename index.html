@@ -552,7 +552,8 @@
   function hideTip(){ var t=document.getElementById('ccTip'); if(t) t.style.display='none'; }
 
   function toggleItem(id){
-    if(window.__auth && window.__auth.isTrial() && FREE_ITEMS.indexOf(id) < 0){ openPay(); return; }
+    if(!window.__auth || window.__auth.isVisitor()){ if(window.__auth) window.__auth.show(); toast('请先注册并登录'); return; }
+    if(window.__auth.isTrial() && FREE_ITEMS.indexOf(id) < 0){ openPay(); return; }
     const it=itemById(id); if(!it) return;
     if(isRadio(id)){
       const group = (it.cat==='style') ? 'style' : 'structure-type';
@@ -690,10 +691,14 @@
     return lines.join('\n');
   }
   function openPrompt(){
-    if(window.__auth && window.__auth.isTrial()){
-      var n = parseInt(localStorage.getItem('hyr_gen_count')||'0', 10);
-      if(n >= 1){ openPay(); return; }
-      localStorage.setItem('hyr_gen_count', String(n+1));
+    // 强制门槛：必须「注册登录 + 已激活(付费)」才能生成 Prompt
+    if(!window.__auth || !window.__auth.isPaid()){
+      if(window.__auth && window.__auth.isVisitor()){
+        window.__auth.show(); toast('请先注册并登录');
+      } else {
+        openPay();
+      }
+      return;
     }
     const t=buildPrompt();
     if(!t){ toast('请先在左侧选择一些组件'); return; }
@@ -702,7 +707,11 @@
   }
   function closePrompt(){ hide('promptOverlay'); }
   function copyPrompt(){
+    if(!window.__auth || !window.__auth.isPaid()){
+      openPrompt(); return;
+    }
     const t=document.getElementById('promptText').textContent;
+    if(!t || t.indexOf('选择组件后')>=0){ toast('请先生成 Prompt'); return; }
     copyText(t,()=>toast('已复制 Prompt ✓'),()=>toast('复制失败，请手动复制'));
   }
 
