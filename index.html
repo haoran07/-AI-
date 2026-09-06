@@ -556,12 +556,17 @@
     if(window.__auth.isTrial() && FREE_ITEMS.indexOf(id) < 0){ openPay(); return; }
     const it=itemById(id); if(!it) return;
     if(isRadio(id)){
-      const group = (it.cat==='style') ? 'style' : 'structure-type';
-      ITEMS.forEach(x=>{
-        const g=(x.cat==='style')?'style':((x.cat==='structure'&&['structure-1','structure-2','structure-3','structure-4'].includes(x.id))?'structure-type':'');
-        if(g===group) selected.delete(x.id);
-      });
-      selected.add(id);
+      // 单选组：点已选中的项→取消选中；点其它项→清空同组后选中（实现「再点一次取消」）
+      if(selected.has(id)){
+        selected.delete(id);
+      } else {
+        const group = (it.cat==='style') ? 'style' : 'structure-type';
+        ITEMS.forEach(x=>{
+          const g=(x.cat==='style')?'style':((x.cat==='structure'&&['structure-1','structure-2','structure-3','structure-4'].includes(x.id))?'structure-type':'');
+          if(g===group) selected.delete(x.id);
+        });
+        selected.add(id);
+      }
     } else {
       selected.has(id) ? selected.delete(id) : selected.add(id);
     }
