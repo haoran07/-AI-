@@ -45,6 +45,33 @@
   pill.innerHTML = '<span class="auth-pill-name" id="authNick"></span><button class="auth-pill-out" onclick="__auth.logout()">退出</button>';
   var nav = document.querySelector('.navbar'); if(nav){ nav.appendChild(pill); } else { document.body.appendChild(pill); }
 
+  // Dify 聊天：仅付费用户懒加载（未登录/未激活不加载脚本 → 看不到按钮、无法聊天）
+  var CHAT_SCRIPT_ID = 'QfzBwTFjkvRobafA';
+  var CHAT_SCRIPT_URL = 'http://118.89.116.235/embed.min.js';
+  function loadChatScript(){
+    if(document.getElementById(CHAT_SCRIPT_ID)) return;
+    try{
+      var u = cur();
+      var cfg = window.difyChatbotConfig = (window.difyChatbotConfig || {});
+      if(!cfg.token) cfg.token = 'QfzBwTFjkvRobafA';
+      if(!cfg.baseUrl) cfg.baseUrl = 'http://118.89.116.235';
+      if(!cfg.inputs) cfg.inputs = {};
+      if(!cfg.systemVariables) cfg.systemVariables = {};
+      cfg.userVariables = { nickname: u.nick || '朋友' };
+    }catch(e){}
+    var s = document.createElement('script');
+    s.id = CHAT_SCRIPT_ID;
+    s.src = CHAT_SCRIPT_URL;
+    s.async = true;
+    document.body.appendChild(s);
+  }
+  function setChatVisible(v){
+    var btn = document.getElementById('dify-chatbot-bubble-button');
+    var win = document.getElementById('dify-chatbot-bubble-window');
+    if(btn) btn.style.display = v ? '' : 'none';
+    if(win) win.style.display = v ? '' : 'none';
+  }
+
   var A = {
     switchAuth: function(mode){
       $('loginForm').style.display = mode==='login' ? '' : 'none';
@@ -125,6 +152,7 @@
       document.body.classList.toggle('trial', !!u.nick && u.paid !== '1');
       document.body.classList.toggle('paid', u.paid === '1');
       document.body.classList.toggle('locked', u.paid !== '1');
+      if(u.paid === '1'){ loadChatScript(); setChatVisible(true); } else { setChatVisible(false); }
       if(window.onAuthChange){ window.onAuthChange(); }
     }
   };

@@ -20,4 +20,5 @@
 .auth-pill-name{font-size:13px;color:#E8E8E8;font-weight:600;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .auth-pill-out{background:#23282B;color:#9BA0A5;border:1px solid #2A2F33;padding:5px 10px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit;}
 .auth-pill-out:hover{background:#2A2F33;}
-.locked #dify-chatbot-bubble-button{display:none !important;}
+.locked #dify-chatbot-bubble-button,
+.locked #dify-chatbot-bubble-window{display:none !important;}
