@@ -1905,7 +1905,14 @@
   .pw-field input{width:100%;border:1px solid #2A2F33;border-radius:8px;padding:10px 12px;font-size:13px;background:#14171A;color:#E8E8E8;box-sizing:border-box;font-family:inherit;}
 </style>
 <script>
-  function openPay(){ document.getElementById('payOverlay').classList.add('show'); }
+  function openPay(){
+    if(!window.__auth || window.__auth.isVisitor()){
+      if(window.__auth) window.__auth.show();
+      showToast('info', '请先登录后再解锁');
+      return;
+    }
+    document.getElementById('payOverlay').classList.add('show');
+  }
   function closePay(){ document.getElementById('payOverlay').classList.remove('show'); }
   function showQR(type){
     if(type==='wechat'){ document.getElementById('qrTitle').textContent='微信收款码'; document.getElementById('qrImg').src='微信收款码.png'; }
@@ -1914,8 +1921,9 @@
   }
   function hideQR(){ document.getElementById('qrOverlay').classList.remove('show'); }
   async function doRedeem(){
-    var code = document.getElementById('redeemCode').value;
     if(!window.__auth){ showToast('error', '请稍后重试'); return; }
+    if(window.__auth.isVisitor()){ closePay(); window.__auth.show(); showToast('info', '请先登录后再激活'); return; }
+    var code = document.getElementById('redeemCode').value;
     var r = await window.__auth.redeem(code);
     if(r && r.ok){ closePay(); showToast('success', r.msg); }
     else { showToast('error', (r && r.msg) || '激活码错误'); }

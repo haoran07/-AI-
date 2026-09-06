@@ -753,11 +753,19 @@
 
   /* ========== 付费 & 试用 ========== */
   const FREE_ITEMS = ['structure-5', 'structure-6', 'components-8'];
-  function openPay(){ show('payOverlay'); }
+  function openPay(){
+    if(!window.__auth || window.__auth.isVisitor()){
+      if(window.__auth) window.__auth.show();
+      toast('请先登录后再解锁');
+      return;
+    }
+    show('payOverlay');
+  }
   function closePay(){ hide('payOverlay'); }
   async function doRedeem(){
-    var code = document.getElementById('redeemCode').value;
     if(!window.__auth){ toast('请稍后重试'); return; }
+    if(window.__auth.isVisitor()){ closePay(); window.__auth.show(); toast('请先登录后再激活'); return; }
+    var code = document.getElementById('redeemCode').value;
     var r = await window.__auth.redeem(code);
     if(r && r.ok){ closePay(); toast(r.msg); }
     else { toast((r && r.msg) || '激活码错误'); }
