@@ -16,6 +16,7 @@
   gate.className = 'auth-overlay';
   gate.innerHTML =
     '<div class="auth-card">'+
+      '<button class="auth-close" onclick="__auth.hide()">✕</button>'+
       '<h2 class="auth-title" id="authTitle">登录</h2>'+
       '<p class="auth-sub">手机号即账号，登录后免费试用</p>'+
       '<div class="auth-tabs">'+
@@ -42,7 +43,7 @@
   pill.id = 'authPill';
   pill.className = 'auth-pill';
   pill.innerHTML = '<span class="auth-pill-name" id="authNick"></span><button class="auth-pill-out" onclick="__auth.logout()">退出</button>';
-  document.body.appendChild(pill);
+  var nav = document.querySelector('.navbar'); if(nav){ nav.appendChild(pill); } else { document.body.appendChild(pill); }
 
   var A = {
     switchAuth: function(mode){

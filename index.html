@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -102,6 +102,7 @@
   .pv-btn.ghost{background:transparent;color:var(--green);border:1px solid var(--green);}
   .pv-input{width:100%;border:1px solid #E2E2DC;border-radius:7px;padding:9px 11px;font-size:12px;margin-top:12px;}
   .pv-avatar{width:34px;height:34px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;}
+  @keyframes pvspin{to{transform:rotate(360deg);}}
 
   /* 风格类 */
   .browser.dark{background:#15181A;}
@@ -365,7 +366,7 @@
   <main class="center">
     <div class="center-head">
       <span class="tt">实时预览</span>
-      <span class="hint">左侧点选，这里实时看到效果</span>
+      <span class="hint">效果仅供参考，实际以 AI 生成为准</span>
     </div>
     <div class="preview-wrap">
       <div class="browser" id="browser">
@@ -615,24 +616,45 @@
   function mockFor(i){
     const badge='<span class="pv-badge">'+i.emoji+' '+i.name+'</span>';
     switch(i.name){
-      case '首屏 Hero': return '<div class="pv-block">'+badge+'<div class="pv-title">'+escapeHtml(proj.name)+'</div><div class="pv-sub">'+escapeHtml(proj.purpose)+'</div><div><span class="pv-btn">立即了解</span><span class="pv-btn ghost">联系我们</span></div></div>';
-      case '功能网格': return '<div class="pv-block">'+badge+'<div class="pv-title">我们的服务</div><div class="pv-grid"><div class="pv-cell">🖼️</div><div class="pv-cell">⚙️</div><div class="pv-cell">📈</div></div></div>';
-      case '时间线': return '<div class="pv-block">'+badge+'<div class="pv-title">发展历程</div><div class="pv-skel"><span class="pv-bar w80"></span><span class="pv-bar w60"></span><span class="pv-bar w40"></span></div></div>';
-      case '常见问题': return '<div class="pv-block">'+badge+'<div class="pv-title">常见问题 FAQ</div><div class="pv-skel"><span class="pv-bar w80"></span><span class="pv-bar w60"></span></div></div>';
-      case '页脚': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:8px;margin-top:10px"><span class="pv-bar" style="width:40px"></span><span class="pv-bar" style="width:40px"></span><span class="pv-bar" style="width:40px"></span></div></div>';
-      case '表单': return '<div class="pv-block">'+badge+'<div class="pv-title">联系表单</div><input class="pv-input" placeholder="姓名"><input class="pv-input" placeholder="邮箱"><span class="pv-btn">提交</span></div>';
-      case '轮播图': return '<div class="pv-block">'+badge+'<div class="pv-grid"><div class="pv-cell" style="background:#DFEEE5">1</div><div class="pv-cell">2</div><div class="pv-cell">3</div></div></div>';
-      case '图片灯箱': return '<div class="pv-block">'+badge+'<div class="pv-grid"><div class="pv-cell">📷</div><div class="pv-cell">📷</div><div class="pv-cell">📷</div></div></div>';
-      case '手风琴': case '标签切换': return '<div class="pv-block">'+badge+'<div class="pv-title">'+i.name+'</div><div class="pv-skel"><span class="pv-bar w80"></span><span class="pv-bar w60"></span></div></div>';
-      case '侧边导航': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:16px"><div class="pv-skel" style="width:70px"><span class="pv-bar"></span><span class="pv-bar"></span><span class="pv-bar"></span></div><div class="pv-skel" style="flex:1"><span class="pv-bar w80"></span><span class="pv-bar w60"></span></div></div></div>';
-      case '底部导航': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:14px;justify-content:center;margin-top:8px;font-size:20px"><span>🏠</span><span>🧭</span><span>➕</span><span>👤</span></div></div>';
-      case '悬浮按钮': return '<div class="pv-block">'+badge+'<div style="display:flex;justify-content:flex-end;margin-top:8px"><span style="width:40px;height:40px;border-radius:50%;background:#1B4332;color:#fff;display:flex;align-items:center;justify-content:center">＋</span></div></div>';
+      case '首屏 Hero': return '<div class="pv-block" style="background:linear-gradient(135deg,#1B4332,#2D5A45);color:#fff;border:none;">'+badge+'<h1 style="font-size:24px;font-weight:800;margin:4px 0 8px;">'+escapeHtml(proj.name)+'</h1><p style="font-size:13px;opacity:.85;margin-bottom:14px;">'+escapeHtml(proj.purpose)+'</p><div><span class="pv-btn" style="background:#fff;color:#1B4332;">立即了解</span><span class="pv-btn" style="border:1px solid rgba(255,255,255,.6);color:#fff;">联系我们</span></div></div>';
+      case '功能网格': return '<div class="pv-block">'+badge+'<div class="pv-title">我们的服务</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;">'+
+        '<div style="background:#F5F7F2;border:1px solid #E6EBE0;border-radius:12px;padding:16px 14px;text-align:center;"><span style="font-size:24px;display:block;margin-bottom:8px;">🎨</span><b style="font-size:13px;color:#1A1A1A;display:block;">品牌设计</b><i style="font-size:11px;color:#888;font-style:normal;">视觉形象打造</i></div>'+
+        '<div style="background:#F5F7F2;border:1px solid #E6EBE0;border-radius:12px;padding:16px 14px;text-align:center;"><span style="font-size:24px;display:block;margin-bottom:8px;">🖥️</span><b style="font-size:13px;color:#1A1A1A;display:block;">网站开发</b><i style="font-size:11px;color:#888;font-style:normal;">响应式建站</i></div>'+
+        '<div style="background:#F5F7F2;border:1px solid #E6EBE0;border-radius:12px;padding:16px 14px;text-align:center;"><span style="font-size:24px;display:block;margin-bottom:8px;">📈</span><b style="font-size:13px;color:#1A1A1A;display:block;">推广运营</b><i style="font-size:11px;color:#888;font-style:normal;">获客增长</i></div></div></div>';
+      case '时间线': return '<div class="pv-block">'+badge+'<div class="pv-title">发展历程</div><div style="border-left:2px solid #D1FAE5;margin:14px 0 0 8px;padding-left:20px;">'+
+        '<div style="margin-bottom:14px;position:relative;"><span style="position:absolute;left:-27px;top:3px;width:12px;height:12px;border-radius:50%;background:#1B4332;"></span><b style="font-size:13px;color:#1A1A1A;">2022</b><p style="font-size:12px;color:#777;">工作室成立</p></div>'+
+        '<div style="margin-bottom:14px;position:relative;"><span style="position:absolute;left:-27px;top:3px;width:12px;height:12px;border-radius:50%;background:#1B4332;"></span><b style="font-size:13px;color:#1A1A1A;">2024</b><p style="font-size:12px;color:#777;">服务客户 100+</p></div>'+
+        '<div style="position:relative;"><span style="position:absolute;left:-27px;top:3px;width:12px;height:12px;border-radius:50%;background:#1B4332;"></span><b style="font-size:13px;color:#1A1A1A;">2026</b><p style="font-size:12px;color:#777;">全面数字化</p></div></div></div>';
+      case '常见问题': return '<div class="pv-block">'+badge+'<div class="pv-title">常见问题 FAQ</div><div style="margin-top:12px;border:1px solid #E6EBE0;border-radius:8px;overflow:hidden;">'+
+        '<div style="padding:10px 14px;border-bottom:1px solid #E6EBE0;font-size:13px;color:#1A1A1A;display:flex;justify-content:space-between;"><span>怎么收费？</span><span>＋</span></div>'+
+        '<div style="padding:10px 14px;font-size:13px;color:#1A1A1A;display:flex;justify-content:space-between;"><span>多久能上线？</span><span>＋</span></div></div></div>';
+      case '页脚': return '<div class="pv-block" style="background:#111;color:#ccc;border:none;">'+badge+'<div style="display:flex;gap:24px;flex-wrap:wrap;">'+
+        '<div><b style="color:#fff;font-size:13px;">'+escapeHtml(proj.name)+'</b><p style="font-size:11px;color:#999;margin-top:4px;">'+escapeHtml(proj.purpose)+'</p></div>'+
+        '<div style="font-size:11px;color:#999;line-height:1.9;">产品<br>关于我们<br>联系方式</div>'+
+        '<div style="font-size:11px;color:#999;line-height:1.9;">隐私政策<br>服务条款</div></div>'+
+        '<p style="font-size:11px;color:#666;margin-top:12px;border-top:1px solid #333;padding-top:10px;">© 2026 '+escapeHtml(proj.name)+'</p></div>';
+      case '表单': return '<div class="pv-block">'+badge+'<div class="pv-title">联系我们</div><input class="pv-input" placeholder="您的称呼" value="张三"><input class="pv-input" placeholder="手机号" value="138****8888"><textarea class="pv-input" style="min-height:56px;resize:vertical;" placeholder="留言内容">我想咨询网站建设</textarea><span class="pv-btn" style="background:#1B4332;color:#fff;">提交咨询</span></div>';
+      case '轮播图': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;border-radius:12px;overflow:hidden;"><div style="height:130px;background:linear-gradient(135deg,#34D399,#1B4332);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;">精选项目 01</div></div><div style="display:flex;gap:6px;justify-content:center;margin-top:8px;"><span style="width:8px;height:8px;border-radius:50%;background:#1B4332;"></span><span style="width:8px;height:8px;border-radius:50%;background:#ddd;"></span><span style="width:8px;height:8px;border-radius:50%;background:#ddd;"></span></div></div>';
+      case '图片灯箱': return '<div class="pv-block">'+badge+'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;"><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#F9A8D4,#C4B5FD);"></div><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#A5F3FC,#86EFAC);"></div><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#FDE68A,#FCA5A5);"></div></div></div>';
+      case '手风琴': case '标签切换': return '<div class="pv-block">'+badge+'<div class="pv-title">'+i.name+'</div><div style="margin-top:12px;border:1px solid #E6EBE0;border-radius:8px;overflow:hidden;">'+
+        '<div style="padding:10px 14px;background:#F5F7F2;font-size:13px;color:#1A1A1A;">已展开的项目 <span style="float:right;">✕</span></div>'+
+        '<div style="padding:10px 14px;border-top:1px solid #E6EBE0;font-size:13px;color:#888;">收起的内容 <span style="float:right;">＋</span></div>'+
+        '<div style="padding:10px 14px;border-top:1px solid #E6EBE0;font-size:13px;color:#888;">收起的内容 <span style="float:right;">＋</span></div></div></div>';
+      case '侧边导航': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:16px;"><div style="width:90px;background:#F5F7F2;border-radius:10px;padding:12px 10px;font-size:12px;color:#888;flex-shrink:0;line-height:2;"><div style="color:#1B4332;font-weight:700;">概览</div><div>项目</div><div>文章</div><div>设置</div></div><div style="flex:1;font-size:12px;color:#555;line-height:2;">这里是内容区，展示当前页面正文信息。</div></div></div>';
+      case '底部导航': return '<div class="pv-block">'+badge+'<div style="display:flex;justify-content:space-around;margin-top:8px;padding:10px;background:#fff;border:1px solid #E6EBE0;border-radius:12px;">'+
+        '<div style="text-align:center;font-size:11px;color:#1B4332;"><span style="font-size:18px;display:block;">🏠</span>首页</div>'+
+        '<div style="text-align:center;font-size:11px;color:#888;"><span style="font-size:18px;display:block;">🧭</span>发现</div>'+
+        '<div style="text-align:center;font-size:11px;color:#888;"><span style="font-size:18px;display:block;">➕</span>发布</div>'+
+        '<div style="text-align:center;font-size:11px;color:#888;"><span style="font-size:18px;display:block;">👤</span>我的</div></div></div>';
+      case '悬浮按钮': return '<div class="pv-block">'+badge+'<div style="display:flex;justify-content:flex-end;margin-top:8px;"><span style="width:44px;height:44px;border-radius:50%;background:#1B4332;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 12px rgba(27,67,50,.4);">＋</span></div></div>';
       case '骨架屏': return '<div class="pv-block">'+badge+'<div class="pv-skel"><span class="pv-bar w80"></span><span class="pv-bar w60"></span><span class="pv-bar w40"></span></div></div>';
-      case '进度条': return '<div class="pv-block">'+badge+'<div style="height:8px;background:#ECECE6;border-radius:6px;margin-top:12px;overflow:hidden"><div style="width:62%;height:100%;background:#1B4332"></div></div></div>';
-      case '加载转圈': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;font-size:22px">⏳</div></div>';
-      case '加载按钮': return '<div class="pv-block">'+badge+'<span class="pv-btn">发送中…</span></div>';
-      case '空状态': case '错误状态': case '重试状态': return '<div class="pv-block">'+badge+'<div class="pv-sub" style="margin-top:8px">'+i.desc+'</div><span class="pv-btn ghost">重试</span></div>';
-      default: return '<div class="pv-block">'+badge+'<div class="pv-title">'+escapeHtml(i.name)+'</div><div class="pv-sub">'+escapeHtml(i.desc)+'</div><div class="pv-skel"><span class="pv-bar w80"></span><span class="pv-bar w60"></span></div></div>';
+      case '进度条': return '<div class="pv-block">'+badge+'<div style="display:flex;align-items:center;gap:10px;margin-top:12px;"><span style="font-size:11px;color:#888;">导出中</span><div style="flex:1;height:8px;background:#ECECE6;border-radius:6px;overflow:hidden;"><div style="width:62%;height:100%;background:#1B4332;"></div></div><span style="font-size:11px;color:#1B4332;font-weight:700;">62%</span></div></div>';
+      case '加载转圈': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;display:flex;align-items:center;gap:10px;"><span style="width:18px;height:18px;border:3px solid #ddd;border-top-color:#1B4332;border-radius:50%;display:inline-block;animation:pvspin 1s linear infinite;"></span><span style="font-size:12px;color:#888;">正在加载项目…</span></div></div>';
+      case '加载按钮': return '<div class="pv-block">'+badge+'<span class="pv-btn" style="background:#1B4332;color:#fff;opacity:.8;">发送中…</span></div>';
+      case '空状态': return '<div class="pv-block">'+badge+'<div style="text-align:center;padding:20px 0;color:#888;"><div style="font-size:32px;margin-bottom:8px;">📭</div><p style="font-size:13px;">还没有项目</p><span class="pv-btn" style="background:#1B4332;color:#fff;">创建第一个项目</span></div></div>';
+      case '错误状态': return '<div class="pv-block">'+badge+'<div style="text-align:center;padding:20px 0;color:#888;"><div style="font-size:32px;margin-bottom:8px;">⚠️</div><p style="font-size:13px;">项目暂时无法加载</p><span class="pv-btn" style="background:#1B4332;color:#fff;">重试</span></div></div>';
+      case '重试状态': return '<div class="pv-block">'+badge+'<div style="text-align:center;padding:20px 0;color:#888;"><div style="font-size:32px;margin-bottom:8px;">🔁</div><p style="font-size:13px;">上传失败，请重试</p><span class="pv-btn" style="background:#1B4332;color:#fff;">重新上传</span></div></div>';
+      default: return '<div class="pv-block">'+badge+'<div class="pv-title">'+escapeHtml(i.name)+'</div><div class="pv-sub">'+escapeHtml(i.desc)+'</div><p style="font-size:12px;color:#999;margin-top:10px;line-height:1.8;">这里是「'+escapeHtml(i.name)+'」组件的效果演示区，实际展示会根据你的内容自动适配。</p></div>';
     }
   }
 
