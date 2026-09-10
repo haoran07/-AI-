@@ -64,6 +64,12 @@
     return html.join('');
   }
 
+  // 提取 Markdown 代码块内容（当作「提示词」），没有代码块返回空字符串
+  function extractCode(md){
+    var m = (md||'').match(/```[a-zA-Z]*\s*\n?([\s\S]*?)```/);
+    return m ? m[1].replace(/\s+$/,'') : '';
+  }
+
   // 判断当前是「思考中」还是「有回答」
   function renderState(full){
     var ts = full.indexOf('<think>');
@@ -105,7 +111,7 @@
       '<div class="input"><input id="hyChatInput" placeholder="问我建站相关问题…" onkeydown="if(event.key===\'Enter\')__hyChat.send()"><button id="hyChatSend" onclick="__hyChat.send()">➤</button></div>';
     document.body.appendChild(bubble);
     document.body.appendChild(win);
-    addAi('你好，我是浩然的 AI 建站助手 👋\n\n可以问我：\n- 怎么选组件\n- 怎么生成 Prompt\n- 建站流程和注意事项', true);
+    addAi('你好，我是浩然的 AI 建站助手 👋\n\n可以问我：\n- 怎么选组件\n- 怎么生成 Prompt\n- 建站流程和注意事项');
   }
 
   function toggle(){
@@ -132,17 +138,18 @@
     body.scrollTop = body.scrollHeight;
   }
 
-  // 新增 AI 消息（markdown 内容 + 复制按钮）
-  function addAi(raw, done){
+  // 新增 AI 消息（markdown 内容 + 复制按钮，仅当有提示词时才显示复制按钮）
+  function addAi(raw){
     var body = document.getElementById('hyChatBody');
     var d = document.createElement('div');
     d.className = 'msg ai';
-    d.innerHTML = '<div class="md"></div><button class="copy-btn" onclick="__hyChat.copy(this)">📋 一键复制</button>';
+    d.innerHTML = '<div class="md"></div><button class="copy-btn" onclick="__hyChat.copy(this)">📋 复制提示词</button>';
     body.appendChild(d);
     if(raw !== undefined){
       d.dataset.raw = raw;
       d.querySelector('.md').innerHTML = mdToHtml(raw);
-      if(done) d.querySelector('.copy-btn').classList.add('show');
+      var prompt = extractCode(raw);
+      if(prompt){ d.dataset.prompt = prompt; d.querySelector('.copy-btn').classList.add('show'); }
     }
     body.scrollTop = body.scrollHeight;
     return d;
@@ -150,11 +157,11 @@
 
   function copy(btn){
     var msg = btn.closest('.msg');
-    var raw = (msg && msg.dataset.raw) || '';
-    if(!raw && msg){ raw = msg.querySelector('.md').innerText || ''; }
-    copyText(raw).then(function(ok){
+    var text = (msg && msg.dataset.prompt) || '';
+    if(!text && msg){ text = msg.querySelector('.md').innerText || ''; }
+    copyText(text).then(function(ok){
       btn.textContent = ok ? '✅ 已复制' : '❌ 复制失败';
-      setTimeout(function(){ btn.textContent = '📋 一键复制'; }, 1500);
+      setTimeout(function(){ btn.textContent = '📋 复制提示词'; }, 1500);
     });
   }
 
@@ -218,13 +225,18 @@
           }
         }
 
-        // 实时更新：思考中显示占位，有内容就渲染 markdown
+        // 实时更新：思考中显示占位，有内容就渲染 markdown；有提示词就亮出复制按钮
         var st = renderState(full);
         if(st.thinking || !st.text){
           aiEl.querySelector('.md').innerHTML = '<div class="thinking"><span class="sp"></span>思考中…</div>';
         } else {
           aiEl.dataset.raw = st.text;
           aiEl.querySelector('.md').innerHTML = mdToHtml(st.text);
+          var prompt = extractCode(st.text);
+          if(prompt){
+            aiEl.dataset.prompt = prompt;
+            aiEl.querySelector('.copy-btn').classList.add('show');
+          }
         }
         var body = document.getElementById('hyChatBody');
         if(body) body.scrollTop = body.scrollHeight;
@@ -237,7 +249,11 @@
     var finalText = st.text || '（没有收到回复，请稍后再试）';
     aiEl.dataset.raw = finalText;
     aiEl.querySelector('.md').innerHTML = mdToHtml(finalText);
-    aiEl.querySelector('.copy-btn').classList.add('show');
+    var prompt = extractCode(finalText);
+    if(prompt){
+      aiEl.dataset.prompt = prompt;
+      aiEl.querySelector('.copy-btn').classList.add('show');
+    }
     var body = document.getElementById('hyChatBody');
     if(body) body.scrollTop = body.scrollHeight;
     busy = false;
