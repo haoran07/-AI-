@@ -6,10 +6,10 @@
 <title>浩然AI建站配置器 · 3分钟配出专业网站</title>
 <style>
   :root{
-    --green:#4ADE80; --green2:#86EFAC; --green-soft:#15351F; --green-softer:#1A3D26;
-    --bg:#14171A; --panel:#1E2225; --preview-bg:#0F1113;
-    --text:#E8E8E8; --muted:#9BA0A5; --faint:#6B7075; --border:#2A2F33;
-    --radius:12px; --shadow:0 1px 3px rgba(0,0,0,.4), 0 8px 24px -14px rgba(0,0,0,.5);
+    --green:#16A34A; --green2:#15803D; --green-soft:#E7F6EC; --green-softer:#F1FAF4;
+    --bg:#F6F7F6; --panel:#FFFFFF; --preview-bg:#ECEEEC;
+    --text:#1A1D1B; --muted:#6B7280; --faint:#9CA3AF; --border:#E5E7E5;
+    --radius:12px; --shadow:0 1px 3px rgba(0,0,0,.06), 0 8px 24px -14px rgba(0,0,0,.12);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{height:100%;}
@@ -119,6 +119,13 @@
   .browser.mono #pvBody{filter:saturate(.25);}
   .browser.minimal #pvBody .pv-block{padding:30px 34px;border-bottom:1px solid #F2F2ED;}
   .browser.editorial #pvBody .pv-title{font-family:Georgia,"Times New Roman",serif;font-size:22px;}
+  .browser.swiss #pvBody{background:#fff;}
+  .browser.swiss #pvBody .pv-block{border-bottom:1px solid #111;padding:26px 30px;}
+  .browser.swiss #pvBody .pv-title{text-transform:uppercase;letter-spacing:.02em;}
+  .browser.mesh #pvBody{background:linear-gradient(135deg,#F0FDF4,#ECFEFF,#F5F3FF);}
+  .browser.grain #pvBody{background-image:radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px);background-size:3px 3px;}
+  .browser.neu #pvBody{background:#ECF0EB;}
+  .browser.neu #pvBody .pv-block{background:#ECF0EB;box-shadow:6px 6px 14px rgba(163,177,158,.5), -6px -6px 14px rgba(255,255,255,.8);border-radius:14px;margin:14px;border:none;}
 
   /* ===== 底部生成栏 ===== */
   .genzone{position:absolute;left:0;right:0;bottom:0;height:88px;display:flex;align-items:flex-end;justify-content:center;padding:0 20px 20px;z-index:60;}
@@ -191,68 +198,6 @@
     .genbar .inner{width:100%;justify-content:space-between;}
   }
 </style>
-<style>
-  /* ===== 深色模式 Dark Mode 覆盖 ===== */
-  body{background:#14171A;color:#E8E8E8;color-scheme:dark;}
-  .navbar{background:rgba(20,23,26,.85);border-bottom:1px solid #2A2F33;}
-  .navbar .logo{color:#E8E8E8;}
-  .navbar .logo .sq{background:#4ADE80;color:#0B1410;box-shadow:none;}
-  .nav-links a{color:#9BA0A5;}
-  .nav-links a:hover{color:#E8E8E8;background:#1E2225;}
-  .btn-primary{background:#4ADE80;color:#0B1410;border:none;box-shadow:none;font-weight:600;}
-  .btn-primary:hover{background:#86EFAC;}
-  .left{background:#1E2225;border-right:1px solid #2A2F33;}
-  .proj-card{background:#1A3D26;border:1px solid #2A2F33;box-shadow:none;}
-  .proj-card .k{color:#9BA0A5;}
-  .proj-card .v{color:#4ADE80;}
-  .proj-card .edit{color:#4ADE80;border-color:#4ADE80;}
-  .proj-card .tip{color:#6B7075;}
-  .tabs{border-bottom:1px solid #2A2F33;}
-  .tabs button{color:#9BA0A5;}
-  .tabs button.active{color:#4ADE80;border-bottom-color:#4ADE80;}
-  .cat-head{color:#9BA0A5;}
-  .cat-head .cnt{color:#6B7075;}
-  .ccard{background:#1E2225;border:1px solid #2A2F33;box-shadow:none;border-radius:9px;}
-  .ccard .nm{color:#E8E8E8;}
-  .ccard:hover{transform:none;border-color:#4ADE80;}
-  .ccard.on{background:#15351F;border-color:#4ADE80;box-shadow:none;}
-  .ccard .help{background:#2A2F33;color:#9BA0A5;}
-  .left-foot{border-top:1px solid #2A2F33;}
-  .left-foot a{color:#4ADE80;}
-  .center{background:#0F1113;}
-  .center-head .tt{color:#9BA0A5;}
-  .center-head .hint{color:#6B7075;}
-  .browser{background:#1E2225;border:none;box-shadow:0 10px 30px rgba(0,0,0,.5)!important;border-radius:14px;}
-  .browser .bar{background:#1A1E20;border-bottom:1px solid #2A2F33;}
-  .browser .addr{background:#2A2F33;color:#9BA0A5;}
-  #pvBody{background:#14171A;color:#E8E8E8;}
-  .pv-empty{color:#6B7075;}
-  .pv-block{border-bottom:1px solid #23282B;}
-  .pv-badge{background:#15351F;color:#4ADE80;border-radius:20px;}
-  .pv-title{color:#E8E8E8;}
-  .pv-sub{color:#9BA0A5;}
-  .pv-bar{background:#2A2F33;}
-  .pv-cell{background:#1A1E20;border-color:#2A2F33;}
-  .pv-input{background:#1A1E20;border-color:#2A2F33;color:#E8E8E8;}
-  .pv-btn{background:#4ADE80;color:#0B1410;border:none;box-shadow:none;font-weight:600;}
-  .pv-btn.ghost{background:transparent;color:#4ADE80;border:1px solid #4ADE80;}
-  .genbar .inner{background:#1E2225;border:none;box-shadow:0 6px 20px rgba(0,0,0,.5)!important;border-radius:14px;}
-  .pill{background:#15351F;color:#4ADE80;border:none;box-shadow:none;}
-  .pill.placeholder{background:#23282B;color:#6B7075;}
-  .modal{background:#1E2225;border:none;box-shadow:0 18px 50px rgba(0,0,0,.6)!important;border-radius:18px;}
-  .modal h2{color:#E8E8E8;}
-  .modal .sub{color:#9BA0A5;}
-  .prompt-box{background:#14171A;border:1px solid #2A2F33;color:#E8E8E8;}
-  .field label{color:#9BA0A5;}
-  .field input,.field textarea{background:#14171A;border:1px solid #2A2F33;color:#E8E8E8;}
-  .btn-ghost{background:#23282B;color:#9BA0A5;border:1px solid #2A2F33;box-shadow:none;}
-  .step b{color:#E8E8E8;}
-  .step span{color:#9BA0A5;}
-  .step .n{background:#15351F;color:#4ADE80;box-shadow:none;}
-  #ccTip{background:#0B0D0E;color:#E8E8E8;border-radius:9px;box-shadow:0 6px 18px rgba(0,0,0,.5);}
-  #ccTip b{color:#4ADE80;}
-  .toast{background:#E8E8E8;color:#14171A;border:none;box-shadow:0 6px 18px rgba(0,0,0,.4);}
-</style>
 <link rel="stylesheet" href="auth.css">
 </head>
 <body>
@@ -268,7 +213,7 @@
   </div>
   <div class="nav-right">
     <button class="btn-primary nav-login" onclick="__auth.show()">登录 / 免费试用</button>
-    <button class="btn-primary nav-upgrade" onclick="openPay()">🔓 升级付费 · 99元</button>
+    <button class="btn-primary nav-upgrade" onclick="openPay()">🔓 升级付费 · 60元</button>
   </div>
 </nav>
 
@@ -282,26 +227,26 @@
   .nav-upgrade{display:none;}
   body.trial .nav-upgrade{display:inline-block;}
   .landing-hero{text-align:center;padding:20px 0 36px;}
-  .landing-badge{display:inline-block;font-size:12px;font-weight:700;color:#4ADE80;background:#15351F;padding:5px 14px;border-radius:999px;margin-bottom:18px;}
-  .landing-hero h1{font-size:38px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:#E8E8E8;}
-  .landing-hero p{color:#9BA0A5;font-size:16px;margin-top:14px;max-width:640px;margin-left:auto;margin-right:auto;}
+  .landing-badge{display:inline-block;font-size:12px;font-weight:700;color:#16A34A;background:#E7F6EC;padding:5px 14px;border-radius:999px;margin-bottom:18px;}
+  .landing-hero h1{font-size:38px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:#1A1D1B;}
+  .landing-hero p{color:#6B7280;font-size:16px;margin-top:14px;max-width:640px;margin-left:auto;margin-right:auto;}
   .landing-cta{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap;}
   .landing-cta .btn-primary{font-size:15px;padding:12px 24px;}
-  .landing-cta .btn-ghost{font-size:14px;padding:12px 20px;border:1px solid #2A2F33;border-radius:9px;color:#9BA0A5;background:#1E2225;font-weight:600;text-decoration:none;}
+  .landing-cta .btn-ghost{font-size:14px;padding:12px 20px;border:1px solid #E5E7E5;border-radius:9px;color:#6B7280;background:#FFFFFF;font-weight:600;text-decoration:none;}
   .landing-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:40px 0;}
-  .lstep{background:#1E2225;border:1px solid #2A2F33;border-radius:14px;padding:22px 20px;}
-  .lstep .n{width:26px;height:26px;border-radius:50%;background:#15351F;color:#4ADE80;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
-  .lstep b{display:block;font-size:15px;color:#E8E8E8;}
-  .lstep span{font-size:13px;color:#9BA0A5;margin-top:4px;display:block;}
+  .lstep{background:#FFFFFF;border:1px solid #E5E7E5;border-radius:14px;padding:22px 20px;}
+  .lstep .n{width:26px;height:26px;border-radius:50%;background:#E7F6EC;color:#16A34A;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+  .lstep b{display:block;font-size:15px;color:#1A1D1B;}
+  .lstep span{font-size:13px;color:#6B7280;margin-top:4px;display:block;}
   .landing-features{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0 40px;}
-  .lfeat{background:#1E2225;border:1px solid #2A2F33;border-radius:14px;padding:20px;text-align:center;}
-  .lfeat b{display:block;font-size:15px;color:#E8E8E8;margin:8px 0 4px;}
-  .lfeat span{font-size:12.5px;color:#9BA0A5;}
+  .lfeat{background:#FFFFFF;border:1px solid #E5E7E5;border-radius:14px;padding:20px;text-align:center;}
+  .lfeat b{display:block;font-size:15px;color:#1A1D1B;margin:8px 0 4px;}
+  .lfeat span{font-size:12.5px;color:#6B7280;}
   .landing-pricing{display:flex;justify-content:center;margin:20px 0;}
-  .price-card{background:#1E2225;border:1px solid #4ADE80;border-radius:18px;padding:32px 40px;text-align:center;max-width:360px;}
-  .price-card .pt{font-size:13px;color:#9BA0A5;}
-  .price-card .pp{font-size:48px;font-weight:800;color:#4ADE80;margin:8px 0;}
-  .price-card .pd{font-size:13px;color:#9BA0A5;margin-bottom:20px;line-height:1.7;}
+  .price-card{background:#FFFFFF;border:1px solid #16A34A;border-radius:18px;padding:32px 40px;text-align:center;max-width:360px;}
+  .price-card .pt{font-size:13px;color:#6B7280;}
+  .price-card .pp{font-size:48px;font-weight:800;color:#16A34A;margin:8px 0;}
+  .price-card .pd{font-size:13px;color:#6B7280;margin-bottom:20px;line-height:1.7;}
   @media (max-width:720px){ .landing-steps,.landing-features{grid-template-columns:1fr;} .landing-hero h1{font-size:28px;} }
 </style>
 
@@ -330,7 +275,7 @@
   <div class="landing-pricing">
     <div class="price-card">
       <div class="pt">永久买断</div>
-      <div class="pp">¥99</div>
+      <div class="pp">¥60</div>
       <div class="pd">解锁全部 70 组件 + 无限生成 + AI 顾问 + 10 大行业案例模板</div>
       <button class="btn-primary" onclick="__auth.show()">登录后购买</button>
     </div>
@@ -439,25 +384,25 @@
 </div>
 
 <style>
-  .pay-price{font-size:40px;font-weight:800;color:#4ADE80;}
-  .pay-price span{font-size:14px;color:#9BA0A5;font-weight:400;}
-  .pay-list{margin:14px 0;background:#14171A;border:1px solid #2A2F33;border-radius:10px;padding:14px 16px;font-size:13px;color:#E8E8E8;line-height:2;}
-  .pay-close{position:absolute;top:14px;right:16px;background:none;border:none;color:#9BA0A5;font-size:22px;cursor:pointer;line-height:1;z-index:10;}
+  .pay-price{font-size:40px;font-weight:800;color:#16A34A;}
+  .pay-price span{font-size:14px;color:#6B7280;font-weight:400;}
+  .pay-list{margin:14px 0;background:#F6F7F6;border:1px solid #E5E7E5;border-radius:10px;padding:14px 16px;font-size:13px;color:#1A1D1B;line-height:2;}
+  .pay-close{position:absolute;top:14px;right:16px;background:none;border:none;color:#6B7280;font-size:22px;cursor:pointer;line-height:1;z-index:10;}
   .pay-qr{display:flex;gap:12px;margin:14px 0;}
-  .pay-qr-box{flex:1;background:#14171A;border:1px solid #2A2F33;border-radius:10px;padding:18px 14px;text-align:center;cursor:pointer;color:#E8E8E8;transition:.15s;}
-  .pay-qr-box:hover{border-color:#4ADE80;background:#15351F;}
+  .pay-qr-box{flex:1;background:#F6F7F6;border:1px solid #E5E7E5;border-radius:10px;padding:18px 14px;text-align:center;cursor:pointer;color:#1A1D1B;transition:.15s;}
+  .pay-qr-box:hover{border-color:#16A34A;background:#E7F6EC;}
   .pay-qr-box span{font-size:13px;font-weight:600;display:block;margin-bottom:6px;}
-  .pay-qr-box i{font-size:11px;color:#6B7075;font-style:normal;}
-  .pay-note{font-size:12px;color:#9BA0A5;text-align:center;margin:10px 0;line-height:1.6;}
+  .pay-qr-box i{font-size:11px;color:#9CA3AF;font-style:normal;}
+  .pay-note{font-size:12px;color:#6B7280;text-align:center;margin:10px 0;line-height:1.6;}
 </style>
 
 <!-- 付费解锁 -->
 <div class="overlay" id="payOverlay">
   <div class="modal" style="width:440px;position:relative;">
     <button class="pay-close" onclick="closePay()">✕</button>
-    <div class="mh"><h2>🔓 解锁全部功能</h2><div class="sub">99 元买断，永久使用，一次付费终身有效</div></div>
+    <div class="mh"><h2>🔓 解锁全部功能</h2><div class="sub">60 元买断，永久使用，一次付费终身有效</div></div>
     <div class="mb">
-      <div class="pay-price">¥99 <span>永久买断</span></div>
+      <div class="pay-price">¥60 <span>永久买断</span></div>
       <div class="pay-list">
         <div>✅ 全部 70 个组件</div>
         <div>✅ 无限次生成 Prompt</div>
@@ -469,7 +414,7 @@
         <button class="pay-qr-box" onclick="showQR('alipay')"><span>💙 支付宝收款码</span><i>点击查看大图</i></button>
       </div>
       <div class="pay-note">付款后加微信「浩然」发付款截图，领取激活码</div>
-      <div class="field"><label>输入激活码</label><input id="redeemCode" placeholder="例如 HAORAN-VIP-99"></div>
+      <div class="field"><label>输入激活码</label><input id="redeemCode" placeholder="例如 HAORAN-VIP-60"></div>
       <button class="btn-primary" style="width:100%;margin-top:12px;" onclick="doRedeem()">激活解锁</button>
     </div>
   </div>
@@ -482,7 +427,7 @@
     <div class="mh"><h2 id="qrTitle">微信收款码</h2></div>
     <div class="mb" style="text-align:center;">
       <img id="qrImg" src="" alt="收款码" style="width:250px;height:250px;object-fit:contain;border-radius:12px;display:block;margin:0 auto;background:#fff;">
-      <p style="margin-top:14px;font-size:13px;color:#9BA0A5;">请扫码支付 99 元</p>
+      <p style="margin-top:14px;font-size:13px;color:#6B7280;">请扫码支付 60 元</p>
     </div>
   </div>
 </div>
@@ -553,7 +498,6 @@
 
   function toggleItem(id){
     if(!window.__auth || window.__auth.isVisitor()){ if(window.__auth) window.__auth.show(); toast('请先注册并登录'); return; }
-    if(window.__auth.isTrial() && FREE_ITEMS.indexOf(id) < 0){ openPay(); return; }
     const it=itemById(id); if(!it) return;
     if(isRadio(id)){
       // 单选组：点已选中的项→取消选中；点其它项→清空同组后选中（实现「再点一次取消」）
@@ -596,37 +540,51 @@
     resetStyle();
     if(!sel.length){ body.innerHTML='<div class="pv-empty"><div class="big">🧱</div><p>从左侧点选组件，这里会实时拼出你的网站预览</p></div>'; return; }
 
-    sel.filter(i=>i.cat==='style').forEach(i=>{
-      const cls={ '玻璃拟态':'glass','深色模式':'dark','新野兽派':'brutal','单色与双色':'mono','极简主义':'minimal','编辑杂志风':'editorial' }[i.name];
-      if(cls) browser.classList.add(cls);
+    // 视觉风格：应用到预览画布 + 底部显示已应用风格
+    const styleMap={ '玻璃拟态':'glass','深色模式':'dark','新野兽派':'brutal','单色与双色':'mono','极简主义':'minimal','编辑杂志风':'editorial','瑞士风':'swiss','网格渐变':'mesh','颗粒与噪点':'grain','新拟态':'neu' };
+    const styles=sel.filter(i=>i.cat==='style');
+    styles.forEach(i=>{ const c=styleMap[i.name]; if(c) browser.classList.add(c); });
+
+    let html='';
+    // 结构类型（单选）→ 顶部布局条
+    const st = sel.filter(i=>i.cat==='structure' && ['structure-1','structure-2','structure-3','structure-4'].includes(i.id));
+    if(st.length) html += mockFor(st[0]);
+
+    // 依次渲染各分类选中项，每一项都有独立效果
+    ['structure','navigation','components','motion','feedback','effects'].forEach(cat=>{
+      sel.filter(i=>i.cat===cat && !(cat==='structure' && ['structure-1','structure-2','structure-3','structure-4'].includes(i.id)))
+         .forEach(i=>{ html += mockFor(i); });
     });
 
-    const blockCats=['structure','components'];
-    let html='';
-    sel.forEach(i=>{
-      if(i.cat==='structure' && ['structure-1','structure-2','structure-3','structure-4'].includes(i.id)) return;
-      if(!blockCats.includes(i.cat)) return;
-      html += mockFor(i);
-    });
-    const hasNav = sel.some(i=>i.cat==='navigation');
-    if(hasNav) html = '<div class="pv-block" style="padding:10px 26px;background:#FBFBF8"><div class="pv-badge">🧭 导航</div><div class="pv-skel" style="flex-direction:row;gap:10px"><span class="pv-bar" style="width:50px;height:8px"></span><span class="pv-bar" style="width:50px"></span><span class="pv-bar" style="width:50px"></span></div></div>' + html;
-    if(!html) html='<div class="pv-empty"><div class="big">👆</div><p>再点选一些「组件」或「布局」里的内容区块</p></div>';
-    body.innerHTML=html;
+    // 已应用风格色条
+    if(styles.length){
+      html += '<div class="pv-block"><div class="pv-badge">🎨 已应用风格</div><div style="display:flex;gap:8px;flex-wrap:wrap;">'
+        + styles.map(s=>'<span style="font-size:12px;font-weight:600;color:#16A34A;background:#E7F6EC;padding:4px 12px;border-radius:20px;">'+s.emoji+' '+s.name+'</span>').join('')
+        + '</div><p style="font-size:11px;color:#888;margin-top:8px;">风格已应用到整个预览画布（背景 / 边框 / 字体 / 阴影会随之变化）。</p></div>';
+    }
+
+    body.innerHTML = html || '<div class="pv-empty"><div class="big">👆</div><p>再点选一些组件，这里会实时展示对应效果</p></div>';
   }
 
   function resetStyle(){
     const b=document.getElementById('browser');
-    ['glass','dark','brutal','mono','minimal','editorial'].forEach(c=>b.classList.remove(c));
+    ['glass','dark','brutal','mono','minimal','editorial','swiss','mesh','grain','neu'].forEach(c=>b.classList.remove(c));
   }
 
   function mockFor(i){
     const badge='<span class="pv-badge">'+i.emoji+' '+i.name+'</span>';
     switch(i.name){
+      /* ===== 页面结构 ===== */
+      case '单页网站': return '<div class="pv-block" style="background:#EAF6EF;border-bottom:1px solid #D8EEDF;">'+badge+'<div class="pv-title">单页网站 · 锚点跳转</div><div class="pv-sub">全部内容在一页，点导航滚动到对应区块</div><div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;">'+['Hero','About','Work','Writing','Contact','Footer'].map(s=>'<span style="font-size:11px;padding:5px 10px;border-radius:6px;background:#16A34A;color:#fff;">'+s+'</span>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:10px;">↓ 单页纵向长滚动，导航项锚点直达</p></div>';
+      case '多页网站': return '<div class="pv-block" style="background:#EFF4F8;border-bottom:1px solid #DDE7F0;">'+badge+'<div class="pv-title">多页网站 · 独立网址</div><div class="pv-sub">每个区块独立成页，利于扩展与 SEO</div><div style="display:flex;gap:8px;margin-top:12px;">'+['Home','Work','About','Journal','Contact'].map(s=>'<div style="flex:1;text-align:center;background:#fff;border:1px solid #DDE4EA;border-radius:8px;padding:10px 4px;font-size:11px;color:#1A1A1A;box-shadow:0 1px 3px rgba(0,0,0,.06);"><div style="font-size:16px;">📄</div>'+s+'</div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:10px;">多个独立页面通过导航连接</p></div>';
+      case '落地页': return '<div class="pv-block" style="background:linear-gradient(135deg,#1B4332,#2D5A45);color:#fff;border:none;">'+badge+'<div class="pv-title" style="color:#fff;">落地页 · 单一转化目标</div><div class="pv-sub" style="color:rgba(255,255,255,.75);">全页只为引导一个动作：预约咨询</div><div style="margin-top:14px;"><span style="display:inline-block;background:#fff;color:#1B4332;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;">预约一次沟通 →</span></div><p style="font-size:11px;color:rgba(255,255,255,.6);margin-top:12px;">Hero + 价值 + 案例 + FAQ + 唯一 CTA</p></div>';
+      case '案例研究页': return '<div class="pv-block" style="background:#FBF7F0;border-bottom:1px solid #EFE6D8;">'+badge+'<div class="pv-title">案例研究页 · 过程复盘</div><div class="pv-sub">不只晒结果，讲清背景 → 过程 → 决策 → 数据</div><div style="display:flex;gap:12px;margin-top:12px;"><div style="flex:1.4;height:70px;border-radius:8px;background:linear-gradient(135deg,#C4B5FD,#93C5FD);"></div><div style="flex:1;font-size:11px;color:#777;line-height:1.9;">背景问题<br>职责<br>关键决策<br>结果数据</div></div></div>';
       case '首屏 Hero': return '<div class="pv-block" style="background:linear-gradient(135deg,#1B4332,#2D5A45);color:#fff;border:none;">'+badge+'<h1 style="font-size:24px;font-weight:800;margin:4px 0 8px;">'+escapeHtml(proj.name)+'</h1><p style="font-size:13px;opacity:.85;margin-bottom:14px;">'+escapeHtml(proj.purpose)+'</p><div><span class="pv-btn" style="background:#fff;color:#1B4332;">立即了解</span><span class="pv-btn" style="border:1px solid rgba(255,255,255,.6);color:#fff;">联系我们</span></div></div>';
       case '功能网格': return '<div class="pv-block">'+badge+'<div class="pv-title">我们的服务</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;">'+
         '<div style="background:#F5F7F2;border:1px solid #E6EBE0;border-radius:12px;padding:16px 14px;text-align:center;"><span style="font-size:24px;display:block;margin-bottom:8px;">🎨</span><b style="font-size:13px;color:#1A1A1A;display:block;">品牌设计</b><i style="font-size:11px;color:#888;font-style:normal;">视觉形象打造</i></div>'+
         '<div style="background:#F5F7F2;border:1px solid #E6EBE0;border-radius:12px;padding:16px 14px;text-align:center;"><span style="font-size:24px;display:block;margin-bottom:8px;">🖥️</span><b style="font-size:13px;color:#1A1A1A;display:block;">网站开发</b><i style="font-size:11px;color:#888;font-style:normal;">响应式建站</i></div>'+
         '<div style="background:#F5F7F2;border:1px solid #E6EBE0;border-radius:12px;padding:16px 14px;text-align:center;"><span style="font-size:24px;display:block;margin-bottom:8px;">📈</span><b style="font-size:13px;color:#1A1A1A;display:block;">推广运营</b><i style="font-size:11px;color:#888;font-style:normal;">获客增长</i></div></div></div>';
+      case '固定叙事区': return '<div class="pv-block">'+badge+'<div class="pv-title">固定叙事区</div><div class="pv-sub">左侧内容固定，右侧滚动讲故事</div><div style="display:flex;gap:14px;margin-top:12px;"><div style="flex:1;background:#F5F7F2;border-radius:10px;padding:14px;font-size:12px;color:#1A1A1A;"><b>Discover</b><p style="color:#888;font-size:11px;margin-top:4px;">探索与定义</p></div><div style="flex:1.6;display:flex;flex-direction:column;gap:8px;"><div style="height:34px;border-radius:6px;background:#E7F6EC;"></div><div style="height:34px;border-radius:6px;background:#ECF4EE;"></div><div style="height:34px;border-radius:6px;background:#E7F6EC;"></div></div></div></div>';
       case '时间线': return '<div class="pv-block">'+badge+'<div class="pv-title">发展历程</div><div style="border-left:2px solid #D1FAE5;margin:14px 0 0 8px;padding-left:20px;">'+
         '<div style="margin-bottom:14px;position:relative;"><span style="position:absolute;left:-27px;top:3px;width:12px;height:12px;border-radius:50%;background:#1B4332;"></span><b style="font-size:13px;color:#1A1A1A;">2022</b><p style="font-size:12px;color:#777;">工作室成立</p></div>'+
         '<div style="margin-bottom:14px;position:relative;"><span style="position:absolute;left:-27px;top:3px;width:12px;height:12px;border-radius:50%;background:#1B4332;"></span><b style="font-size:13px;color:#1A1A1A;">2024</b><p style="font-size:12px;color:#777;">服务客户 100+</p></div>'+
@@ -639,27 +597,74 @@
         '<div style="font-size:11px;color:#999;line-height:1.9;">产品<br>关于我们<br>联系方式</div>'+
         '<div style="font-size:11px;color:#999;line-height:1.9;">隐私政策<br>服务条款</div></div>'+
         '<p style="font-size:11px;color:#666;margin-top:12px;border-top:1px solid #333;padding-top:10px;">© 2026 '+escapeHtml(proj.name)+'</p></div>';
-      case '表单': return '<div class="pv-block">'+badge+'<div class="pv-title">联系我们</div><input class="pv-input" placeholder="您的称呼" value="张三"><input class="pv-input" placeholder="手机号" value="138****8888"><textarea class="pv-input" style="min-height:56px;resize:vertical;" placeholder="留言内容">我想咨询网站建设</textarea><span class="pv-btn" style="background:#1B4332;color:#fff;">提交咨询</span></div>';
-      case '轮播图': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;border-radius:12px;overflow:hidden;"><div style="height:130px;background:linear-gradient(135deg,#34D399,#1B4332);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;">精选项目 01</div></div><div style="display:flex;gap:6px;justify-content:center;margin-top:8px;"><span style="width:8px;height:8px;border-radius:50%;background:#1B4332;"></span><span style="width:8px;height:8px;border-radius:50%;background:#ddd;"></span><span style="width:8px;height:8px;border-radius:50%;background:#ddd;"></span></div></div>';
-      case '图片灯箱': return '<div class="pv-block">'+badge+'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;"><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#F9A8D4,#C4B5FD);"></div><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#A5F3FC,#86EFAC);"></div><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#FDE68A,#FCA5A5);"></div></div></div>';
-      case '手风琴': case '标签切换': return '<div class="pv-block">'+badge+'<div class="pv-title">'+i.name+'</div><div style="margin-top:12px;border:1px solid #E6EBE0;border-radius:8px;overflow:hidden;">'+
-        '<div style="padding:10px 14px;background:#F5F7F2;font-size:13px;color:#1A1A1A;">已展开的项目 <span style="float:right;">✕</span></div>'+
-        '<div style="padding:10px 14px;border-top:1px solid #E6EBE0;font-size:13px;color:#888;">收起的内容 <span style="float:right;">＋</span></div>'+
-        '<div style="padding:10px 14px;border-top:1px solid #E6EBE0;font-size:13px;color:#888;">收起的内容 <span style="float:right;">＋</span></div></div></div>';
+
+      /* ===== 导航 ===== */
+      case '固定导航': return '<div class="pv-block" style="padding:12px 26px;background:#fff;border-bottom:1px solid #E5E7E5;">'+badge+'<div style="display:flex;align-items:center;gap:14px;"><b style="font-size:14px;color:#1B4332;">'+escapeHtml(proj.name)+'</b><span style="font-size:11px;color:#888;">首页</span><span style="font-size:11px;color:#888;">作品</span><span style="font-size:11px;color:#888;">关于</span><span style="margin-left:auto;font-size:11px;background:#16A34A;color:#fff;padding:5px 12px;border-radius:6px;">联系我</span></div><p style="font-size:10px;color:#aaa;margin-top:6px;">📌 始终固定在顶部，滚动后加白底细边框</p></div>';
+      case '汉堡菜单': return '<div class="pv-block" style="padding:12px 26px;background:#fff;">'+badge+'<div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;"><span style="font-size:11px;color:#888;">Home / Work / About / Contact</span><span style="display:flex;flex-direction:column;gap:4px;"><i style="width:22px;height:2px;background:#1B4332;display:block;"></i><i style="width:22px;height:2px;background:#1B4332;display:block;"></i><i style="width:22px;height:2px;background:#1B4332;display:block;"></i></span></div><p style="font-size:10px;color:#aaa;margin-top:6px;">🍔 点击三条线从右侧滑出抽屉</p></div>';
+      case '面包屑': return '<div class="pv-block" style="padding:12px 26px;background:#fff;">'+badge+'<div style="font-size:13px;color:#888;">首页 <span style="color:#ccc;">›</span> 作品 <span style="color:#ccc;">›</span> AI 工具 <span style="color:#ccc;">›</span> <b style="color:#1B4332;">项目详情</b></div></div>';
+      case '锚点跳转': return '<div class="pv-block">'+badge+'<div class="pv-title">锚点跳转</div><div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">'+['About','Work','Writing','Contact'].map(s=>'<span style="font-size:11px;padding:4px 10px;border:1px solid #16A34A;color:#16A34A;border-radius:20px;">#'+s+'</span>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">点击平滑滚动到对应 section，并高亮当前区块</p></div>';
+      case '标签切换': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:4px;border-bottom:1px solid #E5E7E5;margin-top:10px;">'+['All','Web','AI','Experiments'].map((s,k)=>'<span style="padding:8px 14px;font-size:12px;font-weight:600;'+(k===0?'color:#16A34A;border-bottom:2px solid #16A34A;':'color:#888;')+'">'+s+'</span>').join('')+'</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;"><div style="height:46px;border-radius:8px;background:#E7F6EC;"></div><div style="height:46px;border-radius:8px;background:#ECF4EE;"></div><div style="height:46px;border-radius:8px;background:#E7F6EC;"></div></div></div>';
       case '侧边导航': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:16px;"><div style="width:90px;background:#F5F7F2;border-radius:10px;padding:12px 10px;font-size:12px;color:#888;flex-shrink:0;line-height:2;"><div style="color:#1B4332;font-weight:700;">概览</div><div>项目</div><div>文章</div><div>设置</div></div><div style="flex:1;font-size:12px;color:#555;line-height:2;">这里是内容区，展示当前页面正文信息。</div></div></div>';
+      case '超级菜单': return '<div class="pv-block">'+badge+'<div class="pv-title">超级菜单</div><div style="margin-top:10px;border:1px solid #E5E7E5;border-radius:10px;padding:14px;display:flex;gap:16px;background:#fff;"><div style="font-size:11px;line-height:2;"><b style="color:#1B4332;">Projects</b><br>AI 工具<br>个人网站</div><div style="font-size:11px;line-height:2;"><b style="color:#1B4332;">Experiments</b><br>交互原型<br>动效实验</div><div style="font-size:11px;line-height:2;"><b style="color:#1B4332;">Resources</b><br>模板<br>文章</div></div></div>';
       case '底部导航': return '<div class="pv-block">'+badge+'<div style="display:flex;justify-content:space-around;margin-top:8px;padding:10px;background:#fff;border:1px solid #E6EBE0;border-radius:12px;">'+
         '<div style="text-align:center;font-size:11px;color:#1B4332;"><span style="font-size:18px;display:block;">🏠</span>首页</div>'+
         '<div style="text-align:center;font-size:11px;color:#888;"><span style="font-size:18px;display:block;">🧭</span>发现</div>'+
         '<div style="text-align:center;font-size:11px;color:#888;"><span style="font-size:18px;display:block;">➕</span>发布</div>'+
         '<div style="text-align:center;font-size:11px;color:#888;"><span style="font-size:18px;display:block;">👤</span>我的</div></div></div>';
+      case '分页': return '<div class="pv-block">'+badge+'<div class="pv-title">分页</div><div style="display:flex;gap:6px;margin-top:10px;">'+['‹','1','2','3','›'].map((s,k)=>'<span style="min-width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;'+(k===1?'background:#16A34A;color:#fff;':'background:#fff;color:#555;border:1px solid #E5E7E5;')+'">'+s+'</span>').join('')+'</div></div>';
+      case '返回顶部': return '<div class="pv-block">'+badge+'<div style="display:flex;justify-content:flex-end;margin-top:6px;"><span style="width:40px;height:40px;border-radius:50%;background:#16A34A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 6px 16px rgba(22,163,74,.35);">↑</span></div><p style="font-size:11px;color:#888;">滚动超过 800px 后淡入，点击回到顶部</p></div>';
+
+      /* ===== 常用组件 ===== */
+      case '模态框': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;background:#fff;border:1px solid #E5E7E5;border-radius:12px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.12);max-width:320px;"><b style="font-size:13px;color:#1A1A1A;">联系浩然</b><div style="height:10px;background:#F0F0EB;border-radius:5px;margin-top:12px;"></div><div style="height:10px;background:#F0F0EB;border-radius:5px;margin-top:8px;"></div><span style="display:inline-block;margin-top:12px;background:#16A34A;color:#fff;font-size:11px;padding:6px 14px;border-radius:6px;">发送</span></div></div>';
+      case '抽屉': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;display:flex;justify-content:flex-end;"><div style="width:180px;background:#fff;border:1px solid #E5E7E5;border-radius:12px;padding:14px;box-shadow:-8px 0 20px rgba(0,0,0,.08);"><b style="font-size:12px;color:#1A1A1A;">项目详情</b><div style="height:36px;border-radius:6px;background:linear-gradient(135deg,#C4B5FD,#93C5FD);margin-top:10px;"></div><p style="font-size:10px;color:#888;margin-top:8px;">简介 + 技术栈 + 访问链接</p></div></div></div>';
+      case '手风琴': return '<div class="pv-block">'+badge+'<div class="pv-title">手风琴</div><div style="margin-top:12px;border:1px solid #E6EBE0;border-radius:8px;overflow:hidden;">'+
+        '<div style="padding:10px 14px;background:#F5F7F2;font-size:13px;color:#1A1A1A;">已展开的项目 <span style="float:right;">✕</span></div>'+
+        '<div style="padding:10px 14px;border-top:1px solid #E6EBE0;font-size:13px;color:#888;">收起的内容 <span style="float:right;">＋</span></div>'+
+        '<div style="padding:10px 14px;border-top:1px solid #E6EBE0;font-size:13px;color:#888;">收起的内容 <span style="float:right;">＋</span></div></div></div>';
+      case '气泡提示': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:26px;margin-top:18px;">'+[['🖼️','查看作品集'],['💡','灵感来源'],['🔗','复制链接']].map(x=>'<div style="text-align:center;"><span style="font-size:22px;">'+x[0]+'</span><div style="margin-top:5px;background:#111;color:#fff;font-size:10px;padding:4px 9px;border-radius:6px;white-space:nowrap;">'+x[1]+'</div></div>').join('')+'</div></div>';
+      case '轻提示': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:8px;margin-top:12px;flex-direction:column;align-items:flex-end;"><span style="background:#111;color:#fff;font-size:12px;padding:8px 14px;border-radius:8px;">✓ 文章已保存</span><span style="background:#111;color:#fff;font-size:12px;padding:8px 14px;border-radius:8px;">⚠ 保存失败，请重试</span></div></div>';
+      case '轮播图': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;border-radius:12px;overflow:hidden;"><div style="height:130px;background:linear-gradient(135deg,#34D399,#1B4332);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;">精选项目 01</div></div><div style="display:flex;gap:6px;justify-content:center;margin-top:8px;"><span style="width:8px;height:8px;border-radius:50%;background:#1B4332;"></span><span style="width:8px;height:8px;border-radius:50%;background:#ddd;"></span><span style="width:8px;height:8px;border-radius:50%;background:#ddd;"></span></div></div>';
+      case '图片灯箱': return '<div class="pv-block">'+badge+'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;"><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#F9A8D4,#C4B5FD);"></div><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#A5F3FC,#86EFAC);"></div><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#FDE68A,#FCA5A5);"></div></div></div>';
+      case '表单': return '<div class="pv-block">'+badge+'<div class="pv-title">联系我们</div><input class="pv-input" placeholder="您的称呼" value="张三"><input class="pv-input" placeholder="手机号" value="138****8888"><textarea class="pv-input" style="min-height:56px;resize:vertical;" placeholder="留言内容">我想咨询网站建设</textarea><span class="pv-btn" style="background:#1B4332;color:#fff;">提交咨询</span></div>';
+      case '命令面板': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;background:#fff;border:1px solid #E5E7E5;border-radius:12px;overflow:hidden;max-width:340px;"><div style="padding:10px 14px;border-bottom:1px solid #E5E7E5;font-size:12px;color:#888;">⌘K 搜索或输入命令…</div><div style="padding:8px;"><div style="padding:7px 10px;border-radius:6px;background:#E7F6EC;font-size:12px;color:#1B4332;">Go to Work <span style="float:right;color:#888;">↵</span></div><div style="padding:7px 10px;font-size:12px;color:#555;">Open About</div><div style="padding:7px 10px;font-size:12px;color:#555;">Toggle Theme</div></div></div></div>';
       case '悬浮按钮': return '<div class="pv-block">'+badge+'<div style="display:flex;justify-content:flex-end;margin-top:8px;"><span style="width:44px;height:44px;border-radius:50%;background:#1B4332;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 12px rgba(27,67,50,.4);">＋</span></div></div>';
+
+      /* ===== 滚动与动作 ===== */
+      case '滚动出现': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">'+[0,1,2].map(k=>'<div style="height:26px;border-radius:6px;background:'+(k===0?'#16A34A':'#D7EEDF')+';width:'+[70,55,80][k]+'%;opacity:'+(1-k*0.25)+';transform:translateY('+k*6+'px);"></div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:10px;">进入视口时淡入 + 上移 16px，卡片错峰</p></div>';
+      case '视差滚动': return '<div class="pv-block">'+badge+'<div style="position:relative;height:90px;border-radius:10px;overflow:hidden;margin-top:10px;background:linear-gradient(180deg,#C7D2FE,#A5B4FC);"><div style="position:absolute;bottom:-30%;left:0;right:0;height:70%;background:#4F46E5;clip-path:polygon(0 100%,15% 40%,30% 70%,48% 30%,66% 65%,84% 40%,100% 60%,100% 100%);"></div><div style="position:absolute;top:14px;left:16px;color:#fff;font-size:13px;font-weight:700;">视差滚动</div></div><p style="font-size:11px;color:#888;margin-top:8px;">前中背景以不同速度移动</p></div>';
+      case '阅读进度条': return '<div class="pv-block" style="padding:0 0 14px;">'+badge+'<div style="height:3px;background:#E5E7E5;"><div style="width:42%;height:100%;background:#16A34A;"></div></div><div style="padding:14px 26px 0;"><div class="pv-title">阅读进度条</div><p style="font-size:11px;color:#888;">顶部细线随阅读进度增长，当前 42%</p></div></div>';
+      case '滚动吸附': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:8px;overflow:hidden;margin-top:10px;">'+[0,1,2].map(k=>'<div style="flex:0 0 60%;height:60px;border-radius:10px;background:'+(k===1?'#E7F6EC;border:2px solid #16A34A;':'#F3F3EE;')+';display:flex;align-items:center;justify-content:center;font-size:12px;color:#1B4332;">项目 '+[1,2,3][k]+'</div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">滚动后自动对齐到卡片中心</p></div>';
+      case '横向滚动': return '<div class="pv-block">'+badge+'<div style="position:relative;margin-top:10px;"><div style="display:flex;gap:8px;overflow:hidden;"><div style="flex:0 0 46%;height:54px;border-radius:8px;background:linear-gradient(135deg,#34D399,#1B4332);"></div><div style="flex:0 0 46%;height:54px;border-radius:8px;background:linear-gradient(135deg,#FBBF24,#F59E0B);"></div><div style="flex:0 0 46%;height:54px;border-radius:8px;background:linear-gradient(135deg,#60A5FA,#3B82F6);"></div></div><span style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid #E5E7E5;display:flex;align-items:center;justify-content:center;color:#1B4332;">›</span></div><p style="font-size:11px;color:#888;margin-top:8px;">下一张露出一部分 + 左右箭头</p></div>';
+      case '无限滚动': return '<div class="pv-block">'+badge+'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;">'+[0,1,2].map(()=>'<div style="height:48px;border-radius:8px;background:#F3F3EE;"></div>').join('')+'</div><div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-top:10px;font-size:11px;color:#888;"><span style="width:12px;height:12px;border:2px solid #ddd;border-top-color:#16A34A;border-radius:50%;display:inline-block;animation:pvspin 1s linear infinite;"></span>正在加载下一批…</div></div>';
+      case '跑马灯': return '<div class="pv-block">'+badge+'<div style="overflow:hidden;margin-top:10px;"><div style="display:flex;gap:24px;white-space:nowrap;">'+['Design','Frontend','AI Prototyping','Writing','Creative Tools','Design','Frontend'].map(s=>'<span style="font-size:16px;font-weight:800;color:#16A34A;">'+s+'</span>').join('')+'</div></div><p style="font-size:11px;color:#888;margin-top:8px;">内容持续横向移动，悬停暂停</p></div>';
+      case '悬停微交互': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;display:flex;gap:10px;">'+[0,1].map(k=>'<div style="flex:1;background:#fff;border:1px solid #E5E7E5;border-radius:10px;padding:14px;transition:.2s;'+(k===0?'border-color:#16A34A;transform:translateY(-4px);box-shadow:0 8px 20px rgba(22,163,74,.15);':'')+'"><div style="height:34px;border-radius:6px;background:linear-gradient(135deg,#34D399,#1B4332);"></div><b style="font-size:12px;color:#1A1A1A;display:block;margin-top:8px;">项目卡片</b></div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">悬停上移 4px + 边框变绿 + 封面放大</p></div>';
+      case '错峰动画': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:8px;margin-top:10px;">'+[0,1,2,3].map(k=>'<div style="flex:1;height:50px;border-radius:8px;background:#D7EEDF;opacity:'+(1-k*0.22)+';transform:translateY('+k*8+'px);border:1px solid #A7D9BC;"></div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">四张卡片每隔 70ms 依次进入</p></div>';
+      case '滚动驱动': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:14px;margin-top:10px;"><div style="width:3px;background:#E5E7E5;border-radius:3px;"><div style="width:100%;height:40%;background:#16A34A;"></div></div><div style="flex:1;display:flex;flex-direction:column;gap:6px;">'+[0,1,2].map(k=>'<div style="height:26px;border-radius:6px;background:#E7F6EC;opacity:'+(1-k*0.3)+';"></div>').join('')+'</div></div><p style="font-size:11px;color:#888;margin-top:8px;">滚动经过章节时，进度线增长、面板渐显</p></div>';
+
+      /* ===== 提示与加载 ===== */
       case '骨架屏': return '<div class="pv-block">'+badge+'<div class="pv-skel"><span class="pv-bar w80"></span><span class="pv-bar w60"></span><span class="pv-bar w40"></span></div></div>';
-      case '进度条': return '<div class="pv-block">'+badge+'<div style="display:flex;align-items:center;gap:10px;margin-top:12px;"><span style="font-size:11px;color:#888;">导出中</span><div style="flex:1;height:8px;background:#ECECE6;border-radius:6px;overflow:hidden;"><div style="width:62%;height:100%;background:#1B4332;"></div></div><span style="font-size:11px;color:#1B4332;font-weight:700;">62%</span></div></div>';
+      case '懒加载': return '<div class="pv-block">'+badge+'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;">'+[0,1,2].map(k=>'<div style="height:56px;border-radius:8px;background:'+(k===0?'#E5E7E5;':'linear-gradient(135deg,#A5F3FC,#86EFAC);')+';"></div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">首屏立即加载，下方图片接近视口才加载</p></div>';
       case '加载转圈': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;display:flex;align-items:center;gap:10px;"><span style="width:18px;height:18px;border:3px solid #ddd;border-top-color:#1B4332;border-radius:50%;display:inline-block;animation:pvspin 1s linear infinite;"></span><span style="font-size:12px;color:#888;">正在加载项目…</span></div></div>';
+      case '进度条': return '<div class="pv-block">'+badge+'<div style="display:flex;align-items:center;gap:10px;margin-top:12px;"><span style="font-size:11px;color:#888;">导出中</span><div style="flex:1;height:8px;background:#ECECE6;border-radius:6px;overflow:hidden;"><div style="width:62%;height:100%;background:#1B4332;"></div></div><span style="font-size:11px;color:#1B4332;font-weight:700;">62%</span></div></div>';
       case '加载按钮': return '<div class="pv-block">'+badge+'<span class="pv-btn" style="background:#1B4332;color:#fff;opacity:.8;">发送中…</span></div>';
       case '空状态': return '<div class="pv-block">'+badge+'<div style="text-align:center;padding:20px 0;color:#888;"><div style="font-size:32px;margin-bottom:8px;">📭</div><p style="font-size:13px;">还没有项目</p><span class="pv-btn" style="background:#1B4332;color:#fff;">创建第一个项目</span></div></div>';
       case '错误状态': return '<div class="pv-block">'+badge+'<div style="text-align:center;padding:20px 0;color:#888;"><div style="font-size:32px;margin-bottom:8px;">⚠️</div><p style="font-size:13px;">项目暂时无法加载</p><span class="pv-btn" style="background:#1B4332;color:#fff;">重试</span></div></div>';
       case '重试状态': return '<div class="pv-block">'+badge+'<div style="text-align:center;padding:20px 0;color:#888;"><div style="font-size:32px;margin-bottom:8px;">🔁</div><p style="font-size:13px;">上传失败，请重试</p><span class="pv-btn" style="background:#1B4332;color:#fff;">重新上传</span></div></div>';
+      case '乐观更新': return '<div class="pv-block">'+badge+'<div style="display:flex;align-items:center;gap:10px;margin-top:10px;"><span style="font-size:24px;">❤️</span><span style="font-size:13px;color:#1A1A1A;font-weight:700;">已收藏 · 128</span></div><p style="font-size:11px;color:#888;margin-top:8px;">点击立即切换状态，后台再同步，失败自动回滚</p></div>';
+      case '行内验证': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;"><input class="pv-input" value="haoran@example.com" style="border-color:#16A34A;"><div style="font-size:11px;color:#16A34A;margin-top:4px;">✓ 邮箱格式正确</div></div><div style="margin-top:8px;"><input class="pv-input" value="bad-email" style="border-color:#EF4444;"><div style="font-size:11px;color:#EF4444;margin-top:4px;">✗ 请输入正确的邮箱</div></div></div>';
+
+      /* ===== 高级效果 ===== */
+      case '自定义光标': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;display:flex;align-items:center;gap:10px;"><span style="width:16px;height:16px;border-radius:50%;background:#16A34A;"></span><span style="font-size:12px;color:#888;">自定义绿色圆点光标，悬停项目时扩展显示「View」</span></div></div>';
+      case '磁吸按钮': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;text-align:center;"><span style="display:inline-block;background:#16A34A;color:#fff;padding:11px 26px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:0 8px 20px rgba(22,163,74,.3);">View Work</span></div><p style="font-size:11px;color:#888;margin-top:10px;text-align:center;">光标靠近时按钮内容被轻微吸引</p></div>';
+      case '3D 倾斜卡片': return '<div class="pv-block">'+badge+'<div style="perspective:600px;margin-top:12px;display:flex;justify-content:center;"><div style="width:200px;height:100px;border-radius:12px;background:linear-gradient(135deg,#6366F1,#8B5CF6);transform:rotateX(8deg) rotateY(-8deg);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;box-shadow:0 16px 36px rgba(99,102,241,.4);">3D Tilt</div></div><p style="font-size:11px;color:#888;margin-top:10px;text-align:center;">随光标轻微旋转（≤5°）</p></div>';
+      case '聚光灯悬停': return '<div class="pv-block" style="background:#111827;">'+badge+'<div style="margin-top:10px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">'+[0,1].map(k=>'<div style="height:56px;border-radius:10px;border:1px solid #374151;'+(k===0?'background:radial-gradient(160px circle at 50% 50%, rgba(99,102,241,.5), transparent 70%);':'')+'display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;">功能 '+[1,2][k]+'</div>').join('')+'</div><p style="font-size:11px;color:#9CA3AF;margin-top:8px;">局部柔光斑跟随鼠标，突出当前卡片</p></div>';
+      case '文字蒙版': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;font-size:30px;font-weight:900;background:linear-gradient(90deg,#34D399,#1B4332,#34D399);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.01em;">MAKE IDEAS VISIBLE</div><p style="font-size:11px;color:#888;margin-top:6px;">图片/渐变只显示在文字内部</p></div>';
+      case '裁切揭示': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;display:flex;gap:8px;">'+[1,0.66,0.33].map(k=>'<div style="flex:1;height:70px;border-radius:8px;background:linear-gradient(135deg,#34D399,#1B4332);clip-path:inset(0 '+Math.round((1-k)*100)+'% 0 0);"></div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">像幕布打开一样从左向右展开</p></div>';
+      case 'WebGL': return '<div class="pv-block" style="background:#0B0D0E;">'+badge+'<div style="display:flex;align-items:center;gap:14px;margin-top:12px;"><span style="width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 35% 30%, #C7D2FE, #6366F1 55%, #312E81);box-shadow:0 24px 60px rgba(99,102,241,.6);"></span><span style="color:#E5E7EB;font-size:13px;">Three.js 低多边形场景<br><span style="font-size:11px;color:#9CA3AF;">跟随鼠标轻微视差，隐藏时暂停</span></span></div></div>';
+      case '视图过渡': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:8px;margin-top:12px;align-items:center;"><div style="width:70px;height:50px;border-radius:8px;background:linear-gradient(135deg,#C4B5FD,#93C5FD);"></div><span style="color:#888;">→</span><div style="width:130px;height:50px;border-radius:8px;background:linear-gradient(135deg,#C4B5FD,#93C5FD);"></div></div><p style="font-size:11px;color:#888;margin-top:8px;">卡片封面平滑扩展到详情页 Hero</p></div>';
+      case '减少动态': return '<div class="pv-block">'+badge+'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;background:#F6F7F6;border-radius:10px;padding:12px 14px;"><span style="font-size:13px;color:#1A1A1B;">♿ 尊重系统减少动态偏好</span><span style="width:40px;height:22px;border-radius:999px;background:#16A34A;position:relative;"><i style="position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;"></i></span></div><p style="font-size:11px;color:#888;margin-top:8px;">关闭视差/磁吸/3D/自动跑马灯，内容仍可读可操作</p></div>';
+      case '性能预算': return '<div class="pv-block">'+badge+'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;">'+[['JS','170KB gzip','✓'],['图片','WebP/AVIF','✓'],['字体','≤2 家族','✓']].map(x=>'<div style="background:#fff;border:1px solid #E5E7E5;border-radius:8px;padding:10px;text-align:center;"><b style="font-size:11px;color:#1B4332;display:block;">'+x[0]+'</b><span style="font-size:10px;color:#888;">'+x[1]+'</span><div style="color:#16A34A;font-size:12px;">'+x[2]+'</div></div>').join('')+'</div></div>';
+
       default: return '<div class="pv-block">'+badge+'<div class="pv-title">'+escapeHtml(i.name)+'</div><div class="pv-sub">'+escapeHtml(i.desc)+'</div><p style="font-size:12px;color:#999;margin-top:10px;line-height:1.8;">这里是「'+escapeHtml(i.name)+'」组件的效果演示区，实际展示会根据你的内容自动适配。</p></div>';
     }
   }
@@ -696,14 +701,12 @@
     return lines.join('\n');
   }
   function openPrompt(){
-    // 强制门槛：必须「注册登录 + 已激活(付费)」才能生成 Prompt
-    if(!window.__auth || !window.__auth.isPaid()){
-      if(window.__auth && window.__auth.isVisitor()){
-        window.__auth.show(); toast('请先注册并登录');
-      } else {
-        openPay();
-      }
-      return;
+    // 门槛：访客必须先登录；登录后免费试用 5 次，用完需付费升级；付费用户无限生成
+    if(!window.__auth || window.__auth.isVisitor()){ if(window.__auth) window.__auth.show(); toast('请先注册并登录'); return; }
+    if(!window.__auth.isPaid()){
+      var n = parseInt(localStorage.getItem('hyr_gen_count')||'0', 10);
+      if(n >= 5){ openPay(); toast('免费试用已用完（5 次），升级后无限生成'); return; }
+      localStorage.setItem('hyr_gen_count', String(n+1));
     }
     const t=buildPrompt();
     if(!t){ toast('请先在左侧选择一些组件'); return; }
@@ -712,9 +715,6 @@
   }
   function closePrompt(){ hide('promptOverlay'); }
   function copyPrompt(){
-    if(!window.__auth || !window.__auth.isPaid()){
-      openPrompt(); return;
-    }
     const t=document.getElementById('promptText').textContent;
     if(!t || t.indexOf('选择组件后')>=0){ toast('请先生成 Prompt'); return; }
     copyText(t,()=>toast('已复制 Prompt ✓'),()=>toast('复制失败，请手动复制'));
@@ -752,7 +752,6 @@
   function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   /* ========== 付费 & 试用 ========== */
-  const FREE_ITEMS = ['structure-5', 'structure-6', 'components-8'];
   function openPay(){
     if(!window.__auth || window.__auth.isVisitor()){
       if(window.__auth) window.__auth.show();
