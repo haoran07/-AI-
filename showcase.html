@@ -515,6 +515,20 @@
   });
 </script>
 
+<!-- AI 客服：付费用户可见（未付费由 auth.js + auth.css 隐藏） -->
+<script>
+  window.difyChatbotConfig = {
+    token: 'QfzBwTFjkvRobafA',
+    baseUrl: 'http://118.89.116.235',
+    inputs: {}, systemVariables: {}, userVariables: {}
+  }
+</script>
+<script src="http://118.89.116.235/embed.min.js" id="QfzBwTFjkvRobafA" defer></script>
+<style>
+  #dify-chatbot-bubble-button { background-color: #16A34A !important; }
+  #dify-chatbot-bubble-window { width: 24rem !important; height: 40rem !important; }
+  @media (max-width: 480px) { #dify-chatbot-bubble-window { width: 92vw !important; } }
+</style>
 <script src="auth.js"></script>
 </body>
 </html>
