@@ -25,10 +25,31 @@
 #hyChatWindow .head .close{ background:none; border:none; color:#fff; font-size:22px; cursor:pointer; line-height:1; padding:0 4px; }
 #hyChatWindow .body{ flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px; background:#F6F7F6; }
 #hyChatWindow .msg{ max-width:85%; padding:10px 13px; border-radius:14px; font-size:13.5px; line-height:1.6; white-space:pre-wrap; word-break:break-word; }
-#hyChatWindow .msg.ai{ align-self:flex-start; background:#fff; border:1px solid #E5E7E5; border-bottom-left-radius:4px; color:#1A1D1B; }
+#hyChatWindow .msg.ai{ align-self:flex-start; background:#fff; border:1px solid #E5E7E5; border-bottom-left-radius:4px; color:#1A1D1B; white-space:normal; }
 #hyChatWindow .msg.me{ align-self:flex-end; background:#16A34A; color:#fff; border-bottom-right-radius:4px; }
-#hyChatWindow .msg.ai.typing::after{ content:'▍'; color:#16A34A; animation:hyBlink 1s steps(1) infinite; }
-@keyframes hyBlink{ 50%{ opacity:0; } }
+
+/* Markdown 内容样式 */
+#hyChatWindow .msg.ai .md h2,#hyChatWindow .msg.ai .md h3,#hyChatWindow .msg.ai .md h4{ margin:10px 0 6px; font-weight:700; line-height:1.4; }
+#hyChatWindow .msg.ai .md h2{ font-size:16px; }
+#hyChatWindow .msg.ai .md h3{ font-size:15px; }
+#hyChatWindow .msg.ai .md h4{ font-size:14px; }
+#hyChatWindow .msg.ai .md p{ margin:5px 0; }
+#hyChatWindow .msg.ai .md ul,#hyChatWindow .msg.ai .md ol{ margin:5px 0 5px 18px; }
+#hyChatWindow .msg.ai .md li{ margin:3px 0; }
+#hyChatWindow .msg.ai .md code{ background:#F1F2F4; color:#1A1D1B; padding:1px 5px; border-radius:4px; font-family:ui-monospace,Consolas,monospace; font-size:12.5px; }
+#hyChatWindow .msg.ai .md pre{ background:#1A1D1B; color:#E5E7E5; padding:10px 12px; border-radius:8px; overflow-x:auto; margin:8px 0; }
+#hyChatWindow .msg.ai .md pre code{ background:none; padding:0; color:#E5E7E5; }
+#hyChatWindow .msg.ai .md a{ color:#16A34A; text-decoration:underline; }
+#hyChatWindow .msg.ai .md b{ font-weight:700; }
+
+/* 思考中占位 */
+#hyChatWindow .msg.ai .thinking{ display:flex; align-items:center; gap:8px; color:#6B7280; font-size:13px; }
+#hyChatWindow .msg.ai .thinking .sp{ width:14px; height:14px; border:2px solid #D1D5DB; border-top-color:#16A34A; border-radius:50%; animation:hySpin 1s linear infinite; }
+@keyframes hySpin{ to{ transform:rotate(360deg); } }
+
+/* 一键复制按钮 */
+#hyChatWindow .msg.ai .copy-btn{ display:none; margin-top:8px; font-size:11.5px; color:#16A34A; background:#E7F6EC; border:1px solid #D1FAE5; padding:4px 10px; border-radius:6px; cursor:pointer; }
+#hyChatWindow .msg.ai .copy-btn.show{ display:inline-block; }
 #hyChatWindow .input{ display:flex; gap:8px; padding:12px 14px; border-top:1px solid #E5E7E5; background:#fff; flex-shrink:0; }
 #hyChatWindow .input input{ flex:1; border:1px solid #E5E7E5; border-radius:22px; padding:10px 16px; font-size:13px; outline:none; font-family:inherit; }
 #hyChatWindow .input input:focus{ border-color:#16A34A; }

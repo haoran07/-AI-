@@ -1,8 +1,8 @@
 /* 自定义 AI 客服：调用 Dify Agent API（经服务器 nginx 中转，密钥不暴露）
-   支持流式打字机输出 + 多轮对话记忆 */
+   支持流式打字机 + Markdown 渲染 + 一键复制 + 「思考中…」占位 + 多轮记忆 */
 (function(){
   var API_URL = '/api/dify/chat-messages';
-  var convId = '';       // 多轮对话的会话ID（后端返回）
+  var convId = '';
   var busy = false;
 
   function uid(){
@@ -15,17 +15,78 @@
     }catch(e){ return 'guest'; }
   }
 
-  // 过滤掉 <think>...</think> 思考块，只显示最终回答
-  function stripThink(s){
-    if(!s) return '';
-    var end = s.indexOf('</think>');
-    if(end >= 0){
-      return s.slice(end + 8).replace(/^\s+/, '');
-    }
-    if(s.indexOf('<think>') >= 0){
-      return '';   // 还在思考块里，先不显示
-    }
+  function escapeHtml(s){
+    return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // 行内 Markdown：代码、加粗、链接
+  function inlineMd(s){
+    s = escapeHtml(s);
+    s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>');
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
     return s;
+  }
+
+  // 极简 Markdown 渲染：代码块 / 标题 / 列表 / 段落
+  function mdToHtml(md){
+    var lines = (md||'').split('\n');
+    var html = [];
+    var inCode = false, codeBuf = [];
+    var listType = '', listBuf = [];
+    function flushList(){
+      if(listBuf.length){
+        html.push('<' + (listType||'ul') + '>' + listBuf.join('') + '</' + (listType||'ul') + '>');
+        listBuf = []; listType = '';
+      }
+    }
+    for(var i=0;i<lines.length;i++){
+      var line = lines[i];
+      var t = line.trim();
+      if(t.indexOf('```') === 0){
+        if(inCode){ html.push('<pre><code>' + escapeHtml(codeBuf.join('\n')) + '</code></pre>'); codeBuf=[]; inCode=false; }
+        else { flushList(); inCode = true; }
+        continue;
+      }
+      if(inCode){ codeBuf.push(line); continue; }
+      if(!t){ flushList(); continue; }
+      var h = t.match(/^(#{1,3})\s+(.*)$/);
+      if(h){ flushList(); var lv = h[1].length + 1; html.push('<h'+lv+'>' + inlineMd(h[2]) + '</h'+lv+'>'); continue; }
+      var ul = t.match(/^[-*]\s+(.*)$/);
+      if(ul){ if(listType !== 'ul'){ flushList(); listType = 'ul'; } listBuf.push('<li>' + inlineMd(ul[1]) + '</li>'); continue; }
+      var ol = t.match(/^\d+[\.、]\s+(.*)$/);
+      if(ol){ if(listType !== 'ol'){ flushList(); listType = 'ol'; } listBuf.push('<li>' + inlineMd(ol[1]) + '</li>'); continue; }
+      flushList();
+      html.push('<p>' + inlineMd(t) + '</p>');
+    }
+    flushList();
+    if(inCode){ html.push('<pre><code>' + escapeHtml(codeBuf.join('\n')) + '</code></pre>'); }
+    return html.join('');
+  }
+
+  // 判断当前是「思考中」还是「有回答」
+  function renderState(full){
+    var ts = full.indexOf('<think>');
+    var te = full.indexOf('</think>');
+    if(ts >= 0 && te < 0){ return { thinking:true, text:'' }; }
+    if(te >= 0){ return { thinking:false, text: full.slice(te + 8).replace(/^\s+/, '') }; }
+    return { thinking:false, text: full };
+  }
+
+  function copyText(text){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      return navigator.clipboard.writeText(text).then(function(){ return true; }).catch(function(){ return fallbackCopy(text); });
+    }
+    return Promise.resolve(fallbackCopy(text));
+  }
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly','');
+    ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    var ok = false; try{ ok = document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    return ok;
   }
 
   function inject(){
@@ -44,7 +105,7 @@
       '<div class="input"><input id="hyChatInput" placeholder="问我建站相关问题…" onkeydown="if(event.key===\'Enter\')__hyChat.send()"><button id="hyChatSend" onclick="__hyChat.send()">➤</button></div>';
     document.body.appendChild(bubble);
     document.body.appendChild(win);
-    addMsg('ai', '你好，我是浩然的 AI 建站助手 👋\n可以问我：怎么选组件、怎么生成 Prompt、建站流程等问题。');
+    addAi('你好，我是浩然的 AI 建站助手 👋\n\n可以问我：\n- 怎么选组件\n- 怎么生成 Prompt\n- 建站流程和注意事项', true);
   }
 
   function toggle(){
@@ -62,14 +123,39 @@
     if(w) w.classList.remove('open');
   }
 
-  function addMsg(role, text, typing){
+  function addUser(text){
     var body = document.getElementById('hyChatBody');
     var d = document.createElement('div');
-    d.className = 'msg ' + (role === 'me' ? 'me' : 'ai') + (typing ? ' typing' : '');
+    d.className = 'msg me';
     d.textContent = text;
     body.appendChild(d);
     body.scrollTop = body.scrollHeight;
+  }
+
+  // 新增 AI 消息（markdown 内容 + 复制按钮）
+  function addAi(raw, done){
+    var body = document.getElementById('hyChatBody');
+    var d = document.createElement('div');
+    d.className = 'msg ai';
+    d.innerHTML = '<div class="md"></div><button class="copy-btn" onclick="__hyChat.copy(this)">📋 一键复制</button>';
+    body.appendChild(d);
+    if(raw !== undefined){
+      d.dataset.raw = raw;
+      d.querySelector('.md').innerHTML = mdToHtml(raw);
+      if(done) d.querySelector('.copy-btn').classList.add('show');
+    }
+    body.scrollTop = body.scrollHeight;
     return d;
+  }
+
+  function copy(btn){
+    var msg = btn.closest('.msg');
+    var raw = (msg && msg.dataset.raw) || '';
+    if(!raw && msg){ raw = msg.querySelector('.md').innerText || ''; }
+    copyText(raw).then(function(ok){
+      btn.textContent = ok ? '✅ 已复制' : '❌ 复制失败';
+      setTimeout(function(){ btn.textContent = '📋 一键复制'; }, 1500);
+    });
   }
 
   async function send(){
@@ -78,8 +164,9 @@
     var text = (input.value || '').trim();
     if(!text) return;
     input.value = '';
-    addMsg('me', text);
-    var aiEl = addMsg('ai', '', true);
+    addUser(text);
+    var aiEl = addAi();
+    aiEl.querySelector('.md').innerHTML = '<div class="thinking"><span class="sp"></span>思考中…</div>';
     busy = true;
     var btn = document.getElementById('hyChatSend');
     if(btn) btn.disabled = true;
@@ -120,17 +207,24 @@
 
           if(j.event === 'agent_message'){
             seenAgent = true;
-            if(j.answer){ full += j.answer; aiEl.textContent = stripThink(full); aiEl.classList.remove('typing'); }
+            if(j.answer){ full += j.answer; }
           } else if(j.event === 'message' && !seenAgent){
-            // 兼容 Chatflow 型：answer 在 message 事件里
-            if(j.answer){ full += j.answer; aiEl.textContent = stripThink(full); aiEl.classList.remove('typing'); }
+            if(j.answer){ full += j.answer; }
           } else if(j.event === 'message_end'){
             if(j.conversation_id) convId = j.conversation_id;
-            if(!full && j.answer){ full = j.answer; aiEl.textContent = stripThink(full); aiEl.classList.remove('typing'); }
+            if(!full && j.answer){ full = j.answer; }
           } else if(j.event === 'error'){
             full = j.message || '出错了，请稍后再试';
-            aiEl.textContent = full; aiEl.classList.remove('typing');
           }
+        }
+
+        // 实时更新：思考中显示占位，有内容就渲染 markdown
+        var st = renderState(full);
+        if(st.thinking || !st.text){
+          aiEl.querySelector('.md').innerHTML = '<div class="thinking"><span class="sp"></span>思考中…</div>';
+        } else {
+          aiEl.dataset.raw = st.text;
+          aiEl.querySelector('.md').innerHTML = mdToHtml(st.text);
         }
         var body = document.getElementById('hyChatBody');
         if(body) body.scrollTop = body.scrollHeight;
@@ -139,17 +233,18 @@
       full = full || '网络错误，请稍后再试';
     }
 
-    var display = stripThink(full);
-    if(!display){ display = '（没有收到回复，请稍后再试）'; }
-    aiEl.textContent = display;
-    aiEl.classList.remove('typing');
+    var st = renderState(full);
+    var finalText = st.text || '（没有收到回复，请稍后再试）';
+    aiEl.dataset.raw = finalText;
+    aiEl.querySelector('.md').innerHTML = mdToHtml(finalText);
+    aiEl.querySelector('.copy-btn').classList.add('show');
     var body = document.getElementById('hyChatBody');
     if(body) body.scrollTop = body.scrollHeight;
     busy = false;
     if(btn) btn.disabled = false;
   }
 
-  window.__hyChat = { send: send, close: close };
+  window.__hyChat = { send: send, close: close, copy: copy };
 
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', inject);
