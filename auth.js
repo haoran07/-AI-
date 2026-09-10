@@ -95,7 +95,7 @@
       } else { A.msg(j.error_description || '登录失败，请检查手机号或密码'); }
     },
     logout: function(){
-      try{ localStorage.removeItem('hyr_token'); localStorage.removeItem('hyr_refresh'); localStorage.removeItem('hyr_nick'); }catch(e){}
+      try{ localStorage.removeItem('hyr_token'); localStorage.removeItem('hyr_refresh'); localStorage.removeItem('hyr_nick'); localStorage.removeItem('hyr_paid'); localStorage.removeItem('hyr_phone'); }catch(e){}
       A.refresh();
     },
     // 兑换码解锁（Supabase 服务端校验 + 原子标记已用，前端看不到码）
