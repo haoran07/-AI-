@@ -99,7 +99,7 @@
       if(pwd.length < 6){ A.msg('密码至少 6 位'); return; }
       var r = await fetch(SUPABASE_URL + '/auth/v1/signup', { method:'POST', headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'}, body: JSON.stringify({ email: email(phone), password: pwd, data: { nickname: nick, phone: phone } }) });
       var j = await r.json();
-      if(j.access_token){ A.save(j, nick, phone); A.msg('注册成功，已登录', true); A.refresh(); setTimeout(A.hide, 600); }
+      if(j.access_token){ A.save(j, nick, phone); A.msg('注册成功，已登录', true); A.refresh(); A.syncPaid(); setTimeout(A.hide, 600); }
       else { A.msg(j.msg || j.error_description || '注册失败，请重试'); }
     },
     login: async function(){
@@ -110,7 +110,7 @@
       if(j.access_token){
         var nick = '', phone2 = phone;
         try { var u = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+j.access_token} }).then(function(x){ return x.json(); }); nick = (u.user_metadata && u.user_metadata.nickname) || phone; phone2 = (u.user_metadata && u.user_metadata.phone) || phone; } catch(e){ nick = phone; }
-        A.save(j, nick, phone2); A.msg('登录成功', true); A.refresh(); setTimeout(A.hide, 600);
+        A.save(j, nick, phone2); A.msg('登录成功', true); A.refresh(); A.syncPaid(); setTimeout(A.hide, 600);
       } else { A.msg(j.error_description || '登录失败，请检查手机号或密码'); }
     },
     logout: function(){
@@ -140,6 +140,24 @@
     isPaid: function(){ return cur().paid === '1'; },
     isTrial: function(){ return !!cur().nick && cur().paid !== '1'; },
     isVisitor: function(){ return !cur().nick; },
+    // 登录后向 Supabase 核对：这个手机号是否已经激活过（换设备/清缓存也能恢复付费状态）
+    syncPaid: async function(){
+      var u = cur();
+      if(!u.phone){ return; }
+      if(u.paid === '1'){ return; }
+      try{
+        var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/check_paid', {
+          method:'POST',
+          headers:{ 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
+          body: JSON.stringify({ p_user: u.phone })
+        });
+        var j = await r.json();
+        if(j && j.paid === true){
+          try{ localStorage.setItem('hyr_paid','1'); }catch(e){}
+          A.refresh();
+        }
+      }catch(e){}
+    },
     refresh: function(){
       var u = cur();
       if(u.nick){
@@ -159,4 +177,5 @@
 
   window.__auth = A;
   A.refresh();
+  A.syncPaid();
 })();
