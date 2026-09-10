@@ -369,6 +369,7 @@
   }
 </style>
 <link rel="stylesheet" href="auth.css">
+<link rel="stylesheet" href="chat.css">
 </head>
 <body>
 
@@ -1817,32 +1818,9 @@
 </script>
 
 
-<!-- AI 数字分身（悬浮气泡） -->
-<script>
-  window.difyChatbotConfig = {
-    token: 'QfzBwTFjkvRobafA',
-    baseUrl: 'https://dify.haoxixi.com.cn',
-    inputs: {},
-    systemVariables: {},
-    userVariables: {},
-    dynamicScript: true
-  }
-</script>
-<script src="https://dify.haoxixi.com.cn/embed.min.js" id="QfzBwTFjkvRobafA" defer></script>
-<style>
-  #dify-chatbot-bubble-button {
-    background-color: #1B4332 !important;
-  }
-  #dify-chatbot-bubble-window {
-    width: 24rem !important;
-    height: 40rem !important;
-  }
-  @media (max-width: 480px) {
-    #dify-chatbot-bubble-window { width: 92vw !important; }
-  }
-</style>
-
+<!-- AI 客服：自定义聊天窗（chat.js 调服务器中转接口），付费用户可见 -->
 <script src="auth.js"></script>
+<script src="chat.js"></script>
 <style>
   .paid-section{display:block;}
   body.locked .paid-section{display:none;}

@@ -45,10 +45,10 @@
   pill.innerHTML = '<span class="auth-pill-name" id="authNick"></span><button class="auth-pill-out" onclick="__auth.logout()">退出</button>';
   var nav = document.querySelector('.navbar'); if(nav){ nav.appendChild(pill); } else { document.body.appendChild(pill); }
 
-  // Dify 客服气泡：脚本由页面直接加载（defer），这里只负责「付费显示 / 未付费隐藏」
+  // 自定义 AI 客服气泡：这里只负责「付费显示 / 未付费隐藏」
   function setChatVisible(v){
-    var btn = document.getElementById('dify-chatbot-bubble-button');
-    var win = document.getElementById('dify-chatbot-bubble-window');
+    var btn = document.getElementById('hyChatBubble');
+    var win = document.getElementById('hyChatWindow');
     if(btn) btn.style.display = v ? '' : 'none';
     if(win) win.style.display = v ? '' : 'none';
   }
