@@ -106,7 +106,7 @@
     var win = document.createElement('div');
     win.id = 'hyChatWindow';
     win.innerHTML =
-      '<div class="head"><div class="avatar">🤖</div><div class="info"><b>AI 建站客服</b><span>在线 · 有问必答</span></div><button class="close" onclick="__hyChat.close()">✕</button></div>'+
+      '<div class="head"><div class="avatar">🤖</div><div class="info"><b>AI 建站顾问</b><span id="hyChatQuota">登录后可试用</span></div><button class="close" onclick="__hyChat.close()">✕</button></div>'+
       '<div class="body" id="hyChatBody"></div>'+
       '<div class="input"><input id="hyChatInput" placeholder="问我建站相关问题…" onkeydown="if(event.key===\'Enter\')__hyChat.send()"><button id="hyChatSend" onclick="__hyChat.send()">➤</button></div>';
     document.body.appendChild(bubble);
@@ -127,6 +127,14 @@
   function close(){
     var w = document.getElementById('hyChatWindow');
     if(w) w.classList.remove('open');
+  }
+
+  function refreshQuota(){
+    var el = document.getElementById('hyChatQuota');
+    if(!el || !window.__auth) return;
+    if(window.__auth.isPaid()) { el.textContent = '年度版 · 不限次数'; return; }
+    var left = window.__auth.getWorkflowRemaining();
+    el.textContent = '试用剩余 ' + left + ' / ' + window.__auth.getWorkflowLimit() + ' 次';
   }
 
   function addUser(text){
@@ -170,6 +178,11 @@
     var input = document.getElementById('hyChatInput');
     var text = (input.value || '').trim();
     if(!text) return;
+    if(!window.__auth || window.__auth.isVisitor()) return;
+    if(!window.__auth.canUseWorkflow()){
+      addAi('你的 10 次完整方案试用已用完。升级年度版后，可以不限次数生成提示词和继续向 AI 建站顾问提问。');
+      return;
+    }
     input.value = '';
     addUser(text);
     var aiEl = addAi();
@@ -178,7 +191,7 @@
     var btn = document.getElementById('hyChatSend');
     if(btn) btn.disabled = true;
 
-    var full = '';
+    var full = '', completed = false;
     try{
       var resp = await fetch(API_URL, {
         method: 'POST',
@@ -241,6 +254,7 @@
         var body = document.getElementById('hyChatBody');
         if(body) body.scrollTop = body.scrollHeight;
       }
+      completed = true;
     }catch(e){
       full = full || '网络错误，请稍后再试';
     }
@@ -254,17 +268,25 @@
       aiEl.dataset.prompt = prompt;
       aiEl.querySelector('.copy-btn').classList.add('show');
     }
+    if(completed && finalText && window.__auth && !window.__auth.isPaid()){
+      window.__auth.consumeWorkflow();
+      refreshQuota();
+    }
     var body = document.getElementById('hyChatBody');
     if(body) body.scrollTop = body.scrollHeight;
     busy = false;
     if(btn) btn.disabled = false;
   }
 
-  window.__hyChat = { send: send, close: close, copy: copy };
+  window.__hyChat = { send: send, close: close, copy: copy, refreshQuota: refreshQuota };
 
   if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', inject);
+    document.addEventListener('DOMContentLoaded', function(){
+      inject(); refreshQuota();
+      if(window.__auth) window.__auth.refresh();
+    });
   } else {
-    inject();
+    inject(); refreshQuota();
+    if(window.__auth) window.__auth.refresh();
   }
 })();

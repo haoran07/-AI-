@@ -45,7 +45,16 @@
   pill.innerHTML = '<span class="auth-pill-name" id="authNick"></span><button class="auth-pill-out" onclick="__auth.logout()">退出</button>';
   var nav = document.querySelector('.navbar'); if(nav){ nav.appendChild(pill); } else { document.body.appendChild(pill); }
 
-  // 自定义 AI 客服气泡：这里只负责「付费显示 / 未付费隐藏」
+  var FREE_WORKFLOW_LIMIT = 10;
+  var workflowUsageValue = 0;
+  var workflowReady = false;
+  function rpcHeaders(){
+    return { 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+cur().token, 'Content-Type':'application/json' };
+  }
+  function workflowUsage(){ return workflowUsageValue; }
+  function workflowRemaining(){ return A.isPaid() ? Infinity : Math.max(0, FREE_WORKFLOW_LIMIT - workflowUsageValue); }
+
+  // AI 建站顾问属于配置器的试用权益：登录用户可试用，年度版不限次数。
   function setChatVisible(v){
     var btn = document.getElementById('hyChatBubble');
     var win = document.getElementById('hyChatWindow');
@@ -80,7 +89,7 @@
       if(pwd.length < 6){ A.msg('密码至少 6 位'); return; }
       var r = await fetch(SUPABASE_URL + '/auth/v1/signup', { method:'POST', headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'}, body: JSON.stringify({ email: email(phone), password: pwd, data: { nickname: nick, phone: phone } }) });
       var j = await r.json();
-      if(j.access_token){ A.save(j, nick, phone); A.msg('注册成功，已登录', true); A.refresh(); A.syncPaid(); setTimeout(A.hide, 600); }
+      if(j.access_token){ A.save(j, nick, phone); A.msg('注册成功，已登录', true); A.refresh(); A.hide(); A.syncPaid().then(function(){ return A.syncTrialQuota(); }); document.dispatchEvent(new CustomEvent('haoran-auth-register')); }
       else { A.msg(j.msg || j.error_description || '注册失败，请重试'); }
     },
     login: async function(){
@@ -91,11 +100,12 @@
       if(j.access_token){
         var nick = '', phone2 = phone;
         try { var u = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+j.access_token} }).then(function(x){ return x.json(); }); nick = (u.user_metadata && u.user_metadata.nickname) || phone; phone2 = (u.user_metadata && u.user_metadata.phone) || phone; } catch(e){ nick = phone; }
-        A.save(j, nick, phone2); A.msg('登录成功', true); A.refresh(); A.syncPaid(); setTimeout(A.hide, 600);
+        A.save(j, nick, phone2); A.msg('登录成功', true); A.refresh(); A.hide(); A.syncPaid().then(function(){ return A.syncTrialQuota(); });
       } else { A.msg(j.error_description || '登录失败，请检查手机号或密码'); }
     },
     logout: function(){
       try{ localStorage.removeItem('hyr_token'); localStorage.removeItem('hyr_refresh'); localStorage.removeItem('hyr_nick'); localStorage.removeItem('hyr_paid'); localStorage.removeItem('hyr_phone'); }catch(e){}
+      workflowUsageValue = 0; workflowReady = false;
       A.refresh();
     },
     // 兑换码解锁（Supabase 服务端校验 + 原子标记已用，前端看不到码）
@@ -104,7 +114,7 @@
       try{
         var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/redeem_code', {
           method:'POST',
-          headers:{ 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
+          headers:rpcHeaders(),
           body: JSON.stringify({ p_code: code, p_user: (cur().phone || cur().nick || '未登录') })
         });
         var j = await r.json();
@@ -121,23 +131,65 @@
     isPaid: function(){ return cur().paid === '1'; },
     isTrial: function(){ return !!cur().nick && cur().paid !== '1'; },
     isVisitor: function(){ return !cur().nick; },
+    getWorkflowLimit: function(){ return FREE_WORKFLOW_LIMIT; },
+    getWorkflowUsage: function(){ return workflowUsage(); },
+    getWorkflowRemaining: function(){ return workflowRemaining(); },
+    isWorkflowReady: function(){ return A.isPaid() || workflowReady; },
+    canUseWorkflow: function(){ return A.isPaid() || (workflowReady && workflowRemaining() > 0); },
+    syncTrialQuota: async function(){
+      if(A.isPaid()){ workflowReady = true; if(window.onAuthChange) window.onAuthChange(); return true; }
+      if(!cur().token){ workflowUsageValue = 0; workflowReady = false; if(window.onAuthChange) window.onAuthChange(); return false; }
+      workflowReady = false; if(window.onAuthChange) window.onAuthChange();
+      try{
+        var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_trial_quota', { method:'POST', headers:rpcHeaders(), body:'{}' });
+        var j = await r.json();
+        if(!r.ok || !j || typeof j.usage !== 'number') throw new Error('quota sync failed');
+        workflowUsageValue = Math.min(FREE_WORKFLOW_LIMIT, Math.max(0, j.usage));
+        workflowReady = true;
+        if(window.onAuthChange) window.onAuthChange();
+        return true;
+      }catch(e){
+        workflowReady = false;
+        if(window.onAuthChange) window.onAuthChange();
+        return false;
+      }
+    },
+    consumeWorkflow: async function(){
+      if(A.isPaid()) return true;
+      if(!cur().token) return false;
+      try{
+        var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/consume_trial_quota', { method:'POST', headers:rpcHeaders(), body:'{}' });
+        var j = await r.json();
+        if(!r.ok || !j || typeof j.usage !== 'number') throw new Error('quota consume failed');
+        workflowUsageValue = Math.min(FREE_WORKFLOW_LIMIT, Math.max(0, j.usage));
+        workflowReady = true;
+        if(window.onAuthChange) window.onAuthChange();
+        return j.ok === true;
+      }catch(e){
+        workflowReady = false;
+        if(window.onAuthChange) window.onAuthChange();
+        return false;
+      }
+    },
     // 登录后向 Supabase 核对：这个手机号是否已经激活过（换设备/清缓存也能恢复付费状态）
     syncPaid: async function(){
       var u = cur();
-      if(!u.phone){ return; }
-      if(u.paid === '1'){ return; }
+      if(!u.phone){ return false; }
+      if(u.paid === '1'){ return true; }
       try{
         var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/check_paid', {
           method:'POST',
-          headers:{ 'apikey':SUPABASE_ANON_KEY, 'Authorization':'Bearer '+SUPABASE_ANON_KEY, 'Content-Type':'application/json' },
+          headers:rpcHeaders(),
           body: JSON.stringify({ p_user: u.phone })
         });
         var j = await r.json();
         if(j && j.paid === true){
           try{ localStorage.setItem('hyr_paid','1'); }catch(e){}
           A.refresh();
+          return true;
         }
-      }catch(e){}
+        return false;
+      }catch(e){ return false; }
     },
     refresh: function(){
       var u = cur();
@@ -151,12 +203,13 @@
       document.body.classList.toggle('trial', !!u.nick && u.paid !== '1');
       document.body.classList.toggle('paid', u.paid === '1');
       document.body.classList.toggle('locked', u.paid !== '1');
-      if(u.paid === '1'){ setChatVisible(true); } else { setChatVisible(false); }
+      if(u.nick){ A.hide(); }
+      setChatVisible(!!u.nick);
       if(window.onAuthChange){ window.onAuthChange(); }
     }
   };
 
   window.__auth = A;
   A.refresh();
-  A.syncPaid();
+  A.syncPaid().then(function(){ return A.syncTrialQuota(); });
 })();

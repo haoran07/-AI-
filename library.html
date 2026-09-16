@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>组件参考 · 浩然AI建站知识库（70个组件）</title>
+<title>组件图鉴 · 浩然建站蓝图</title>
 <script defer src="/_vercel/insights/script.js"></script>
 <style>
   :root {
@@ -377,8 +377,8 @@
 <div class="mask" id="mask"></div>
 <div class="drawer" id="drawer">
   <button class="close" onclick="closeDrawer()">✕</button>
-  <a href="index.html" style="color:var(--accent);font-weight:700">🧰 AI 建站配置器</a>
-  <a href="showcase.html" style="color:var(--accent);font-weight:700">案例</a>
+  <a href="index.html" style="color:var(--accent);font-weight:700">建站工作台</a>
+  <a href="showcase.html" style="color:var(--accent);font-weight:700">案例档案</a>
   <a href="#structure">01 页面结构</a>
   <a href="#navigation">02 导航与切换</a>
   <a href="#components">03 常用组件</a>
@@ -386,14 +386,17 @@
   <a href="#loading">05 提示与加载</a>
   <a href="#visual">06 视觉风格</a>
   <a href="#advanced">07 高级效果</a>
+  <a href="#conversion">08 转化与信任</a>
+  <a href="#showcase">09 内容展示</a>
+  <a href="#quality">10 上线品质</a>
 </div>
 
 <nav class="navbar">
   <button class="burger"><span onclick="openDrawer()" style="font-size:20px">☰</span></button>
-  <div class="logo">浩然<em>· AI 建站知识库</em></div>
+  <div class="logo">浩然<em>· 建站蓝图</em></div>
   <div class="links" id="navLinks">
-    <a href="index.html" style="color:var(--accent);font-weight:700">🧰 配置器</a>
-    <a href="showcase.html">案例</a>
+    <a href="index.html" style="color:var(--accent);font-weight:700">建站工作台</a>
+    <a href="showcase.html">案例档案</a>
     <a href="#structure">页面结构</a>
     <a href="#navigation">导航切换</a>
     <a href="#components">常用组件</a>
@@ -401,6 +404,9 @@
     <a href="#loading">提示加载</a>
     <a href="#visual">视觉风格</a>
     <a href="#advanced">高级效果</a>
+    <a href="#conversion">转化信任</a>
+    <a href="#showcase">内容展示</a>
+    <a href="#quality">上线品质</a>
   </div>
 </nav>
 
@@ -425,6 +431,9 @@
   <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">5</span>提示与加载<span class="caret">▶</span></button><div class="sub"><a href="#l1">骨架屏</a><a href="#l2">懒加载</a><a href="#l3">加载转圈</a><a href="#l4">进度条</a><a href="#l5">加载按钮</a><a href="#l6">空状态</a><a href="#l7">错误状态</a><a href="#l8">重试状态</a><a href="#l9">乐观更新</a><a href="#l10">行内验证</a></div></div>
   <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">6</span>视觉风格<span class="caret">▶</span></button><div class="sub"><a href="#v1">极简主义</a><a href="#v2">编辑杂志风</a><a href="#v3">瑞士风</a><a href="#v4">玻璃拟态</a><a href="#v5">新野兽派</a><a href="#v6">深色模式</a><a href="#v7">单色双色</a><a href="#v8">网格渐变</a><a href="#v9">颗粒噪点</a><a href="#v10">新拟态</a></div></div>
   <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">7</span>高级效果<span class="caret">▶</span></button><div class="sub"><a href="#a1">自定义光标</a><a href="#a2">磁吸按钮</a><a href="#a3">3D倾斜</a><a href="#a4">聚光灯悬停</a><a href="#a5">文字蒙版</a><a href="#a6">裁切揭示</a><a href="#a7">WebGL</a><a href="#a8">视图过渡</a><a href="#a9">减少动态</a><a href="#a10">性能预算</a></div></div>
+  <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">8</span>转化与信任<span class="caret">▶</span></button><div class="sub"><a href="#conversion">主行动按钮</a><a href="#conversion">客户评价</a><a href="#conversion">品牌 Logo 墙</a><a href="#conversion">定价对比</a><a href="#conversion">预约入口</a><a href="#conversion">案例成果</a></div></div>
+  <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">9</span>内容展示<span class="caret">▶</span></button><div class="sub"><a href="#showcase">Bento 网格</a><a href="#showcase">产品 Mockup</a><a href="#showcase">前后对比</a><a href="#showcase">作品筛选</a><a href="#showcase">数据大数字</a><a href="#showcase">对比矩阵</a></div></div>
+  <div class="cat"><button class="cat-head" onclick="toggleCat(this)"><span class="n">10</span>上线品质<span class="caret">▶</span></button><div class="sub"><a href="#quality">移动端优先</a><a href="#quality">SEO 基础</a><a href="#quality">表单反馈</a><a href="#quality">图片性能</a><a href="#quality">上线检查</a></div></div>
 </aside>
 
 <main class="main">
@@ -920,8 +929,8 @@
 <div class="paywall" id="paywall">
   <div class="paywall-box">
     <div class="pw-icon">🔒</div>
-    <h3>后面的 40 个组件需要付费解锁</h3>
-    <p>你已经看完了免费的 30 个组件（页面结构 / 导航与切换 / 常用组件）。<br>付费 60 元买断，解锁全部 70 个组件、无限生成 Prompt、AI 顾问。</p>
+    <h3>更多专业组件需要付费解锁</h3>
+    <p>免费查看基础页面、导航与常用组件。<br>付费 60 元买断，解锁 100+ 组件、智能推荐、无限生成 Prompt 与 AI 顾问。</p>
     <button class="pw-btn" onclick="openPay()">🔓 立即解锁（60元）</button>
   </div>
 </div>
@@ -933,7 +942,7 @@
     <h3 style="font-size:19px;font-weight:800;color:#1A1D1B;">🔓 解锁全部功能</h3>
     <p style="font-size:13px;color:#6B7280;margin-top:6px;">60 元买断，永久使用</p>
     <div style="font-size:40px;font-weight:800;color:#16A34A;margin-top:8px;">¥60 <span style="font-size:14px;color:#6B7280;font-weight:400;">永久买断</span></div>
-    <div class="pw-list"><div>✅ 全部 70 个组件</div><div>✅ 无限次生成 Prompt</div><div>✅ AI 建站顾问</div><div>✅ 10 大行业案例模板</div></div>
+    <div class="pw-list"><div>✅ 100+ 个组件与智能推荐</div><div>✅ 无限次生成 Prompt</div><div>✅ AI 建站顾问</div><div>✅ 10 大行业案例模板</div></div>
     <div class="pw-qr">
       <button class="pw-qr-box" onclick="showQR('wechat')"><span>💚 微信收款码</span><i>点击查看</i></button>
       <button class="pw-qr-box" onclick="showQR('alipay')"><span>💙 支付宝收款码</span><i>点击查看</i></button>
@@ -1473,6 +1482,9 @@
   </div>
 </section>
 
+  <section class="paid-section" id="conversion"><div class="cat-hero"><span class="tag">08 · 转化与信任 Conversion</span><h2>转化与信任</h2><p>让访客理解价值、建立信任，并顺利完成联系、预约、注册或购买。</p></div><div class="library-new-grid" data-category="conversion"></div></section>
+  <section class="paid-section" id="showcase"><div class="cat-hero"><span class="tag">09 · 内容展示 Content Showcase</span><h2>内容展示</h2><p>用更有节奏的方式呈现产品、作品、数据与关键观点。</p></div><div class="library-new-grid" data-category="showcase"></div></section>
+  <section class="paid-section" id="quality"><div class="cat-hero"><span class="tag">10 · 上线品质 Launch Quality</span><h2>上线品质</h2><p>让 AI 生成的网站在手机、搜索、表单与性能上真正可用。</p></div><div class="library-new-grid" data-category="quality"></div></section>
 </main>
 
 <footer style="text-align:center;padding:20px 16px 8px;font-size:12px;color:#6B7075;">
@@ -1818,14 +1830,32 @@
 </script>
 
 
-<!-- AI 客服：自定义聊天窗（chat.js 调服务器中转接口），付费用户可见 -->
-<script src="auth.js"></script>
-<script src="chat.js"></script>
+<!-- 组件图鉴保持公开、静态参考：AI 顾问与权益限制只在配置器内提供。 -->
+<script src="components.js?v=20260916b"></script>
 <style>
-  .paid-section{display:block;}
-  body.locked .paid-section{display:none;}
-  .paywall{display:none;padding:20px 16px 50px;}
-  body.locked .paywall{display:block;}
+  .library-new-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:26px 0 54px;}
+  .library-new-grid .demo-card{margin:0;}
+  .library-new-grid .new-icon{font-size:36px;display:block;margin-bottom:10px;}
+  .library-new-grid .new-title{font-size:16px;font-weight:800;color:var(--accent);}
+  .new-demo{width:100%;max-width:460px;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 4px 18px rgba(17,24,39,.06);}
+  .new-demo button{font:inherit;cursor:pointer;}
+  .new-demo .nd-nav{padding:10px 13px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:800;}
+  .new-demo .nd-cta{border:0;border-radius:7px;background:var(--green);color:#fff;padding:7px 11px;font-size:10px;font-weight:700;}
+  .new-demo .nd-body{padding:17px;}.new-demo .nd-title{font-size:16px;font-weight:800;line-height:1.25;}.new-demo .nd-copy{font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.6;}
+  .nd-logos{display:flex;gap:9px;align-items:center;margin-top:13px;filter:grayscale(1);color:#6B7280;font-size:11px;font-weight:800;}.nd-logos i{font-style:normal;border:1px solid var(--border);padding:6px;border-radius:5px;}
+  .nd-prices{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px;}.nd-price{border:1px solid var(--border);border-radius:8px;padding:9px 7px;font-size:9px;text-align:center;}.nd-price.on{border-color:var(--green);background:var(--green-soft);}.nd-price b{font-size:13px;display:block;color:var(--accent);}
+  .nd-steps,.nd-metrics{display:flex;gap:8px;margin-top:13px;}.nd-steps div,.nd-metrics div{flex:1;border-radius:8px;background:#F6F7F6;padding:9px;font-size:9px;}.nd-steps b,.nd-metrics b{display:block;font-size:13px;color:var(--accent);margin-bottom:3px;}
+  .nd-testimonial{margin-top:12px;border-radius:9px;padding:11px;background:#F6F7F6;font-size:10px;line-height:1.6;}.nd-testimonial b{display:block;margin-top:5px;color:var(--accent);}
+  .nd-bento{display:grid;grid-template-columns:1.35fr 1fr;gap:7px;margin-top:10px;}.nd-bento div{border-radius:8px;padding:10px;background:linear-gradient(135deg,#DCFCE7,#E0F2FE);min-height:42px;font-size:9px;font-weight:700;}.nd-bento div:first-child{grid-row:span 2;min-height:91px;background:linear-gradient(135deg,#14532D,#16A34A);color:#fff;}
+  .nd-screen{margin-top:11px;border-radius:8px;background:linear-gradient(135deg,#1E293B,#4F46E5);height:86px;padding:11px;color:#fff;font-size:9px;}.nd-screen span{display:block;width:52%;height:6px;border-radius:3px;background:rgba(255,255,255,.55);margin:7px 0;}
+  .nd-compare{position:relative;height:96px;margin-top:11px;border-radius:8px;overflow:hidden;background:linear-gradient(135deg,#FDE68A,#F59E0B);}.nd-compare .after{position:absolute;inset:0 46% 0 0;background:linear-gradient(135deg,#A7F3D0,#10B981);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;}.nd-compare .handle{position:absolute;top:0;bottom:0;left:54%;width:3px;background:#fff;cursor:ew-resize;}.nd-compare .handle:after{content:'↔';position:absolute;top:35px;left:-10px;width:22px;height:22px;display:grid;place-items:center;background:#fff;border-radius:50%;font-size:11px;box-shadow:0 2px 8px #0003;}
+  .nd-filters{display:flex;gap:6px;margin-top:12px;}.nd-filter{background:#fff;border:1px solid var(--border);border-radius:99px;padding:5px 9px;font-size:9px;}.nd-filter.on{background:var(--green);border-color:var(--green);color:#fff;}.nd-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;}.nd-gallery i{height:34px;border-radius:6px;display:block;}.nd-gallery i:nth-child(1){background:#6366F1}.nd-gallery i:nth-child(2){background:#10B981}.nd-gallery i:nth-child(3){background:#F59E0B}
+  .nd-matrix{display:grid;grid-template-columns:1.4fr repeat(2,1fr);margin-top:10px;font-size:9px;}.nd-matrix span{padding:7px;border-bottom:1px solid var(--border);text-align:center;}.nd-matrix span:nth-child(3n+1){text-align:left;font-weight:700;}.nd-quality{margin-top:11px;padding:11px;border-radius:9px;background:#F6F7F6;font-size:10px;display:flex;justify-content:space-between;align-items:center;}.nd-quality input{width:100%;padding:7px;border:1px solid var(--border);border-radius:6px;font-size:10px;}.nd-toggle{width:36px;height:20px;border:0;border-radius:99px;background:#CBD5E1;padding:2px;}.nd-toggle i{display:block;width:16px;height:16px;border-radius:50%;background:#fff;transition:.2s;}.nd-toggle.on{background:var(--green);}.nd-toggle.on i{transform:translateX(16px);}
+  @media(max-width:720px){.library-new-grid{grid-template-columns:1fr;}}
+  /* 组件参考页是公开图鉴：所有组件都可查看；付费限制只在配置器中生效。 */
+  .paid-section{display:block!important;}
+  .paywall{display:none!important;}
+  #paywall{display:none!important;}
   .paywall-box{max-width:560px;margin:0 auto;background:#FFFFFF;border:1px solid #E5E7E5;border-radius:16px;padding:40px 30px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.06);}
   .pw-icon{font-size:42px;margin-bottom:12px;}
   .paywall-box h3{font-size:21px;font-weight:800;color:#1A1D1B;}
@@ -1847,6 +1877,35 @@
   .pw-field input{width:100%;border:1px solid #E5E7E5;border-radius:8px;padding:10px 12px;font-size:13px;background:#FFFFFF;color:#1A1D1B;box-sizing:border-box;font-family:inherit;}
 </style>
 <script>
+  (function renderNewLibraryCategories(){
+    var source=window.COMPONENTS||[];
+    document.querySelectorAll('.library-new-grid').forEach(function(grid){
+      var category=source.find(function(item){return item.id===grid.dataset.category;});
+      if(!category) return;
+      grid.innerHTML=category.items.map(function(item,index){
+        return '<div class="demo-card" id="'+item.id+'"><div class="head"><div class="idx">'+String(index+1).padStart(2,'0')+' · '+item.name+'</div><h3>'+item.en+'</h3><div class="en">'+item.desc+'</div></div><div class="stage">'+newDemo(item)+'</div><div class="note">'+item.desc+'</div><div class="prompt"><div class="ph"><b>可复制的 PROMPT</b><button class="copy" onclick="copyP(this)">复制</button></div><pre>'+item.prompt.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre></div></div>';
+      }).join('');
+    });
+  })();
+  function newDemo(item){
+    var wrap=function(content){return '<div class="new-demo">'+content+'</div>';};
+    var shell='<div class="nd-nav"><span>浩然 · Studio</span><button class="nd-cta" onclick="newToast(this,\'已触发主行动\')">开始咨询</button></div>';
+    if(['主行动按钮','预约入口','风险逆转','最终行动区','下载资料'].includes(item.name)) return wrap(shell+'<div class="nd-body"><div class="nd-title">把想法做成能上线的网站</div><div class="nd-copy">清晰说明价值与下一步，主行动始终一致。</div><button class="nd-cta" style="margin-top:12px" onclick="newToast(this,\'下一步已打开\')">'+(item.name==='预约入口'?'预约 30 分钟咨询':item.name==='下载资料'?'免费下载建站清单':'立即开始')+'</button><div class="nd-copy" style="margin-top:8px">✓ 无需信用卡　✓ 可随时取消</div></div>');
+    if(['客户评价','品牌 Logo 墙','数据背书','案例成果'].includes(item.name)) return wrap('<div class="nd-body"><div class="nd-title">真实结果，建立信任</div>'+(item.name==='客户评价'?'<div class="nd-testimonial">“从想法到上线只用了两周，沟通非常顺畅。”<b>林晓 · 独立摄影师</b></div>':item.name==='品牌 Logo 墙'?'<div class="nd-logos"><i>ALPHA</i><i>north</i><i>STUDIO</i><i>VOID</i></div>':item.name==='数据背书'?'<div class="nd-metrics"><div><b>120+</b>交付项目</div><div><b>4.9/5</b>客户评分</div><div><b>48h</b>平均响应</div></div>':'<div class="nd-steps"><div><b>背景</b>增长停滞</div><div><b>方案</b>重做首屏</div><div><b>结果</b>预约提升</div></div>')+'</div>');
+    if(item.name==='定价对比') return wrap('<div class="nd-body"><div class="nd-title">选择适合你的方案</div><div class="nd-prices"><button class="nd-price" onclick="pickPrice(this)">基础<b>¥99</b></button><button class="nd-price on" onclick="pickPrice(this)">推荐<b>¥299</b></button><button class="nd-price" onclick="pickPrice(this)">团队<b>¥599</b></button></div></div>');
+    if(['Bento 网格','产品 Mockup','功能步骤','横向作品墙','引用强调','动态文字'].includes(item.name)) return wrap('<div class="nd-body"><div class="nd-title">'+(item.name==='动态文字'?'<span class="new-reveal">MAKE IDEAS VISIBLE</span>':item.name==='引用强调'?'“清晰比炫技更重要。”':item.name==='功能步骤'?'三步，完成你的建站方案':'更有节奏地展示内容')+'</div>'+(item.name==='Bento 网格'?'<div class="nd-bento"><div>核心功能<br><small>一眼看懂价值</small></div><div>快速</div><div>清晰</div></div>':item.name==='产品 Mockup'?'<div class="nd-screen">AI 建站配置器<span></span><span style="width:74%"></span><span style="width:38%"></span></div>':item.name==='功能步骤'?'<div class="nd-steps"><div><b>01</b>告诉需求</div><div><b>02</b>选择方案</div><div><b>03</b>交给 AI</div></div>':item.name==='横向作品墙'?'<div class="nd-gallery" style="grid-template-columns:1.3fr 1fr 1fr"><i></i><i></i><i></i></div>':'<div class="nd-copy" style="margin-top:15px">内容有重点，阅读才会自然发生。</div>')+'</div>');
+    if(item.name==='前后对比') return wrap('<div class="nd-body"><div class="nd-title">拖动查看改版前后</div><div class="nd-compare" onmousemove="dragCompare(event,this)"><div class="after">改版后</div><div class="handle"></div></div></div>');
+    if(item.name==='作品筛选') return wrap('<div class="nd-body"><div class="nd-title">精选作品</div><div class="nd-filters"><button class="nd-filter on" onclick="filterGallery(this)">全部</button><button class="nd-filter" onclick="filterGallery(this)">网页</button><button class="nd-filter" onclick="filterGallery(this)">品牌</button></div><div class="nd-gallery"><i></i><i></i><i></i></div></div>');
+    if(['数据大数字','对比矩阵'].includes(item.name)) return wrap('<div class="nd-body"><div class="nd-title">'+(item.name==='数据大数字'?'项目成果':'方案功能对比')+'</div>'+(item.name==='数据大数字'?'<div class="nd-metrics"><div><b>120+</b>客户</div><div><b>32%</b>提升</div><div><b>2 周</b>交付</div></div>':'<div class="nd-matrix"><span>功能</span><span>基础</span><span>专业</span><span>自定义</span><span>—</span><span>✓</span><span>数据分析</span><span>—</span><span>✓</span></div>')+'</div>');
+    if(['深浅主题','移动端优先','键盘可访问','SEO 基础','404 与空状态','表单反馈','图片性能','减少动态','隐私说明','上线检查'].includes(item.name)) return wrap('<div class="nd-body"><div class="nd-title">'+item.name+'检查</div>'+(item.name==='深浅主题'?'<div class="nd-quality"><span>深色模式</span><button class="nd-toggle" onclick="toggleThemeDemo(this)"><i></i></button></div>':item.name==='表单反馈'?'<div class="nd-quality"><input placeholder="输入邮箱后失焦" onblur="validateDemoEmail(this)"></div>':item.name==='404 与空状态'?'<div class="nd-quality" style="display:block;text-align:center">🧭<br><b>页面没有找到</b><br><button class="nd-cta" style="margin-top:6px" onclick="newToast(this,\'已返回首页\')">返回首页</button></div>':'<div class="nd-quality"><span>✓ '+({ '移动端优先':'按钮触摸区域 ≥ 44px','键盘可访问':'焦点状态清晰可见','SEO 基础':'标题与分享卡已配置','图片性能':'首屏图片已优化','减少动态':'已尊重系统偏好','隐私说明':'已说明信息用途','上线检查':'链接、表单与手机端已检查' }[item.name]||'准备就绪')+'</span><span style="color:var(--green);font-weight:800">通过</span></div>')+'</div>');
+    return wrap(shell+'<div class="nd-body"><span class="new-icon">'+item.emoji+'</span><div class="nd-title">'+item.name+'</div><div class="nd-copy">这是可直接加入网站方案的交互组件。</div></div>');
+  }
+  function newToast(btn,msg){btn.textContent='✓ '+msg;setTimeout(function(){btn.textContent='立即开始';},1200);}
+  function pickPrice(btn){btn.parentElement.querySelectorAll('.nd-price').forEach(function(el){el.classList.remove('on');});btn.classList.add('on');}
+  function filterGallery(btn){btn.parentElement.querySelectorAll('.nd-filter').forEach(function(el){el.classList.remove('on');});btn.classList.add('on');var cards=btn.parentElement.nextElementSibling.children;Array.from(cards).forEach(function(card,index){card.style.opacity=btn.textContent==='全部'||index===0?'1':'.25';});}
+  function dragCompare(event,box){var percent=Math.max(15,Math.min(85,(event.clientX-box.getBoundingClientRect().left)/box.clientWidth*100));box.querySelector('.after').style.right=(100-percent)+'%';box.querySelector('.handle').style.left=percent+'%';}
+  function toggleThemeDemo(btn){btn.classList.toggle('on');btn.closest('.new-demo').style.background=btn.classList.contains('on')?'#111827':'#fff';btn.closest('.new-demo').style.color=btn.classList.contains('on')?'#fff':'';}
+  function validateDemoEmail(input){var ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value);input.style.borderColor=ok?'#16A34A':'#EF4444';input.placeholder=ok?'✓ 邮箱格式正确':'请输入正确邮箱';}
   function openPay(){
     if(!window.__auth || window.__auth.isVisitor()){
       if(window.__auth) window.__auth.show();
@@ -1871,5 +1930,20 @@
     else { showToast('error', (r && r.msg) || '激活码错误'); }
   }
 </script>
+<style>
+/* 组件图鉴：设计档案式阅读，不沿用旧绿色后台感 */
+:root{--bg:#f2f1ed;--card:#f8f7f3;--text:#171714;--muted:#68675f;--faint:#89877f;--accent:#1e4d45;--accent-soft:#e1ebe6;--green:#1e4d45;--green-soft:#e1ebe6;--border:#d4d1c8;--radius:2px;--shadow:none}
+body{background:var(--bg);color:var(--text)}#progress{background:var(--accent)}.navbar{height:64px;background:rgba(242,241,237,.92);border-color:var(--border);padding:0 30px;gap:22px}.navbar .logo{color:var(--text);font-size:16px}.navbar .logo em{color:var(--accent);font-size:12px;letter-spacing:.03em}.navbar .links{gap:4px}.navbar .links a{color:var(--muted);border-radius:2px;padding:7px 9px}.navbar .links a:hover{color:var(--accent);background:#e6e4dc}.sidebar{top:64px;background:#eceae3;border-color:var(--border);padding:22px 14px 45px}.sidebar .cat-head{color:var(--text);border-radius:2px}.sidebar .cat-head:hover{background:#e2e0d8}.sidebar .cat-head .n{background:transparent;color:var(--accent);border:1px solid #a7b7b0;border-radius:2px}.sidebar .sub a{color:var(--muted);border-radius:0}.sidebar .sub a:hover{background:#e2e0d8}.sidebar .sub a.active{color:var(--accent);background:transparent;border-left-color:var(--accent)}.main{padding:0 60px 140px}.cat-hero{padding:72px 0 18px;border-bottom:1px solid var(--border);margin-bottom:28px}.cat-hero .tag{background:transparent;color:var(--accent);border-radius:0;padding:0;font:800 10px ui-monospace,monospace;letter-spacing:.12em}.cat-hero h2{font-size:clamp(37px,4vw,56px);letter-spacing:-.06em;font-weight:750;margin:14px 0 10px}.cat-hero p{font-size:15px;color:var(--muted);max-width:570px}.demo-card{border-color:var(--border);border-radius:0;box-shadow:none;background:var(--card);margin:28px 0}.demo-card .head{padding:22px 26px 0}.demo-card .head .idx{color:var(--accent)}.demo-card .head h3{letter-spacing:-.035em}.demo-card .stage{background:#eeece6;border-color:var(--border)}.demo-card .note,.demo-card .prompt{background:#f5f3ee;border-color:var(--border)}.demo-card .prompt .copy{color:var(--accent);border-radius:2px;border-color:var(--border)}.demo-card .prompt .copy:hover{background:var(--accent-soft);border-color:var(--accent)}.demo-card .prompt pre{background:#fbfaf7;border-color:var(--border);border-radius:0}.mock{border-radius:0;box-shadow:none;border-color:#bdbab0}.mock .mbar{background:#f8f7f3}.btn,.btn.green{background:var(--accent);border-radius:2px}.btn.ghost{border-radius:2px;background:#f8f7f3}.library-new-grid{gap:0!important;border-top:1px solid var(--border);border-left:1px solid var(--border);margin:28px 0 58px!important}.library-new-grid .demo-card{margin:0!important;border-left:0;border-top:0;border-radius:0}.library-new-grid .new-icon{display:none}.drawer{background:#f2f1ed!important;color:var(--text)!important}.drawer a{color:var(--text)!important}.mask{background:rgba(23,23,20,.35)}body>a[href="index.html"]{background:var(--accent)!important;border-radius:2px!important;box-shadow:none!important;left:auto!important;right:24px!important;bottom:24px!important}@media(max-width:900px){.main{padding:0 25px 100px}.navbar{padding:0 18px}.sidebar{background:#f2f1ed}.cat-hero{padding-top:50px}}@media(max-width:720px){.main{padding:0 18px 85px}.navbar .links{display:none}.cat-hero h2{font-size:37px}}
+</style>
+<style>
+/* APIMart-inspired component catalog: a dark developer reference with stable reading rhythm. */
+:root{--bg:#0d1424;--card:#121d32;--text:#f4f7fc;--muted:#91a0b7;--faint:#60718d;--accent:#8db6ff;--accent-soft:rgba(141,182,255,.12);--green:#8db6ff;--green-soft:rgba(141,182,255,.12);--border:rgba(220,231,248,.16);--radius:4px;--shadow:none}
+body{background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}.navbar{height:64px;background:rgba(13,20,36,.92);border-color:var(--border);padding:0 30px}.navbar .logo{color:var(--text)}.navbar .logo em{color:var(--accent)}.navbar .links{gap:5px}.navbar .links a{color:#91a0b7;border-radius:3px}.navbar .links a:hover{color:#fff;background:var(--accent-soft)}.sidebar{top:64px;background:#101a2d;border-color:var(--border);padding:22px 14px 45px}.sidebar .cat-head{color:#dbe6f6;border-radius:4px}.sidebar .cat-head:hover{background:rgba(141,182,255,.08)}.sidebar .cat-head .n{background:var(--accent-soft);color:var(--accent);border:0;border-radius:4px}.sidebar .sub a{color:#8190a7;border-left-color:transparent}.sidebar .sub a:hover{background:rgba(141,182,255,.08);color:#fff}.sidebar .sub a.active{color:var(--accent);background:transparent;border-left-color:var(--accent)}.main{padding:0 60px 140px;max-width:1160px}.cat-hero{padding:76px 0 24px;border-bottom:1px solid var(--border);margin-bottom:30px}.cat-hero .tag{color:var(--accent);font:700 11px ui-monospace,monospace;letter-spacing:.11em;background:none;border-radius:0;padding:0}.cat-hero h2{color:var(--text);font-size:clamp(40px,5vw,66px);line-height:.98;letter-spacing:-.08em;font-weight:720}.cat-hero p{color:var(--muted);font-size:15px;line-height:1.75}.demo-card{background:var(--card);border-color:var(--border);border-radius:4px;box-shadow:none;margin:28px 0}.demo-card .head .idx{color:var(--accent)}.demo-card .head h3{color:var(--text)}.demo-card .head .en{color:var(--faint)}.demo-card .stage{background:#101a2d;border-color:var(--border)}.demo-card .note,.demo-card .prompt{background:#101a2d;border-color:var(--border);color:var(--muted)}.demo-card .prompt .ph b{color:var(--muted)}.demo-card .prompt .copy{color:var(--accent);border-color:var(--border);background:transparent;border-radius:3px}.demo-card .prompt .copy:hover{background:var(--accent-soft);border-color:var(--accent)}.demo-card .prompt pre{background:#0b1323;border-color:var(--border);color:#c8d5e8;border-radius:3px}.mock{background:#f5f7fb;border-color:#b8c6da;border-radius:4px;box-shadow:none}.mock .mbar{background:#edf2f8;border-color:#d8e0ec}.btn,.btn.green{background:#2f68c3;border-radius:3px}.btn.ghost{background:transparent;color:var(--text);border-color:var(--border);border-radius:3px}.fgrid .f{background:#101a2d;border-color:var(--border)}.fgrid .f .ico{background:var(--accent-soft);color:var(--accent)}.fgrid .f b{color:var(--text)}.fgrid .f p{color:var(--muted)}.library-new-grid{border-color:var(--border)}.drawer{background:#101a2d!important;color:var(--text)!important}.drawer a{color:var(--text)!important}.mask{background:rgba(3,8,17,.7)}body>a[href="index.html"]{background:#f4f7fc!important;color:#0d1424!important;border-radius:3px!important;box-shadow:none!important}@media(max-width:900px){.main{padding:0 25px 100px}.sidebar{background:#0d1424}.cat-hero{padding-top:55px}}@media(max-width:720px){.main{padding:0 18px 85px}.navbar .links{display:none}.cat-hero h2{font-size:43px}}
+</style>
+<style>
+:root{--bg:#080808;--card:#11100f;--text:#f5f3ef;--muted:#928d87;--faint:#665f58;--accent:#f07a32;--accent-soft:rgba(240,122,50,.12);--green:#f07a32;--green-soft:rgba(240,122,50,.12);--border:#282522;--radius:3px}
+body{background:var(--bg);color:var(--text)}.navbar{background:rgba(8,8,8,.92);border-color:var(--border)}.navbar .logo{color:var(--text)}.navbar .logo em{color:var(--accent)}.navbar .links a{color:var(--muted)}.navbar .links a:hover{color:var(--accent);background:#171513}.sidebar{background:#0e0d0c;border-color:var(--border)}.sidebar .cat-head{color:#ddd8d2}.sidebar .cat-head:hover{background:#171513}.sidebar .cat-head .n{background:var(--accent-soft);color:var(--accent)}.sidebar .sub a{color:#857e76}.sidebar .sub a:hover{background:#171513;color:#fff}.sidebar .sub a.active{color:var(--accent);border-color:var(--accent)}.cat-hero{border-color:var(--border)}.cat-hero .tag{color:var(--accent)}.cat-hero h2{color:var(--text)}.cat-hero p{color:var(--muted)}.demo-card{background:var(--card);border-color:var(--border)}.demo-card .head .idx{color:var(--accent)}.demo-card .head h3{color:var(--text)}.demo-card .head .en{color:var(--faint)}.demo-card .stage,.demo-card .note,.demo-card .prompt{background:#0e0d0c;border-color:var(--border)}.demo-card .note{color:var(--muted)}.demo-card .prompt pre{background:#080808;border-color:var(--border);color:#d0c9c1}.demo-card .prompt .copy{color:var(--accent);border-color:var(--border)}.mock{background:#161311;border-color:#4b3629}.mock .mbar{background:#211b17;border-color:#4b3629}.btn,.btn.green{background:var(--accent)}.btn.ghost{background:transparent;color:var(--text);border-color:var(--border)}.fgrid .f{background:#0e0d0c;border-color:var(--border)}.fgrid .f .ico{background:var(--accent-soft);color:var(--accent)}.fgrid .f b{color:var(--text)}.fgrid .f p{color:var(--muted)}.drawer{background:#0e0d0c!important;color:var(--text)!important}.drawer a{color:var(--text)!important}body>a[href="index.html"]{background:var(--accent)!important;color:#fff!important}
+</style>
 </body>
+<style>body{background:#080808!important;color:#f5f3ef!important}.navbar{background:rgba(8,8,8,.94)!important;border-color:#282522!important}.navbar .logo{color:#f5f3ef!important}.navbar .logo em{color:#f07a32!important}.sidebar{background:#0e0d0c!important;border-color:#282522!important}.main{color:#f5f3ef!important}.cat-hero{border-color:#282522!important}.cat-hero h2{color:#f5f3ef!important}.cat-hero p{color:#928d87!important}.cat-hero .tag{color:#f07a32!important}.demo-card{background:#11100f!important;border-color:#282522!important}.demo-card .head h3{color:#f5f3ef!important}.demo-card .stage,.demo-card .note,.demo-card .prompt{background:#0e0d0c!important;border-color:#282522!important}.demo-card .head .idx{color:#f07a32!important}.demo-card .note{color:#928d87!important}.library-new-grid{border-color:#282522!important}</style>
 </html>

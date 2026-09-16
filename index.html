@@ -1,792 +1,151 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>浩然AI建站配置器 · 3分钟配出专业网站</title>
-<style>
-  :root{
-    --green:#16A34A; --green2:#15803D; --green-soft:#E7F6EC; --green-softer:#F1FAF4;
-    --bg:#F6F7F6; --panel:#FFFFFF; --preview-bg:#ECEEEC;
-    --text:#1A1D1B; --muted:#6B7280; --faint:#9CA3AF; --border:#E5E7E5;
-    --radius:12px; --shadow:0 1px 3px rgba(0,0,0,.06), 0 8px 24px -14px rgba(0,0,0,.12);
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{height:100%;}
-  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
-  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
-  a{text-decoration:none;color:inherit;}
-  ::-webkit-scrollbar{width:8px;height:8px;}
-  ::-webkit-scrollbar-thumb{background:#D4D4CE;border-radius:8px;}
-
-  /* ===== 顶部导航 ===== */
-  .navbar{position:fixed;top:0;left:0;right:0;height:56px;z-index:100;background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 20px;}
-  .logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px;letter-spacing:-.01em;}
-  .logo .sq{width:28px;height:28px;border-radius:7px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;}
-  .logo .beta{font-size:10px;font-weight:700;color:var(--green);background:var(--green-soft);padding:2px 6px;border-radius:6px;margin-left:2px;}
-  .nav-links{display:flex;gap:4px;margin-left:8px;}
-  .nav-links a{font-size:13.5px;color:var(--muted);padding:6px 12px;border-radius:8px;font-weight:500;transition:.15s;}
-  .nav-links a:hover{color:var(--green);background:var(--green-softer);}
-  .nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
-  .btn-primary{background:var(--green);color:#fff;padding:8px 16px;border-radius:8px;font-weight:600;font-size:13.5px;transition:.15s;}
-  .btn-primary:hover{background:var(--green2);}
-  .hamburger{display:none;font-size:22px;padding:4px;}
-
-  /* ===== 工作台三栏 ===== */
-  .workbench{display:flex;height:100vh;padding-top:56px;}
-  .left{width:360px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-  .center{flex:1;background:var(--preview-bg);position:relative;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
-  .right{width:320px;flex-shrink:0;background:var(--panel);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
-
-  /* ===== 左栏 ===== */
-  .left-scroll{flex:1;overflow-y:auto;padding:14px;}
-  .proj-card{background:var(--green-softer);border:1px solid #DFEEE5;border-radius:var(--radius);padding:12px 13px;margin-bottom:14px;}
-  .proj-card .row{display:flex;align-items:center;gap:8px;}
-  .proj-card .k{font-size:11px;color:var(--muted);width:56px;flex-shrink:0;}
-  .proj-card .v{font-size:13px;font-weight:600;color:var(--green);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .proj-card .edit{font-size:12px;color:var(--green);border-bottom:1px dashed var(--green2);flex-shrink:0;padding:0 2px;}
-  .proj-card .tip{font-size:11px;color:var(--faint);margin-top:6px;}
-
-  .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:12px;gap:2px;}
-  .tabs button{flex:1;padding:9px 4px;font-size:13.5px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;transition:.15s;}
-  .tabs button.active{color:var(--green);border-bottom-color:var(--green);}
-
-  .cat-group{margin-bottom:14px;}
-  .cat-head{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--muted);padding:4px 2px 7px;cursor:pointer;}
-  .cat-head .cnt{margin-left:auto;font-weight:500;color:var(--faint);}
-  .cat-head .fold{margin-left:6px;color:var(--faint);transition:transform .2s;font-size:10px;}
-  .cat-group.collapsed .ccard{display:none;}
-  .cat-group.collapsed .fold{transform:rotate(-90deg);}
-
-  .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-  .ccard{position:relative;display:flex;align-items:center;gap:7px;padding:9px 8px;border:1px solid var(--border);border-radius:9px;background:#fff;text-align:left;transition:all .2s;min-height:40px;}
-  .ccard:hover{border-color:#C9D8CE;}
-  .ccard .emoji{font-size:16px;flex-shrink:0;}
-  .ccard .nm{font-size:12px;font-weight:600;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .ccard .help{margin-left:auto;width:15px;height:15px;border-radius:50%;background:#EDEDE8;color:var(--muted);font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-  .ccard.on{border-color:var(--green);background:var(--green-soft);box-shadow:0 2px 8px rgba(27,67,50,.12);}
-  #ccTip{display:none;position:fixed;z-index:500;background:#111;color:#fff;font-size:11.5px;padding:9px 12px;border-radius:9px;line-height:1.5;pointer-events:none;max-width:300px;box-shadow:0 8px 24px rgba(0,0,0,.25);}
-  #ccTip b{color:#A7F3D0;}
-
-  .left-foot{padding:12px 14px;border-top:1px solid var(--border);}
-  .left-foot a{font-size:12.5px;color:var(--green);font-weight:600;}
-
-  /* ===== 中栏预览 ===== */
-  .center-head{padding:14px 20px 8px;display:flex;align-items:center;justify-content:space-between;}
-  .center-head .tt{font-size:13px;font-weight:700;color:var(--muted);}
-  .center-head .hint{font-size:11.5px;color:var(--faint);}
-  .preview-wrap{flex:1;overflow:auto;padding:6px 20px 100px;display:flex;justify-content:center;}
-  .browser{width:100%;max-width:1200px;border-radius:14px;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,.14);overflow:hidden;display:flex;flex-direction:column;transition:background .3s,color .3s;align-self:flex-start;min-height:100%;}
-  .browser .bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#F1F1EC;border-bottom:1px solid var(--border);flex-shrink:0;}
-  .browser .dots{display:flex;gap:6px;}
-  .browser .dot{width:11px;height:11px;border-radius:50%;}
-  .browser .dot.r{background:#FF5F57;} .browser .dot.y{background:#FEBC2E;} .browser .dot.g{background:#28C840;}
-  .browser .addr{flex:1;max-width:340px;margin:0 auto;background:#fff;border-radius:7px;padding:4px 12px;font-size:12px;color:var(--muted);text-align:center;}
-  #pvBody{flex:1;background:#fff;padding:0;transition:background .3s,color .3s;min-height:420px;}
-  .pv-empty{padding:70px 30px;text-align:center;color:var(--faint);}
-  .pv-empty .big{font-size:44px;margin-bottom:12px;}
-  .pv-empty p{font-size:13px;}
-
-  /* 预览 mock 区块 */
-  .pv-block{padding:22px 26px;border-bottom:1px solid #F0F0EB;}
-  .pv-block:last-child{border-bottom:none;}
-  .pv-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--green);background:var(--green-soft);padding:2px 8px;border-radius:20px;margin-bottom:10px;font-weight:600;}
-  .pv-title{font-size:17px;font-weight:800;margin-bottom:4px;letter-spacing:-.01em;}
-  .pv-sub{font-size:12px;color:var(--muted);}
-  .pv-skel{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
-  .pv-bar{height:9px;border-radius:6px;background:#ECECE6;}
-  .pv-bar.w60{width:60%;} .pv-bar.w80{width:80%;} .pv-bar.w40{width:40%;}
-  .pv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
-  .pv-cell{height:70px;border-radius:9px;background:#F3F3EE;border:1px solid #ECECE6;display:flex;align-items:center;justify-content:center;font-size:20px;}
-  .pv-btn{display:inline-block;background:var(--green);color:#fff;padding:7px 16px;border-radius:7px;font-size:12px;font-weight:600;margin-right:8px;margin-top:12px;}
-  .pv-btn.ghost{background:transparent;color:var(--green);border:1px solid var(--green);}
-  .pv-input{width:100%;border:1px solid #E2E2DC;border-radius:7px;padding:9px 11px;font-size:12px;margin-top:12px;}
-  .pv-avatar{width:34px;height:34px;border-radius:50%;background:var(--green-soft);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;}
-  @keyframes pvspin{to{transform:rotate(360deg);}}
-
-  /* 风格类 */
-  .browser.dark{background:#15181A;}
-  .browser.dark .bar{background:#1E2224;border-color:#2A2F31;}
-  .browser.dark .addr{background:#2A2F31;color:#CFCFCF;}
-  .browser.dark #pvBody{background:#15181A;color:#E8E8E8;}
-  .browser.dark .pv-block{border-color:#262B2D;}
-  .browser.dark .pv-bar{background:#2A2F31;}
-  .browser.dark .pv-cell{background:#1E2224;border-color:#2A2F31;}
-  .browser.dark .pv-input{background:#1E2224;border-color:#33383B;color:#E8E8E8;}
-  .browser.glass #pvBody .pv-block{background:rgba(255,255,255,.55);backdrop-filter:blur(16px);border-radius:12px;margin:12px;border:1px solid rgba(255,255,255,.6);}
-  .browser.glass #pvBody{background:linear-gradient(135deg,#DDE9FF,#E8F5E9,#F5E8FF);}
-  .browser.brutal #pvBody .pv-block{border:3px solid #000;border-radius:0;box-shadow:6px 6px 0 rgba(0,0,0,.9);margin:14px;}
-  .browser.mono #pvBody{filter:saturate(.25);}
-  .browser.minimal #pvBody .pv-block{padding:30px 34px;border-bottom:1px solid #F2F2ED;}
-  .browser.editorial #pvBody .pv-title{font-family:Georgia,"Times New Roman",serif;font-size:22px;}
-  .browser.swiss #pvBody{background:#fff;}
-  .browser.swiss #pvBody .pv-block{border-bottom:1px solid #111;padding:26px 30px;}
-  .browser.swiss #pvBody .pv-title{text-transform:uppercase;letter-spacing:.02em;}
-  .browser.mesh #pvBody{background:linear-gradient(135deg,#F0FDF4,#ECFEFF,#F5F3FF);}
-  .browser.grain #pvBody{background-image:radial-gradient(rgba(0,0,0,.05) 1px, transparent 1px);background-size:3px 3px;}
-  .browser.neu #pvBody{background:#ECF0EB;}
-  .browser.neu #pvBody .pv-block{background:#ECF0EB;box-shadow:6px 6px 14px rgba(163,177,158,.5), -6px -6px 14px rgba(255,255,255,.8);border-radius:14px;margin:14px;border:none;}
-
-  /* ===== 底部生成栏 ===== */
-  .genzone{position:absolute;left:0;right:0;bottom:0;height:88px;display:flex;align-items:flex-end;justify-content:center;padding:0 20px 20px;z-index:60;}
-  .genbar{width:100%;display:flex;justify-content:center;transform:translateY(150%);opacity:0;transition:transform .3s ease,opacity .3s ease;pointer-events:none;}
-  .genzone:hover .genbar{transform:translateY(0);opacity:1;}
-  .genbar .inner{pointer-events:auto;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.16);padding:10px 12px 10px 16px;display:flex;align-items:center;gap:14px;max-width:100%;flex-wrap:wrap;}
-  .pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
-  .pill{font-size:11px;font-weight:600;color:var(--green);background:var(--green-soft);padding:3px 9px;border-radius:20px;white-space:nowrap;}
-  .pill.placeholder{color:var(--faint);background:#F1F1EC;}
-  .genbar .btn{background:var(--green);color:#fff;padding:9px 16px;border-radius:8px;font-weight:600;font-size:13px;white-space:nowrap;transition:.15s;}
-  .genbar .btn:hover{background:var(--green2);}
-
-  /* ===== 右栏聊天 ===== */
-  .chat-head{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
-  .chat-avatar{width:38px;height:38px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0;}
-  .chat-id{flex:1;}
-  .chat-id b{display:block;font-size:14px;}
-  .chat-id .st{font-size:11px;color:var(--green);display:flex;align-items:center;gap:5px;}
-  .chat-id .st i{width:7px;height:7px;border-radius:50%;background:#28C840;display:inline-block;}
-  .chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
-  .msg{max-width:86%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.55;white-space:pre-wrap;align-self:flex-start;}
-  .msg.ai{background:#F1F1EC;border-bottom-left-radius:5px;}
-  .msg.me{align-self:flex-end;background:var(--green);color:#fff;border-bottom-right-radius:5px;}
-  .apply-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
-  .apply-chip{font-size:12px;padding:6px 11px;border-radius:20px;border:1px solid var(--green);color:var(--green);font-weight:600;transition:.15s;}
-  .apply-chip:hover{background:var(--green);color:#fff;}
-  .chat-input{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--border);flex-shrink:0;}
-  .chat-input input{flex:1;border:1px solid var(--border);border-radius:24px;padding:10px 16px;font-size:13px;outline:none;transition:.15s;}
-  .chat-input input:focus{border-color:var(--green);}
-  .chat-input button{width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;font-size:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s;}
-  .chat-input button:hover{background:var(--green2);}
-
-  /* ===== 弹层 ===== */
-  .overlay{position:fixed;inset:0;background:rgba(17,24,39,.45);backdrop-filter:blur(4px);z-index:900;display:none;align-items:center;justify-content:center;padding:20px;}
-  .overlay.show{display:flex;animation:fadeIn .25s;}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  .modal{background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.3);width:480px;max-width:100%;max-height:90vh;overflow-y:auto;animation:pop .25s;}
-  @keyframes pop{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
-  .modal .mh{padding:24px 26px 0;}
-  .modal .mb{padding:18px 26px 26px;}
-  .modal h2{font-size:19px;font-weight:800;letter-spacing:-.01em;}
-  .modal .sub{font-size:13px;color:var(--muted);margin-top:6px;}
-  .steps{display:flex;flex-direction:column;gap:12px;margin:20px 0;}
-  .step{display:flex;gap:12px;align-items:flex-start;}
-  .step .n{width:26px;height:26px;border-radius:50%;background:var(--green-soft);color:var(--green);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-  .step b{display:block;font-size:13.5px;}
-  .step span{font-size:12px;color:var(--muted);}
-  .modal .actions{display:flex;gap:10px;margin-top:20px;}
-  .modal .actions button{flex:1;padding:11px;border-radius:9px;font-weight:600;font-size:14px;}
-  .btn-ghost{background:#F1F1EC;color:var(--muted);}
-  .prompt-box{background:#F7F7F2;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:12.5px;line-height:1.7;white-space:pre-wrap;max-height:46vh;overflow-y:auto;margin:14px 0;}
-  .field{margin-top:12px;}
-  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:600;}
-  .field input,.field textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;outline:none;font-family:inherit;}
-  .field input:focus,.field textarea:focus{border-color:var(--green);}
-  .field textarea{resize:vertical;min-height:56px;}
-
-  .toast{position:fixed;top:70px;right:20px;background:#111;color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;z-index:1000;box-shadow:var(--shadow);opacity:0;transform:translateY(-8px);transition:.25s;pointer-events:none;}
-  .toast.show{opacity:1;transform:none;}
-
-  /* ===== 响应式 ===== */
-  @media (max-width:768px){
-    .nav-links{display:none;}
-    .hamburger{display:block;}
-    .left{position:fixed;top:56px;left:0;bottom:0;z-index:400;width:280px;transform:translateX(-100%);transition:transform .25s;box-shadow:8px 0 30px rgba(0,0,0,.15);}
-    .left.open{transform:translateX(0);}
-    .center-head{padding:12px 14px 6px;}
-    .preview-wrap{padding:6px 12px 110px;}
-    .genzone{padding:0 12px 16px;height:84px;}
-    .genbar .inner{width:100%;justify-content:space-between;}
-  }
-</style>
-<link rel="stylesheet" href="auth.css">
-<link rel="stylesheet" href="chat.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浩然AI实验室 · 建站蓝图</title>
+  <style>
+    :root{--bg:#080808;--panel:rgba(19,19,19,.9);--panel2:rgba(24,24,24,.92);--line:#282828;--text:#f0efed;--muted:#92908d;--accent:#ef6b2d;--accentsoft:#29130b;--soft:#f0efed}*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background-color:var(--bg);background-image:linear-gradient(rgba(8,8,8,.22),rgba(8,8,8,.22)),url('https://api.aicodewith.ai/files/002XBMYMSXLOZQATJR/images/2026/09/16/file_eb46a29a2ca648709c888fa1d434b56c.png');background-position:center top;background-size:cover;background-attachment:fixed;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}button,a,input{font:inherit}button{cursor:pointer}.nav{height:68px;display:flex;align-items:center;padding:0 max(24px,calc((100vw - 1240px)/2));gap:36px;border-bottom:1px solid var(--line);background:rgba(8,8,8,.78);backdrop-filter:blur(16px);position:sticky;top:0;z-index:20}.brand{display:flex;align-items:center;gap:9px;color:var(--text);font-weight:780;text-decoration:none;white-space:nowrap}.brand i{display:grid;place-items:center;width:29px;height:29px;border:1px solid #5c5c5c;background:#111;color:var(--soft);border-radius:2px;font-style:normal;font:800 16px Arial}.navlinks{display:flex;gap:24px}.navlinks button{border:0;background:transparent;color:var(--muted);padding:24px 0 20px}.navlinks button:hover,.navlinks button.active{color:var(--text);box-shadow:inset 0 -2px var(--accent)}.navright{margin-left:auto;display:flex;gap:10px}.button{border:1px solid var(--line);background:rgba(12,12,12,.72);color:var(--text);padding:10px 14px}.button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}.view{display:none;min-height:calc(100vh - 68px)}.view.active{display:block}.wrap{max-width:1240px;margin:auto;padding:82px 24px 105px}.eyebrow{font:700 11px ui-monospace,monospace;letter-spacing:.13em;color:var(--accent)}h1{font-size:clamp(48px,6.4vw,84px);letter-spacing:-.09em;line-height:.96;margin:22px 0}p{color:var(--muted);line-height:1.75}.hero{display:grid;grid-template-columns:1.08fr .92fr;gap:62px;align-items:center;min-height:660px}.hero p{max-width:570px;font-size:16px}.actions{display:flex;gap:10px;margin-top:28px}.route{border:1px solid var(--line);background:rgba(14,14,14,.84);backdrop-filter:blur(5px)}.routehead{padding:14px 18px;border-bottom:1px solid var(--line);font:11px ui-monospace,monospace;color:var(--muted);display:flex;justify-content:space-between}.routebody{padding:28px}.step{display:flex;gap:15px}.step+.step{margin-top:26px}.step b{display:block;margin-bottom:5px}.step span{display:block;font-size:12px;color:var(--muted)}.number{color:var(--accent);font:11px ui-monospace,monospace}.entitlements{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line);margin-top:28px}.entitlements div{padding:18px;border-right:1px solid var(--line)}.entitlements div:last-child{border:0}.entitlements small{color:var(--accent)}.entitlements b{display:block;margin:8px 0;font-size:14px}.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(9,9,9,.2)}.stats div{padding:23px;border-right:1px solid var(--line)}.stats div:last-child{border:0}.stats b{display:block;font-size:27px}.stats span{color:var(--muted);font-size:12px}.sectionhead{max-width:800px;border-bottom:1px solid var(--line);padding-bottom:28px}
+    .sectionhead h1{font-size:clamp(42px,5.2vw,72px)}.library{margin-top:38px;border-top:1px solid var(--line)}.library-group{border-bottom:1px solid var(--line)}.library-head{width:100%;display:grid;grid-template-columns:70px 1fr auto auto;align-items:center;gap:16px;padding:23px 0;border:0;background:transparent;color:var(--text);text-align:left}.library-head:hover{color:var(--accent)}.library-no{font:700 11px ui-monospace,monospace;color:var(--accent)}.library-head b{font-size:20px}.library-head small{color:var(--muted);font-size:12px}.library-count{border:1px solid var(--line);padding:5px 8px;color:#d6d2cc;font-size:11px}.library-chevron{font-size:17px;color:var(--accent);transition:.2s}.library-group.open .library-chevron{transform:rotate(45deg)}.library-items{display:none;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 0 24px}.library-group.open .library-items{display:grid}.item-card{min-height:126px;border:1px solid var(--line);background:rgba(19,19,19,.88);padding:15px;display:grid;grid-template-columns:64px 1fr;gap:12px;text-align:left}.item-card:hover{border-color:var(--accent);background:#181411}.item-preview{height:42px;border:1px solid #3d3a38;background:#121212;display:grid;place-items:center;color:#aaa;font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.04em}.item-card:hover .item-preview{color:var(--accent);border-color:#754026}.item-card b{display:block;font-size:14px}.item-card span{display:block;margin-top:5px;color:var(--muted);font-size:11px;line-height:1.5}.item-card em{display:block;margin-top:8px;color:#d8d3ca;font-size:10px;font-style:normal}.notice{margin-top:38px;padding:20px;border:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;align-items:center}
+    .config-layout{display:grid;grid-template-columns:290px minmax(0,1fr) 260px;min-height:calc(100vh - 68px);background:rgba(8,8,8,.58)}.config-left,.config-right{background:rgba(14,14,14,.9);border-right:1px solid var(--line);padding:18px;overflow:auto}.config-right{border-right:0;border-left:1px solid var(--line)}.project{padding:15px;border:1px solid var(--line);background:var(--panel);margin-bottom:12px}.project label{display:block;font:10px ui-monospace,monospace;color:var(--muted);margin-bottom:6px}.project input{width:100%;border:0;border-bottom:1px solid #3a3a3a;background:transparent;color:var(--text);padding:6px 0;outline:0}.project input+label{margin-top:12px}.recommend{width:100%;padding:11px;border:1px solid #73401f;background:#1d130e;color:#ffd1bb;text-align:left;margin-bottom:13px}.config-tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:12px}.config-tabs button{flex:1;padding:10px 2px;border:0;background:transparent;color:var(--muted)}.config-tabs button.active{color:var(--text);box-shadow:inset 0 -2px var(--accent)}.config-category{margin-bottom:12px}.config-category h3{display:flex;justify-content:space-between;align-items:center;margin:0 0 7px;color:#ddd9d3;font-size:12px}.config-category h3 small{color:var(--muted);font-weight:400}.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.choice{min-height:62px;border:1px solid var(--line);background:var(--panel);color:#d8d5d0;padding:8px;text-align:left;font-size:11px}.choice b{display:block;font-size:11px}.choice span{color:var(--muted);font-size:9px;display:block;margin-top:3px}.choice.selected{border-color:var(--accent);background:var(--accentsoft);color:white}.choice.locked{opacity:.55}.choice.locked:after{content:'年度版';display:block;color:#ffb08a;font-size:9px;margin-top:4px}.config-main{padding:20px;min-width:0}.config-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.config-top b{font-size:14px}.config-top span{color:var(--muted);font-size:11px}.preview{max-width:820px;margin:auto;border:1px solid var(--line);background:#f8f7f3;color:#20201f;min-height:540px;padding:14px}.browserbar{height:31px;background:#ebe9e2;display:flex;align-items:center;gap:5px;padding:0 10px}.dot{width:8px;height:8px;border-radius:50%;background:#ff6258}.dot:nth-child(2){background:#ffc83d}.dot:nth-child(3){background:#3bc76f}.url{margin-left:14px;background:white;border-radius:4px;text-align:center;flex:1;color:#8d8b85;font-size:10px;padding:5px}.preview-body{padding:28px}.preview-body .kicker{font-size:10px;color:#a44c24;letter-spacing:.1em}.preview-body h2{font-size:32px;letter-spacing:-.06em;max-width:460px;margin:14px 0}.preview-body p{font-size:13px;color:#625f59;max-width:450px}.preview-button{display:inline-block;background:#20201f;color:#fff;padding:9px 13px;font-size:11px;margin-top:8px}.preview-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:28px}.preview-cards div{min-height:75px;background:#e9e7e0;border:1px solid #dedbd2;padding:10px;font-size:11px}.preview-cards div:first-child{background:#ff6a2b;color:white}.selected-strip{max-width:820px;margin:16px auto 0;border:1px solid var(--line);background:var(--panel);padding:11px;display:flex;justify-content:space-between;gap:12px;align-items:center}.selected-list{display:flex;gap:6px;flex-wrap:wrap}.selected-list span{padding:4px 6px;background:#242424;color:#ddd;font-size:10px}.health{padding:15px;border:1px solid var(--line);background:var(--panel);margin-bottom:12px}.health strong{display:block;color:var(--accent);font-size:30px}.health span{color:var(--muted);font-size:11px}.check{border-bottom:1px solid var(--line);padding:12px 0;color:var(--muted);font-size:12px}.check.ok{color:#e5e1da}.check i{color:var(--accent);font-style:normal;margin-right:7px}.clear{width:100%;margin-top:12px;padding:10px;border:1px solid var(--line);background:transparent;color:var(--muted)}.plans{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:42px}.plan{border:1px solid var(--line);padding:30px;background:var(--panel)}.plan.featured{border-color:var(--accent);background:linear-gradient(135deg,#1c120e,#121212)}.plan h2{font-size:29px;margin:38px 0 10px}.plan ul{padding:0;list-style:none;border-top:1px solid var(--line);margin:28px 0}.plan li{padding:12px 0;border-bottom:1px solid var(--line);color:#dedbd5}.plan li:before{content:'✓';color:var(--accent);margin-right:9px}@media(max-width:930px){.config-layout{grid-template-columns:260px 1fr}.config-right{display:none}}@media(max-width:760px){body{background-attachment:scroll}.nav{padding:0 16px;gap:12px}.navlinks{gap:12px;overflow:auto}.navlinks button{font-size:12px}.navright .button:not(.primary){display:none}.hero,.plans{grid-template-columns:1fr;gap:34px;min-height:auto}.wrap{padding:55px 18px}.library-items{grid-template-columns:1fr}.library-head{grid-template-columns:45px 1fr auto}.library-head small{display:none}.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(2){border-right:0}.stats div:nth-child(n+3){border-top:1px solid var(--line)}.notice{display:block}.notice .button{margin-top:15px}.config-layout{display:block}.config-left{height:auto;max-height:50vh}.config-main{padding:12px}.preview{min-height:420px}.preview-cards{grid-template-columns:1fr 1fr}.config-right{display:block}.config-right{border-left:0;border-top:1px solid var(--line)}}
+    .item-preview{border:0!important;background:transparent!important}.item-detail{display:none;grid-column:1/-1;margin-top:4px;padding-top:12px;border-top:1px solid var(--line)}.item-card.is-inspected .item-detail{display:block}.demo-window{height:78px;border:1px solid #333;background:#0d0d0d;padding:10px;display:flex;flex-direction:column;gap:7px}.demo-window i{display:block;height:5px;background:#393939}.demo-window i:nth-child(1){width:34%;background:#777}.demo-window i:nth-child(2){width:82%}.demo-window i:nth-child(3){width:62%;background:#555}.demo-window b{display:block;width:24%;height:14px;background:var(--accent);margin-top:auto}
+    .hero h1{letter-spacing:-.045em;line-height:1.08;-webkit-text-stroke:1px rgba(240,239,237,.9);color:transparent;text-shadow:0 0 1px rgba(240,239,237,.28)}
+    .landing{position:relative;min-height:calc(100vh - 68px);overflow:hidden;background:#080808;isolation:isolate}.landing-layer{position:absolute;inset:0;background:center/cover no-repeat}.landing-base{background-image:url('assets/haoran-line.png');filter:contrast(.98)}.landing-reveal{background-image:url('assets/haoran-wireframe.png');clip-path:circle(0 at 50% 50%);transition:clip-path .18s ease-out;pointer-events:none}.landing-content{position:absolute;inset:0;display:flex;align-items:flex-end;padding:clamp(28px,6vw,84px);pointer-events:none}.landing-kicker{color:#aaa;font:11px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.16em}.landing-title{margin:12px 0 0;color:#171717;font:400 clamp(34px,7vw,92px)/.9 Inter,-apple-system,BlinkMacSystemFont,"Microsoft YaHei",sans-serif;letter-spacing:-.06em}.landing-enter{position:absolute;right:clamp(24px,5vw,72px);bottom:clamp(24px,5vw,68px);display:flex;align-items:center;gap:12px;color:#1b1b1b;text-decoration:none;font-size:13px;letter-spacing:.04em;z-index:2}.landing-enter:after{content:'→';font-size:26px;font-weight:300;transition:transform .2s}.landing-enter:hover:after{transform:translateX(6px)}.landing-hint{position:absolute;right:clamp(24px,5vw,72px);bottom:24px;color:rgba(25,25,25,.58);font:10px ui-monospace,SFMono-Regular,Consolas,monospace}.site-footer{max-width:1240px;margin:0 auto;padding:20px 24px 34px;border-top:1px solid var(--line);color:#777;font-size:11px}.site-footer a{color:#999;text-decoration:none}.landing-view{display:block}.landing-view~.view{min-height:calc(100vh - 68px)}
+  </style>
+  <style>.landing-view{display:none}.landing-view.active{display:block}.landing-reveal{opacity:.08;clip-path:inset(29% 0 24% 0)!important;mask-image:radial-gradient(circle 118px at var(--mx,50%) var(--my,50%),rgba(0,0,0,0) 0,rgba(0,0,0,.18) 18%,rgba(0,0,0,.72) 54%,#000 82%,transparent 100%);-webkit-mask-image:radial-gradient(circle 118px at var(--mx,50%) var(--my,50%),rgba(0,0,0,0) 0,rgba(0,0,0,.18) 18%,rgba(0,0,0,.72) 54%,#000 82%,transparent 100%);transition:mask-position .35s ease,-webkit-mask-position .35s ease,opacity .35s ease}.landing-base{filter:contrast(.96)}.landing-content{mix-blend-mode:normal}#home .hero h1{font-size:clamp(48px,5.45vw,74px);letter-spacing:-.025em;white-space:nowrap}</style>
+  <style>.page-spotlight{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0;background:radial-gradient(circle 190px at var(--spot-x,50%) var(--spot-y,50%),rgba(255,255,255,.085),rgba(255,255,255,.028) 38%,transparent 74%);transition:opacity .45s ease}.page-spotlight.on{opacity:1}.nav,main{position:relative;z-index:1}</style>
+  <style>.haoran-advisor{margin-top:14px;border:1px solid var(--line);background:rgba(12,12,12,.84);display:flex;flex-direction:column;min-height:360px}.haoran-advisor-head{display:flex;align-items:flex-start;gap:10px;padding:14px;border-bottom:1px solid var(--line)}.haoran-advisor-mark{width:25px;height:25px;border:1px solid #805035;color:var(--accent);display:grid;place-items:center;font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace}.haoran-advisor-title{min-width:0;flex:1}.haoran-advisor-title b{display:block;font-size:12px;color:var(--text)}.haoran-advisor-title span{display:block;margin-top:3px;font-size:10px;color:var(--muted)}.haoran-advisor-status{color:var(--accent);font:10px ui-monospace,SFMono-Regular,Consolas,monospace;white-space:nowrap}.haoran-advisor-body{height:250px;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:9px}.haoran-message{max-width:95%;padding:9px 10px;border:1px solid #2c2c2c;color:#cfcac4;font-size:11px;line-height:1.65;white-space:pre-wrap}.haoran-message.me{align-self:flex-end;border-color:#74411f;background:#22130c;color:#f0ddd3}.haoran-message.ai{align-self:flex-start;background:#151515}.haoran-message.loading{color:#8b8782;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.haoran-advisor-quick{display:flex;flex-wrap:wrap;gap:5px;padding:0 12px 10px}.haoran-advisor-quick button{padding:5px 7px;border:1px solid #34312e;background:transparent;color:#aaa39c;font-size:10px}.haoran-advisor-quick button:hover{border-color:#805035;color:var(--accent)}.haoran-advisor-input{display:flex;gap:7px;padding:11px;border-top:1px solid var(--line)}.haoran-advisor-input input{min-width:0;flex:1;border:0;border-bottom:1px solid #3c3936;background:transparent;color:var(--text);padding:7px 1px;font-size:11px;outline:0}.haoran-advisor-input input:focus{border-color:var(--accent)}.haoran-advisor-input button{width:32px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:16px;line-height:1}.haoran-advisor-input button:disabled{opacity:.5;cursor:wait}</style>
+  <style>body.config-advisor-open .haoran-advisor{position:fixed;right:24px;bottom:24px;z-index:30;width:min(320px,calc(100vw - 48px));min-height:0;max-height:calc(100vh - 112px);box-shadow:0 18px 46px rgba(0,0,0,.42)}body.config-advisor-open .haoran-advisor-body{height:min(280px,calc(100vh - 340px))}@media(min-width:761px){#configurator{height:calc(100vh - 68px);min-height:0;overflow:hidden}.config-layout{height:100%;min-height:0;overflow:hidden}.config-left{height:100%;overflow-y:auto;overscroll-behavior:contain}.config-main,.config-right{height:100%;overflow:hidden}.config-main{display:flex;flex-direction:column}.config-main .preview{flex:1;min-height:0;overflow:hidden}.config-main .selected-strip{flex:0 0 auto;position:relative;opacity:0;transform:translateY(34px);transition:transform .42s cubic-bezier(.2,.78,.2,1),opacity .28s ease,box-shadow .32s ease,border-color .32s ease;will-change:transform,opacity}.config-main .selected-strip:hover,.config-main .selected-strip:focus-within{opacity:1;transform:translateY(-8px);border-color:#74401f;box-shadow:0 16px 30px rgba(0,0,0,.32)}.config-right{overscroll-behavior:contain}}@media(max-width:760px){body.config-advisor-open .haoran-advisor{right:12px;bottom:12px;width:calc(100vw - 24px)}body.config-advisor-open .haoran-advisor-body{height:190px}}</style>
+  <style>.haoran-advisor-close{width:22px;height:22px;padding:0;border:0;background:transparent;color:#8d8983;font-size:17px;line-height:1}.haoran-advisor-close:hover{color:var(--text)}.haoran-advisor-reopen{display:none;position:fixed;right:24px;bottom:24px;z-index:30;border:1px solid #804625;background:#12100f;color:#e8d6ca;padding:9px 11px;font:11px ui-monospace,SFMono-Regular,Consolas,monospace}.haoran-advisor-reopen:hover{border-color:var(--accent);color:#fff}body.config-advisor-open.advisor-dismissed .haoran-advisor{display:none}body.config-advisor-open.advisor-dismissed .haoran-advisor-reopen{display:block}body.visitor .haoran-advisor,body.visitor .haoran-advisor-reopen{display:none!important}@media(max-width:760px){.haoran-advisor-reopen{right:12px;bottom:12px}}</style>
+  <style>.auth-overlay{background:rgba(0,0,0,.72)!important}.auth-card{border-radius:0!important;border-color:#3a3734!important;background:#121212!important;color:var(--text)!important;box-shadow:0 24px 80px rgba(0,0,0,.55)!important}.auth-title,.auth-field label,.auth-pill-name{color:var(--text)!important}.auth-sub,.auth-tab{color:var(--muted)!important}.auth-tabs{border-color:var(--line)!important}.auth-tab{border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;box-shadow:none!important;outline:0!important;background:transparent!important}.auth-tab:hover{color:var(--text)!important;background:transparent!important}.auth-tab.active{color:var(--accent)!important;border-bottom-color:var(--accent)!important}.auth-tab:focus-visible{outline:1px solid var(--accent)!important;outline-offset:-3px}.auth-field input{border-radius:0!important;border-color:#393633!important;background:#0c0c0c!important;color:var(--text)!important}.auth-field input:focus{border-color:var(--accent)!important}.auth-btn{border-radius:0!important;background:var(--accent)!important}.auth-pill{margin-left:0!important;border-radius:0!important;border-color:#3b3835!important;background:#101010!important}.auth-pill-out{border-radius:0!important;border-color:#403c38!important;background:transparent!important;color:var(--muted)!important}.paid .choice.locked{opacity:1}.paid .choice.locked:after{display:none}.access-note{display:none;margin:0 0 12px;padding:9px 11px;border:1px solid #49301f;background:#17100c;color:#c8aaa0;font-size:10px;line-height:1.5}.access-note.show{display:block}.access-note b{color:var(--accent)}.config-access-status{font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent)}</style>
+  <style>.nav .auth-pill{order:2;margin-left:0!important;height:38px;padding:4px 6px 4px 10px}.nav .auth-pill-name:before{content:'账户 / ';color:var(--accent);font:10px ui-monospace,SFMono-Regular,Consolas,monospace}.nav .auth-pill-out{padding:5px 7px}.nav .auth-pill-name{font-size:11px}.trial #haoranLoginEntry,.paid #haoranLoginEntry{display:none!important}.manual-upgrade{margin-top:18px;border:1px solid var(--line);background:rgba(16,16,16,.88);display:grid;grid-template-columns:220px 1fr;min-height:260px}.manual-upgrade-qr{padding:22px;border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center}.manual-upgrade-qr img{width:142px;height:142px;object-fit:contain;background:#fff;padding:5px}.manual-upgrade-qr small{margin-top:12px;color:var(--muted);font-size:10px}.manual-upgrade-copy{padding:27px 30px}.manual-upgrade-copy .eyebrow{margin-bottom:10px}.manual-upgrade-copy h3{margin:0;font-size:23px;letter-spacing:-.04em}.manual-upgrade-copy p{max-width:620px;margin:9px 0 18px;font-size:13px}.manual-steps{display:flex;gap:17px;margin-bottom:20px}.manual-step{font-size:11px;color:#aaa39c;line-height:1.6}.manual-step b{display:block;color:var(--text);font-size:12px}.manual-step i{font:700 10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--accent);font-style:normal}.activation-row{display:flex;gap:8px;max-width:470px}.activation-row input{min-width:0;flex:1;border:1px solid #3c3936;background:#0b0b0b;color:var(--text);padding:11px 12px;outline:0;font-size:12px;letter-spacing:.06em}.activation-row input:focus{border-color:var(--accent)}.activation-msg{margin-top:9px;color:var(--muted);font-size:11px}@media(max-width:700px){.manual-upgrade{grid-template-columns:1fr}.manual-upgrade-qr{border-right:0;border-bottom:1px solid var(--line)}.manual-upgrade-copy{padding:22px}.manual-steps{display:block}.manual-step+.manual-step{margin-top:10px}}.contact-overlay{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.67);backdrop-filter:blur(5px)}.contact-overlay.show{display:flex}.contact-card{position:relative;width:min(390px,100%);border:1px solid #4b423c;background:#111;box-shadow:0 28px 90px rgba(0,0,0,.65);padding:26px;text-align:center}.contact-close{position:absolute;top:10px;right:10px;width:30px;height:30px;border:0;background:transparent;color:#938c85;font-size:20px}.contact-close:hover{color:#fff}.contact-card .eyebrow{margin-bottom:9px}.contact-card h3{margin:0;font-size:22px;letter-spacing:-.04em;color:var(--text)}.contact-card p{margin:9px auto 18px;max-width:290px;color:var(--muted);font-size:12px;line-height:1.7}.contact-qr{width:188px;height:188px;object-fit:contain;background:#fff;padding:6px}.contact-note{margin:12px 0 0;color:#b8afa7;font-size:11px;line-height:1.65}.contact-note b{color:var(--accent);font-weight:500}</style>
 </head>
 <body>
-
-<!-- 顶部导航 -->
-<nav class="navbar">
-  <button class="hamburger" onclick="toggleLeft()" aria-label="菜单">☰</button>
-  <div class="logo"><span class="sq">浩</span>浩然AI建站配置器<span class="beta">Beta</span></div>
-  <div class="nav-links">
-    <a href="showcase.html">案例</a>
-    <a href="javascript:void(0)" onclick="toast('定价方案即将上线，先免费体验')">定价</a>
-    <a href="library.html">组件参考</a>
-  </div>
-  <div class="nav-right">
-    <button class="btn-primary nav-login" onclick="__auth.show()">登录 / 免费试用</button>
-    <button class="btn-primary nav-upgrade" onclick="openPay()">🔓 升级付费 · 60元</button>
-  </div>
-</nav>
-
-<style>
-  #landing{display:block;max-width:960px;margin:0 auto;padding:56px 24px 80px;}
-  .workbench{display:none;}
-  body.trial #landing, body.paid #landing{display:none;}
-  body.trial .workbench, body.paid .workbench{display:flex;}
-  .nav-login{display:none;}
-  body.visitor .nav-login{display:inline-block;}
-  .nav-upgrade{display:none;}
-  body.trial .nav-upgrade{display:inline-block;}
-  .landing-hero{text-align:center;padding:20px 0 36px;}
-  .landing-badge{display:inline-block;font-size:12px;font-weight:700;color:#16A34A;background:#E7F6EC;padding:5px 14px;border-radius:999px;margin-bottom:18px;}
-  .landing-hero h1{font-size:38px;font-weight:800;letter-spacing:-.03em;line-height:1.15;color:#1A1D1B;}
-  .landing-hero p{color:#6B7280;font-size:16px;margin-top:14px;max-width:640px;margin-left:auto;margin-right:auto;}
-  .landing-cta{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap;}
-  .landing-cta .btn-primary{font-size:15px;padding:12px 24px;}
-  .landing-cta .btn-ghost{font-size:14px;padding:12px 20px;border:1px solid #E5E7E5;border-radius:9px;color:#6B7280;background:#FFFFFF;font-weight:600;text-decoration:none;}
-  .landing-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:40px 0;}
-  .lstep{background:#FFFFFF;border:1px solid #E5E7E5;border-radius:14px;padding:22px 20px;}
-  .lstep .n{width:26px;height:26px;border-radius:50%;background:#E7F6EC;color:#16A34A;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
-  .lstep b{display:block;font-size:15px;color:#1A1D1B;}
-  .lstep span{font-size:13px;color:#6B7280;margin-top:4px;display:block;}
-  .landing-features{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0 40px;}
-  .lfeat{background:#FFFFFF;border:1px solid #E5E7E5;border-radius:14px;padding:20px;text-align:center;}
-  .lfeat b{display:block;font-size:15px;color:#1A1D1B;margin:8px 0 4px;}
-  .lfeat span{font-size:12.5px;color:#6B7280;}
-  .landing-pricing{display:flex;justify-content:center;margin:20px 0;}
-  .price-card{background:#FFFFFF;border:1px solid #16A34A;border-radius:18px;padding:32px 40px;text-align:center;max-width:360px;}
-  .price-card .pt{font-size:13px;color:#6B7280;}
-  .price-card .pp{font-size:48px;font-weight:800;color:#16A34A;margin:8px 0;}
-  .price-card .pd{font-size:13px;color:#6B7280;margin-bottom:20px;line-height:1.7;}
-  @media (max-width:720px){ .landing-steps,.landing-features{grid-template-columns:1fr;} .landing-hero h1{font-size:28px;} }
-</style>
-
-<!-- 价值介绍落地页（访客可见） -->
-<section id="landing">
-  <div class="landing-hero">
-    <div class="landing-badge">🚀 AI 建站配置器</div>
-    <h1>3 分钟，用 AI 配出你的专业网站</h1>
-    <p>不懂代码也能做网站：选组件 → 实时预览 → 一键生成 Prompt → 交给 AI</p>
-    <div class="landing-cta">
-      <button class="btn-primary" onclick="__auth.show()">免费试用</button>
-      <a class="btn-ghost" href="showcase.html">看看 10 大行业案例 →</a>
-    </div>
-  </div>
-  <div class="landing-steps">
-    <div class="lstep"><span class="n">1</span><b>告诉 AI 你的想法</b><span>填网站名字、用途</span></div>
-    <div class="lstep"><span class="n">2</span><b>点选组件与风格</b><span>70 个组件随便配</span></div>
-    <div class="lstep"><span class="n">3</span><b>实时预览 + 一键生成</b><span>复制 Prompt 交给 AI</span></div>
-  </div>
-  <div class="landing-features">
-    <div class="lfeat">🧩<b>70 个组件</b><span>页面/导航/组件/动效全都有</span></div>
-    <div class="lfeat">👁️<b>实时预览</b><span>选完立刻看到效果</span></div>
-    <div class="lfeat">⚡<b>一键 Prompt</b><span>生成精准建站指令</span></div>
-    <div class="lfeat">🤖<b>AI 顾问</b><span>随时解答你的疑问</span></div>
-  </div>
-  <div class="landing-pricing">
-    <div class="price-card">
-      <div class="pt">永久买断</div>
-      <div class="pp">¥60</div>
-      <div class="pd">解锁全部 70 组件 + 无限生成 + AI 顾问 + 10 大行业案例模板</div>
-      <button class="btn-primary" onclick="__auth.show()">登录后购买</button>
-    </div>
-  </div>
-</section>
-
-<!-- 三栏工作台 -->
-<div class="workbench">
-  <!-- 左栏：工具箱 -->
-  <aside class="left" id="leftPanel">
-    <div class="left-scroll">
-      <div class="proj-card">
-        <div class="row"><span class="k">网站名称</span><span class="v" id="projName">小林摄影工作室</span><span class="edit" onclick="openProj()">编辑</span></div>
-        <div class="row" style="margin-top:6px"><span class="k">网站目的</span><span class="v" id="projPurpose">展示作品 + 预约拍摄</span></div>
-        <div class="tip">点击「编辑」修改名称和目的，AI 会据此生成 Prompt</div>
-      </div>
-
-      <div class="tabs">
-        <button class="active" data-tab="comp" onclick="switchTab(this)">组件</button>
-        <button data-tab="layout" onclick="switchTab(this)">布局</button>
-        <button data-tab="style" onclick="switchTab(this)">风格</button>
-      </div>
-
-      <div id="tabBody"></div>
-    </div>
-    <div class="left-foot">
-      <a href="library.html">📚 查看全部 70 个组件参考 →</a>
-      <div style="margin-top:6px;font-size:11px;color:#6B7075;"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener" style="color:#6B7075;text-decoration:none;">冀ICP备2026034843号-1</a></div>
-    </div>
-  </aside>
-
-  <!-- 中栏：预览 -->
-  <main class="center">
-    <div class="center-head">
-      <span class="tt">实时预览</span>
-      <span class="hint">效果仅供参考，实际以 AI 生成为准</span>
-    </div>
-    <div class="preview-wrap">
-      <div class="browser" id="browser">
-        <div class="bar">
-          <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
-          <div class="addr" id="addr">xiaolin.studio</div>
-        </div>
-        <div id="pvBody"></div>
-      </div>
-    </div>
-    <div class="genzone">
-      <div class="genbar">
-        <div class="inner">
-          <div class="pills" id="pills"><span class="pill placeholder">尚未选择组件</span></div>
-          <button class="btn" onclick="openPrompt()">⚡ 生成完整 Prompt</button>
-        </div>
-      </div>
-    </div>
+  <nav class="nav"><a class="brand" href="#home" onclick="go('home')"><i>H</i>浩然AI实验室</a><div class="navlinks"><button data-view="home" onclick="go('home')">主页</button><button data-view="library" onclick="go('library')">组件库</button><button data-view="configurator" onclick="go('configurator')">配置器</button><button data-view="annual" onclick="go('annual')">年度版权益</button></div><div class="navright"><button class="button" onclick="go('library')">先看组件</button><button class="button primary" onclick="go('configurator')">开始配置</button></div></nav>
+  <main>
+    <section class="view" id="home"><div class="wrap"><div class="hero"><div><div class="eyebrow">HAORAN AI LAB / WEBSITE BLUEPRINT</div><h1>给 AI 一份真正能执行的建站方案。</h1><p>浩然AI实验室把你的目标、页面结构、交互与视觉选择，整理成可以直接交给 AI 制作的网站蓝图。</p><div class="actions"><button class="button primary" onclick="go('configurator')">开始配置基础方案</button><button class="button" onclick="go('library')">浏览公开组件库</button></div></div><div class="route"><div class="routehead"><span>你的建站路径</span><span>01 / 03</span></div><div class="routebody"><div class="step"><b class="number">01</b><div><b>组件库</b><span>先看每个组件长什么样、解决什么问题</span></div></div><div class="step"><b class="number">02</b><div><b>配置器</b><span>点选组件，实时看页面组合效果</span></div></div><div class="step"><b class="number">03</b><div><b>交给 AI 制作</b><span>生成清楚、完整、可复制的 Prompt</span></div></div></div><div class="entitlements"><div><small>免费账户</small><b>基础建站路径</b><span>基础 6 类 · 10 次完整方案</span></div><div><small>年度版</small><b>完整建站工作流</b><span>10 大模块、AI 顾问、生成不限</span></div></div></div></div><div class="stats"><div><b>10</b><span>公开组件类别</span></div><div><b>100+</b><span>可组合组件</span></div><div><b>10</b><span>完整方案试用次数</span></div><div><b>∞</b><span>年度版生成与顾问</span></div></div></div></section>
+    <section class="view" id="library"><div class="wrap"><div class="sectionhead"><div class="eyebrow">COMPONENT LIBRARY / PUBLIC</div><h1>全部组件，先看清再选择。</h1><p>点击任一类别，展开查看该类别完整组件、用途和小型样式预览。这里只做公开参考，不会影响你的配置方案。</p></div><div class="library" id="libraryRoot"></div><div class="notice"><div><b>准备把组件变成你的方案？</b><p>进入配置器，选择基础建站路径并生成完整 Prompt。</p></div><button class="button primary" onclick="go('configurator')">进入配置器</button></div></div></section>
+    <section class="view" id="configurator"><div class="config-layout"><aside class="config-left"><div class="project"><label>网站名称</label><input id="siteName" value="我的网站" oninput="renderPreview()"><label>网站目标</label><input id="siteGoal" value="展示业务并获得咨询" oninput="renderPreview()"></div><button class="recommend" onclick="recommend()"><span class="number">01</span> 不知道怎么选？按网站目标加入基础推荐</button><div class="config-tabs"><button class="active" data-tab="components" onclick="setTab('components')">组件</button><button data-tab="layout" onclick="setTab('layout')">布局</button><button data-tab="style" onclick="setTab('style')">风格</button></div><div id="picker"></div><button class="clear" onclick="clearSelection()">清空当前选择</button></aside><section class="config-main"><div class="config-top"><b>实时预览</b><span>点选左侧组件，预览即时更新</span></div><div class="preview"><div class="browserbar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><div class="url" id="previewUrl">my-site.studio</div></div><div class="preview-body" id="previewBody"></div></div><div class="selected-strip"><div class="selected-list" id="selectedList"></div><button class="button primary" onclick="makePrompt()">生成完整 Prompt</button></div></section><aside class="config-right"><div class="health"><strong id="score">0 / 5</strong><span>已满足的建站关键项</span></div><div id="checks"></div><button class="clear" onclick="clearSelection()">清空当前选择</button></aside></div></section>
+    <section class="view" id="annual"><div class="wrap"><div class="sectionhead"><div class="eyebrow">ANNUAL WORKFLOW</div><h1>持续做站，就解锁完整工作流。</h1><p>免费版帮助你做出第一份网站方案；年度版让你可以持续组合、生成、复制并向 AI 追问。</p></div><div class="plans"><article class="plan"><small>免费账户</small><h2>基础建站路径</h2><p>适合先验证方向和完成第一个网站。</p><ul><li>公开浏览全部组件库</li><li>配置器基础 6 大类</li><li>10 次完整方案试用</li><li>浏览、点选、预览不扣次数</li></ul><button class="button" onclick="go('configurator')">开始免费试用</button></article><article class="plan featured"><small>年度版</small><h2>完整建站工作流</h2><p>适合持续制作、迭代与交付不同网站项目。</p><ul><li>配置器全部 10 大模块</li><li>完整 Prompt 生成与复制不限次数</li><li>AI 建站顾问不限次数</li><li>转化、内容展示、上线品质模块</li></ul><button class="button primary" onclick="go('configurator')">进入年度版配置器</button></article></div></div></section>
   </main>
-</div>
-
-<!-- 首次访问引导 -->
-<div class="overlay" id="onboardOverlay">
-  <div class="modal">
-    <div class="mh">
-      <h2>🚀 3分钟，AI 帮你配出专业网站</h2>
-      <div class="sub">不需要写代码，跟 AI 聊聊需求，点选组件，实时预览，一键生成完整 Prompt</div>
-    </div>
-    <div class="mb">
-      <div class="steps">
-        <div class="step"><span class="n">1</span><div><b>告诉 AI 你的想法</b><span>填写网站名字、用途，或直接跟右侧顾问聊</span></div></div>
-        <div class="step"><span class="n">2</span><div><b>点选组件与风格</b><span>从左侧面板选择布局、动效、视觉风格</span></div></div>
-        <div class="step"><span class="n">3</span><div><b>实时预览 + 一键生成</b><span>中间看效果，底部导出完整 Prompt</span></div></div>
-      </div>
-      <div class="actions">
-        <button class="btn-primary" onclick="startConfig()">开始配置我的网站</button>
-        <button class="btn-ghost" onclick="skipOnboard()">我先看看</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Prompt 弹层 -->
-<div class="overlay" id="promptOverlay">
-  <div class="modal">
-    <div class="mh"><h2>⚡ 你的完整 Prompt</h2><div class="sub">把下面整段复制，丢给任意 AI 建站工具即可</div></div>
-    <div class="mb">
-      <div class="prompt-box" id="promptText">（选择组件后生成）</div>
-      <div class="actions">
-        <button class="btn-primary" onclick="copyPrompt()">📋 一键复制</button>
-        <button class="btn-ghost" onclick="closePrompt()">关闭</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- 项目信息编辑 -->
-<div class="overlay" id="projOverlay">
-  <div class="modal">
-    <div class="mh"><h2>✏️ 编辑项目信息</h2></div>
-    <div class="mb">
-      <div class="field"><label>网站名称</label><input id="fName" placeholder="例如：小林摄影工作室"></div>
-      <div class="field"><label>网站目的</label><textarea id="fPurpose" placeholder="例如：展示作品 + 预约拍摄"></textarea></div>
-      <div class="actions">
-        <button class="btn-primary" onclick="saveProj()">保存</button>
-        <button class="btn-ghost" onclick="closeProj()">取消</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<style>
-  .pay-price{font-size:40px;font-weight:800;color:#16A34A;}
-  .pay-price span{font-size:14px;color:#6B7280;font-weight:400;}
-  .pay-list{margin:14px 0;background:#F6F7F6;border:1px solid #E5E7E5;border-radius:10px;padding:14px 16px;font-size:13px;color:#1A1D1B;line-height:2;}
-  .pay-close{position:absolute;top:14px;right:16px;background:none;border:none;color:#6B7280;font-size:22px;cursor:pointer;line-height:1;z-index:10;}
-  .pay-qr{display:flex;gap:12px;margin:14px 0;}
-  .pay-qr-box{flex:1;background:#F6F7F6;border:1px solid #E5E7E5;border-radius:10px;padding:18px 14px;text-align:center;cursor:pointer;color:#1A1D1B;transition:.15s;}
-  .pay-qr-box:hover{border-color:#16A34A;background:#E7F6EC;}
-  .pay-qr-box span{font-size:13px;font-weight:600;display:block;margin-bottom:6px;}
-  .pay-qr-box i{font-size:11px;color:#9CA3AF;font-style:normal;}
-  .pay-note{font-size:12px;color:#6B7280;text-align:center;margin:10px 0;line-height:1.6;}
-</style>
-
-<!-- 付费解锁 -->
-<div class="overlay" id="payOverlay">
-  <div class="modal" style="width:440px;position:relative;">
-    <button class="pay-close" onclick="closePay()">✕</button>
-    <div class="mh"><h2>🔓 解锁全部功能</h2><div class="sub">60 元买断，永久使用，一次付费终身有效</div></div>
-    <div class="mb">
-      <div class="pay-price">¥60 <span>永久买断</span></div>
-      <div class="pay-list">
-        <div>✅ 全部 70 个组件</div>
-        <div>✅ 无限次生成 Prompt</div>
-        <div>✅ AI 建站顾问</div>
-        <div>✅ 10 大行业案例模板</div>
-      </div>
-      <div class="pay-qr">
-        <button class="pay-qr-box" onclick="showQR('wechat')"><span>💚 微信收款码</span><i>点击查看大图</i></button>
-        <button class="pay-qr-box" onclick="showQR('alipay')"><span>💙 支付宝收款码</span><i>点击查看大图</i></button>
-      </div>
-      <div class="pay-note">付款后加微信「浩然」发付款截图，领取激活码</div>
-      <div class="field"><label>输入激活码</label><input id="redeemCode" placeholder="例如 HAORAN-VIP-60"></div>
-      <button class="btn-primary" style="width:100%;margin-top:12px;" onclick="doRedeem()">激活解锁</button>
-    </div>
-  </div>
-</div>
-
-<!-- 收款码弹窗 -->
-<div class="overlay" id="qrOverlay" onclick="if(event.target===this)hideQR()">
-  <div class="modal" style="width:320px;position:relative;">
-    <button class="pay-close" onclick="hideQR()">✕</button>
-    <div class="mh"><h2 id="qrTitle">微信收款码</h2></div>
-    <div class="mb" style="text-align:center;">
-      <img id="qrImg" src="" alt="收款码" style="width:250px;height:250px;object-fit:contain;border-radius:12px;display:block;margin:0 auto;background:#fff;">
-      <p style="margin-top:14px;font-size:13px;color:#6B7280;">请扫码支付 60 元</p>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-<div id="ccTip"></div>
-
-<script src="components.js"></script>
+  <script src="components.js"></script>
+  <link rel="stylesheet" href="auth.css">
+  <script src="auth.js"></script>
+  <script>
+    const freeCats=['structure','navigation','components','motion','feedback','style'];let activeTab='components';const chosen=new Set();
+    function escapeHtml(value){return String(value||'').replace(/[&<>"']/g,function(char){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]})}
+    function iconCode(item){const words=String(item.en||item.name||'UI').replace(/[^A-Za-z0-9 ]/g,' ').trim().split(/\s+/).filter(Boolean);let code=words.length>1?words.map(w=>w[0]).join(''):words[0]||'UI';return escapeHtml(code.toUpperCase().slice(0,5))}
+    function go(view){if(['home','library','configurator','annual'].indexOf(view)<0)view='home';document.querySelectorAll('.view').forEach(s=>s.classList.toggle('active',s.id===view));document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));if(view==='library')renderLibrary();if(view==='configurator'){renderPicker();renderPreview()}history.replaceState(null,'','#'+view);window.scrollTo(0,0)}
+    function renderLibrary(){const root=document.getElementById('libraryRoot');if(root.dataset.ready)return;root.innerHTML=(window.COMPONENTS||[]).map((cat,index)=>'<article class="library-group" id="lib-'+cat.id+'"><button class="library-head" onclick="toggleLibrary(\''+cat.id+'\')"><span class="library-no">'+String(index+1).padStart(2,'0')+'</span><span><b>'+escapeHtml(cat.name)+'</b><small> · '+cat.items.length+' 个组件，点击展开查看</small></span><span class="library-count">'+cat.items.length+' 个</span><span class="library-chevron">+</span></button><div class="library-items">'+cat.items.map(item=>'<button class="item-card" onclick="go(\'configurator\');selectItem(\''+item.id+'\')"><span class="item-preview">'+iconCode(item)+'</span><span><b>'+escapeHtml(item.name)+'</b><span>'+escapeHtml(item.desc)+'</span><em>查看并加入配置器 →</em></span></button>').join('')+'</div></article>').join('');root.dataset.ready='1'}
+    function toggleLibrary(id){document.getElementById('lib-'+id).classList.toggle('open')}
+    function categoriesForTab(){if(activeTab==='layout')return ['structure','navigation'];if(activeTab==='style')return ['style'];return ['components','motion','feedback','conversion','showcase','quality','effects']}
+    function setTab(tab){activeTab=tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));renderPicker()}
+    function renderPicker(){const root=document.getElementById('picker');if(!root)return;const hasAnnual=!!(window.__auth&&!window.__auth.isVisitor()&&window.__auth.isPaid());root.innerHTML=(window.COMPONENTS||[]).filter(c=>categoriesForTab().includes(c.id)).map(cat=>{const locked=!freeCats.includes(cat.id)&&!hasAnnual;return '<div class="config-category"><h3>'+escapeHtml(cat.name)+(locked?' <small>年度版</small>':'')+'<small>'+cat.items.filter(i=>chosen.has(i.id)).length+'/'+cat.items.length+'</small></h3><div class="config-grid">'+cat.items.map(i=>'<button class="choice '+(chosen.has(i.id)?'selected ':'')+(locked?'locked':'')+'" onclick="selectItem(\''+i.id+'\')"><b>'+escapeHtml(i.name)+'</b><span>'+escapeHtml(i.desc)+'</span></button>').join('')+'</div></div>'}).join('')}
+    function item(id){for(const c of window.COMPONENTS||[]){const x=c.items.find(i=>i.id===id);if(x)return {...x,cat:c.id,catName:c.name}}}
+    function selectItem(id){const it=item(id);if(!it)return;const hasAnnual=!!(window.__auth&&!window.__auth.isVisitor()&&window.__auth.isPaid());if(!freeCats.includes(it.cat)&&!hasAnnual){alert('这是年度版进阶模块。免费用户可以在组件库查看，年度版可加入完整方案。');return}chosen.has(id)?chosen.delete(id):chosen.add(id);renderPicker();renderPreview()}
+    function clearSelection(){chosen.clear();renderPicker();renderPreview()}
+    function recommend(){['structure-3','structure-5','navigation-1','components-8','motion-1','feedback-10','style-1'].forEach(id=>chosen.add(id));renderPicker();renderPreview()}
+    function renderPreview(){const body=document.getElementById('previewBody');if(!body)return;const selected=[...chosen].map(item).filter(Boolean);const name=document.getElementById('siteName').value||'我的网站';const goal=document.getElementById('siteGoal').value||'展示业务并获得咨询';document.getElementById('previewUrl').textContent=name.replace(/\s/g,'').slice(0,16)+'.studio';const structures=selected.filter(i=>i.cat==='structure').map(i=>i.name);const extras=selected.filter(i=>i.cat!=='structure').slice(0,5);body.innerHTML='<div class="kicker">'+(structures.join(' / ')||'从一个目标开始')+'</div><h2>'+escapeHtml(name)+'</h2><p>'+escapeHtml(goal)+'。已选择 '+selected.length+' 个组件，下面展示页面组合示意。</p><span class="preview-button">开始行动 →</span><div class="preview-cards">'+(extras.length?extras.map((i,n)=>'<div '+(n===0?'style="background:#ff6a2b;color:#fff"':'')+'><b>'+escapeHtml(i.name)+'</b><br><small>'+escapeHtml(i.desc)+'</small></div>').join(''):'<div>选择组件后，这里会出现真实的页面模块预览。</div><div>从左侧选择布局、组件或动效。</div><div>生成 Prompt 后交给 AI 制作。</div>')+'</div>';document.getElementById('selectedList').innerHTML=selected.length?selected.map(i=>'<span>'+escapeHtml(i.name)+'</span>').join(''):'<span>尚未选择组件</span>';const checks=[['页面结构',selected.some(i=>i.cat==='structure')],['明确行动',selected.some(i=>i.name.includes('按钮')||i.name.includes('表单')||i.name.includes('预约'))],['内容展示',selected.some(i=>i.cat==='showcase'||i.name.includes('网格'))],['体验反馈',selected.some(i=>i.cat==='feedback')],['视觉风格',selected.some(i=>i.cat==='style')]];document.getElementById('score').textContent=checks.filter(x=>x[1]).length+' / 5';document.getElementById('checks').innerHTML=checks.map(x=>'<div class="check '+(x[1]?'ok':'')+'"><i>'+ (x[1]?'✓':'○') +'</i>'+x[0]+'</div>').join('')}
+    async function makePrompt(){const selected=[...chosen].map(item).filter(Boolean);if(!selected.length){alert('请先选择至少一个组件');return}if(!window.__auth||window.__auth.isVisitor()){window.__auth&&window.__auth.show();return}if(window.__haoranAccess&&!(await window.__haoranAccess.usePrompt()))return;const text='为「'+(document.getElementById('siteName').value||'我的网站')+'」制作网站，目标是：'+(document.getElementById('siteGoal').value||'展示业务并获得咨询')+'。\n\n请实现以下组件：\n'+selected.map((i,n)=>(n+1)+'. '+i.name+'：'+i.prompt).join('\n');navigator.clipboard&&navigator.clipboard.writeText(text);alert('完整 Prompt 已生成并复制，可直接粘贴给 AI。')}
+    window.addEventListener('hashchange',()=>go(location.hash.slice(1)));go(location.hash.slice(1)||'home');
+    const originalGoWithAdvisor=go;go=function(view){originalGoWithAdvisor(view);document.body.classList.toggle('config-advisor-open',view==='configurator')};
+  </script>
 <script>
-  const DATA = window.COMPONENTS || [];
-  const selected = new Set();
-  let curTab = 'comp';
-
-  /* ========== 数据工具 ========== */
-  function allItems(){ const r=[]; DATA.forEach(c=>c.items.forEach(i=>r.push({cat:c.id,catName:c.name,catEmoji:c.emoji,...i}))); return r; }
-  const ITEMS = allItems();
-  function itemById(id){ return ITEMS.find(i=>i.id===id); }
-
-  function isRadio(id){ const it=itemById(id); if(!it) return false; if(it.cat==='style') return true; if(it.cat==='structure' && ['structure-1','structure-2','structure-3','structure-4'].includes(id)) return true; return false; }
-
-  /* ========== 左栏渲染 ========== */
-  function switchTab(btn){
-    document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active'); curTab=btn.dataset.tab; renderTab();
-  }
-  function renderTab(){
-    const body=document.getElementById('tabBody');
-    let cats;
-    if(curTab==='comp') cats=['components','motion','feedback','effects'];
-    else if(curTab==='layout') cats=['structure','navigation'];
-    else cats=['style'];
-    let html='';
-    DATA.filter(c=>cats.includes(c.id)).forEach(c=>{
-      const nSel = c.items.filter(i=>selected.has(i.id)).length;
-      html += '<div class="cat-group" id="grp-'+c.id+'">'
-            + '<div class="cat-head" onclick="toggleGroup(\''+c.id+'\')"><span>'+c.emoji+'</span>'+c.name
-            + '<span class="cnt">'+nSel+'/'+c.items.length+'</span><span class="fold">▼</span></div>'
-            + '<div class="cgrid">';
-      c.items.forEach(i=>{
-        const on=selected.has(i.id);
-        html += '<button class="ccard'+(on?' on':'')+'" data-id="'+i.id+'" onclick="toggleItem(\''+i.id+'\')">'
-              + '<span class="emoji">'+i.emoji+'</span><span class="nm">'+i.name+'</span>'
-              + '<span class="help" onmouseenter="showTip(this)" onmouseleave="hideTip()">?</span>'
-              + '</button>';
-      });
-      html += '</div></div>';
-    });
-    body.innerHTML=html;
-  }
-  function toggleGroup(id){ document.getElementById('grp-'+id).classList.toggle('collapsed'); }
-  function showTip(el){
-    var card=el.closest('.ccard'); if(!card) return;
-    var it=itemById(card.getAttribute('data-id')); if(!it) return;
-    var tip=document.getElementById('ccTip');
-    tip.innerHTML='<b>'+escapeHtml(it.name)+'</b> · '+escapeHtml(it.desc)+'<br>'+escapeHtml(it.prompt.slice(0,100))+'…';
-    tip.style.display='block';
-    var r=el.getBoundingClientRect();
-    var tw=tip.offsetWidth, th=tip.offsetHeight;
-    var x=r.left + r.width/2 - tw/2;
-    var y=r.top - th - 8;
-    if(x<8) x=8;
-    if(x+tw>window.innerWidth-8) x=window.innerWidth-8-tw;
-    if(y<8) y=r.bottom+8;
-    tip.style.left=x+'px';
-    tip.style.top=y+'px';
-  }
-  function hideTip(){ var t=document.getElementById('ccTip'); if(t) t.style.display='none'; }
-
-  function toggleItem(id){
-    if(!window.__auth || window.__auth.isVisitor()){ if(window.__auth) window.__auth.show(); toast('请先注册并登录'); return; }
-    const it=itemById(id); if(!it) return;
-    if(isRadio(id)){
-      // 单选组：点已选中的项→取消选中；点其它项→清空同组后选中（实现「再点一次取消」）
-      if(selected.has(id)){
-        selected.delete(id);
-      } else {
-        const group = (it.cat==='style') ? 'style' : 'structure-type';
-        ITEMS.forEach(x=>{
-          const g=(x.cat==='style')?'style':((x.cat==='structure'&&['structure-1','structure-2','structure-3','structure-4'].includes(x.id))?'structure-type':'');
-          if(g===group) selected.delete(x.id);
-        });
-        selected.add(id);
-      }
-    } else {
-      selected.has(id) ? selected.delete(id) : selected.add(id);
-    }
-    renderTab(); renderPreview(); renderPills();
-  }
-
-  /* ========== 项目信息 ========== */
-  const proj = { name: '小林摄影工作室', purpose: '展示作品 + 预约拍摄' };
-  function openProj(){ document.getElementById('fName').value=proj.name; document.getElementById('fPurpose').value=proj.purpose; show('projOverlay'); }
-  function closeProj(){ hide('projOverlay'); }
-  function saveProj(){
-    proj.name=document.getElementById('fName').value.trim()||'我的网站';
-    proj.purpose=document.getElementById('fPurpose').value.trim()||'展示业务并引导联系';
-    document.getElementById('projName').textContent=proj.name;
-    document.getElementById('projPurpose').textContent=proj.purpose;
-    updateAddr(); closeProj(); toast('已保存项目信息 ✓');
-  }
-
-  /* ========== 预览 ========== */
-  function slug(s){ return (s||'site').replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g,'').toLowerCase().slice(0,18)||'site'; }
-  function updateAddr(){ document.getElementById('addr').textContent = slug(proj.name)+'.studio'; }
-
-  function renderPreview(){
-    const body=document.getElementById('pvBody');
-    const browser=document.getElementById('browser');
-    const sel = ITEMS.filter(i=>selected.has(i.id));
-    resetStyle();
-    if(!sel.length){ body.innerHTML='<div class="pv-empty"><div class="big">🧱</div><p>从左侧点选组件，这里会实时拼出你的网站预览</p></div>'; return; }
-
-    // 视觉风格：应用到预览画布 + 底部显示已应用风格
-    const styleMap={ '玻璃拟态':'glass','深色模式':'dark','新野兽派':'brutal','单色与双色':'mono','极简主义':'minimal','编辑杂志风':'editorial','瑞士风':'swiss','网格渐变':'mesh','颗粒与噪点':'grain','新拟态':'neu' };
-    const styles=sel.filter(i=>i.cat==='style');
-    styles.forEach(i=>{ const c=styleMap[i.name]; if(c) browser.classList.add(c); });
-
-    let html='';
-    // 结构类型（单选）→ 顶部布局条
-    const st = sel.filter(i=>i.cat==='structure' && ['structure-1','structure-2','structure-3','structure-4'].includes(i.id));
-    if(st.length) html += mockFor(st[0]);
-
-    // 依次渲染各分类选中项，每一项都有独立效果
-    ['structure','navigation','components','motion','feedback','effects'].forEach(cat=>{
-      sel.filter(i=>i.cat===cat && !(cat==='structure' && ['structure-1','structure-2','structure-3','structure-4'].includes(i.id)))
-         .forEach(i=>{ html += mockFor(i); });
-    });
-
-    // 已应用风格色条
-    if(styles.length){
-      html += '<div class="pv-block"><div class="pv-badge">🎨 已应用风格</div><div style="display:flex;gap:8px;flex-wrap:wrap;">'
-        + styles.map(s=>'<span style="font-size:12px;font-weight:600;color:#16A34A;background:#E7F6EC;padding:4px 12px;border-radius:20px;">'+s.emoji+' '+s.name+'</span>').join('')
-        + '</div><p style="font-size:11px;color:#888;margin-top:8px;">风格已应用到整个预览画布（背景 / 边框 / 字体 / 阴影会随之变化）。</p></div>';
-    }
-
-    body.innerHTML = html || '<div class="pv-empty"><div class="big">👆</div><p>再点选一些组件，这里会实时展示对应效果</p></div>';
-  }
-
-  function resetStyle(){
-    const b=document.getElementById('browser');
-    ['glass','dark','brutal','mono','minimal','editorial','swiss','mesh','grain','neu'].forEach(c=>b.classList.remove(c));
-  }
-
-  function mockFor(i){
-    const badge='<span class="pv-badge">'+i.emoji+' '+i.name+'</span>';
-    switch(i.name){
-      /* ===== 页面结构 ===== */
-      case '单页网站': return '<div class="pv-block" style="background:#EAF6EF;border-bottom:1px solid #D8EEDF;">'+badge+'<div class="pv-title">单页网站 · 锚点跳转</div><div class="pv-sub">全部内容在一页，点导航滚动到对应区块</div><div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;">'+['Hero','About','Work','Writing','Contact','Footer'].map(s=>'<span style="font-size:11px;padding:5px 10px;border-radius:6px;background:#16A34A;color:#fff;">'+s+'</span>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:10px;">↓ 单页纵向长滚动，导航项锚点直达</p></div>';
-      case '多页网站': return '<div class="pv-block" style="background:#EFF4F8;border-bottom:1px solid #DDE7F0;">'+badge+'<div class="pv-title">多页网站 · 独立网址</div><div class="pv-sub">每个区块独立成页，利于扩展与 SEO</div><div style="display:flex;gap:8px;margin-top:12px;">'+['Home','Work','About','Journal','Contact'].map(s=>'<div style="flex:1;text-align:center;background:#fff;border:1px solid #DDE4EA;border-radius:8px;padding:10px 4px;font-size:11px;color:#1A1A1A;box-shadow:0 1px 3px rgba(0,0,0,.06);"><div style="font-size:16px;">📄</div>'+s+'</div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:10px;">多个独立页面通过导航连接</p></div>';
-      case '落地页': return '<div class="pv-block" style="background:linear-gradient(135deg,#1B4332,#2D5A45);color:#fff;border:none;">'+badge+'<div class="pv-title" style="color:#fff;">落地页 · 单一转化目标</div><div class="pv-sub" style="color:rgba(255,255,255,.75);">全页只为引导一个动作：预约咨询</div><div style="margin-top:14px;"><span style="display:inline-block;background:#fff;color:#1B4332;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;">预约一次沟通 →</span></div><p style="font-size:11px;color:rgba(255,255,255,.6);margin-top:12px;">Hero + 价值 + 案例 + FAQ + 唯一 CTA</p></div>';
-      case '案例研究页': return '<div class="pv-block" style="background:#FBF7F0;border-bottom:1px solid #EFE6D8;">'+badge+'<div class="pv-title">案例研究页 · 过程复盘</div><div class="pv-sub">不只晒结果，讲清背景 → 过程 → 决策 → 数据</div><div style="display:flex;gap:12px;margin-top:12px;"><div style="flex:1.4;height:70px;border-radius:8px;background:linear-gradient(135deg,#C4B5FD,#93C5FD);"></div><div style="flex:1;font-size:11px;color:#777;line-height:1.9;">背景问题<br>职责<br>关键决策<br>结果数据</div></div></div>';
-      case '首屏 Hero': return '<div class="pv-block" style="background:linear-gradient(135deg,#1B4332,#2D5A45);color:#fff;border:none;">'+badge+'<h1 style="font-size:24px;font-weight:800;margin:4px 0 8px;">'+escapeHtml(proj.name)+'</h1><p style="font-size:13px;opacity:.85;margin-bottom:14px;">'+escapeHtml(proj.purpose)+'</p><div><span class="pv-btn" style="background:#fff;color:#1B4332;">立即了解</span><span class="pv-btn" style="border:1px solid rgba(255,255,255,.6);color:#fff;">联系我们</span></div></div>';
-      case '功能网格': return '<div class="pv-block">'+badge+'<div class="pv-title">我们的服务</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;">'+
-        '<div style="background:#F5F7F2;border:1px solid #E6EBE0;border-radius:12px;padding:16px 14px;text-align:center;"><span style="font-size:24px;display:block;margin-bottom:8px;">🎨</span><b style="font-size:13px;color:#1A1A1A;display:block;">品牌设计</b><i style="font-size:11px;color:#888;font-style:normal;">视觉形象打造</i></div>'+
-        '<div style="background:#F5F7F2;border:1px solid #E6EBE0;border-radius:12px;padding:16px 14px;text-align:center;"><span style="font-size:24px;display:block;margin-bottom:8px;">🖥️</span><b style="font-size:13px;color:#1A1A1A;display:block;">网站开发</b><i style="font-size:11px;color:#888;font-style:normal;">响应式建站</i></div>'+
-        '<div style="background:#F5F7F2;border:1px solid #E6EBE0;border-radius:12px;padding:16px 14px;text-align:center;"><span style="font-size:24px;display:block;margin-bottom:8px;">📈</span><b style="font-size:13px;color:#1A1A1A;display:block;">推广运营</b><i style="font-size:11px;color:#888;font-style:normal;">获客增长</i></div></div></div>';
-      case '固定叙事区': return '<div class="pv-block">'+badge+'<div class="pv-title">固定叙事区</div><div class="pv-sub">左侧内容固定，右侧滚动讲故事</div><div style="display:flex;gap:14px;margin-top:12px;"><div style="flex:1;background:#F5F7F2;border-radius:10px;padding:14px;font-size:12px;color:#1A1A1A;"><b>Discover</b><p style="color:#888;font-size:11px;margin-top:4px;">探索与定义</p></div><div style="flex:1.6;display:flex;flex-direction:column;gap:8px;"><div style="height:34px;border-radius:6px;background:#E7F6EC;"></div><div style="height:34px;border-radius:6px;background:#ECF4EE;"></div><div style="height:34px;border-radius:6px;background:#E7F6EC;"></div></div></div></div>';
-      case '时间线': return '<div class="pv-block">'+badge+'<div class="pv-title">发展历程</div><div style="border-left:2px solid #D1FAE5;margin:14px 0 0 8px;padding-left:20px;">'+
-        '<div style="margin-bottom:14px;position:relative;"><span style="position:absolute;left:-27px;top:3px;width:12px;height:12px;border-radius:50%;background:#1B4332;"></span><b style="font-size:13px;color:#1A1A1A;">2022</b><p style="font-size:12px;color:#777;">工作室成立</p></div>'+
-        '<div style="margin-bottom:14px;position:relative;"><span style="position:absolute;left:-27px;top:3px;width:12px;height:12px;border-radius:50%;background:#1B4332;"></span><b style="font-size:13px;color:#1A1A1A;">2024</b><p style="font-size:12px;color:#777;">服务客户 100+</p></div>'+
-        '<div style="position:relative;"><span style="position:absolute;left:-27px;top:3px;width:12px;height:12px;border-radius:50%;background:#1B4332;"></span><b style="font-size:13px;color:#1A1A1A;">2026</b><p style="font-size:12px;color:#777;">全面数字化</p></div></div></div>';
-      case '常见问题': return '<div class="pv-block">'+badge+'<div class="pv-title">常见问题 FAQ</div><div style="margin-top:12px;border:1px solid #E6EBE0;border-radius:8px;overflow:hidden;">'+
-        '<div style="padding:10px 14px;border-bottom:1px solid #E6EBE0;font-size:13px;color:#1A1A1A;display:flex;justify-content:space-between;"><span>怎么收费？</span><span>＋</span></div>'+
-        '<div style="padding:10px 14px;font-size:13px;color:#1A1A1A;display:flex;justify-content:space-between;"><span>多久能上线？</span><span>＋</span></div></div></div>';
-      case '页脚': return '<div class="pv-block" style="background:#111;color:#ccc;border:none;">'+badge+'<div style="display:flex;gap:24px;flex-wrap:wrap;">'+
-        '<div><b style="color:#fff;font-size:13px;">'+escapeHtml(proj.name)+'</b><p style="font-size:11px;color:#999;margin-top:4px;">'+escapeHtml(proj.purpose)+'</p></div>'+
-        '<div style="font-size:11px;color:#999;line-height:1.9;">产品<br>关于我们<br>联系方式</div>'+
-        '<div style="font-size:11px;color:#999;line-height:1.9;">隐私政策<br>服务条款</div></div>'+
-        '<p style="font-size:11px;color:#666;margin-top:12px;border-top:1px solid #333;padding-top:10px;">© 2026 '+escapeHtml(proj.name)+'</p></div>';
-
-      /* ===== 导航 ===== */
-      case '固定导航': return '<div class="pv-block" style="padding:12px 26px;background:#fff;border-bottom:1px solid #E5E7E5;">'+badge+'<div style="display:flex;align-items:center;gap:14px;"><b style="font-size:14px;color:#1B4332;">'+escapeHtml(proj.name)+'</b><span style="font-size:11px;color:#888;">首页</span><span style="font-size:11px;color:#888;">作品</span><span style="font-size:11px;color:#888;">关于</span><span style="margin-left:auto;font-size:11px;background:#16A34A;color:#fff;padding:5px 12px;border-radius:6px;">联系我</span></div><p style="font-size:10px;color:#aaa;margin-top:6px;">📌 始终固定在顶部，滚动后加白底细边框</p></div>';
-      case '汉堡菜单': return '<div class="pv-block" style="padding:12px 26px;background:#fff;">'+badge+'<div style="display:flex;justify-content:flex-end;align-items:center;gap:12px;"><span style="font-size:11px;color:#888;">Home / Work / About / Contact</span><span style="display:flex;flex-direction:column;gap:4px;"><i style="width:22px;height:2px;background:#1B4332;display:block;"></i><i style="width:22px;height:2px;background:#1B4332;display:block;"></i><i style="width:22px;height:2px;background:#1B4332;display:block;"></i></span></div><p style="font-size:10px;color:#aaa;margin-top:6px;">🍔 点击三条线从右侧滑出抽屉</p></div>';
-      case '面包屑': return '<div class="pv-block" style="padding:12px 26px;background:#fff;">'+badge+'<div style="font-size:13px;color:#888;">首页 <span style="color:#ccc;">›</span> 作品 <span style="color:#ccc;">›</span> AI 工具 <span style="color:#ccc;">›</span> <b style="color:#1B4332;">项目详情</b></div></div>';
-      case '锚点跳转': return '<div class="pv-block">'+badge+'<div class="pv-title">锚点跳转</div><div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">'+['About','Work','Writing','Contact'].map(s=>'<span style="font-size:11px;padding:4px 10px;border:1px solid #16A34A;color:#16A34A;border-radius:20px;">#'+s+'</span>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">点击平滑滚动到对应 section，并高亮当前区块</p></div>';
-      case '标签切换': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:4px;border-bottom:1px solid #E5E7E5;margin-top:10px;">'+['All','Web','AI','Experiments'].map((s,k)=>'<span style="padding:8px 14px;font-size:12px;font-weight:600;'+(k===0?'color:#16A34A;border-bottom:2px solid #16A34A;':'color:#888;')+'">'+s+'</span>').join('')+'</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;"><div style="height:46px;border-radius:8px;background:#E7F6EC;"></div><div style="height:46px;border-radius:8px;background:#ECF4EE;"></div><div style="height:46px;border-radius:8px;background:#E7F6EC;"></div></div></div>';
-      case '侧边导航': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:16px;"><div style="width:90px;background:#F5F7F2;border-radius:10px;padding:12px 10px;font-size:12px;color:#888;flex-shrink:0;line-height:2;"><div style="color:#1B4332;font-weight:700;">概览</div><div>项目</div><div>文章</div><div>设置</div></div><div style="flex:1;font-size:12px;color:#555;line-height:2;">这里是内容区，展示当前页面正文信息。</div></div></div>';
-      case '超级菜单': return '<div class="pv-block">'+badge+'<div class="pv-title">超级菜单</div><div style="margin-top:10px;border:1px solid #E5E7E5;border-radius:10px;padding:14px;display:flex;gap:16px;background:#fff;"><div style="font-size:11px;line-height:2;"><b style="color:#1B4332;">Projects</b><br>AI 工具<br>个人网站</div><div style="font-size:11px;line-height:2;"><b style="color:#1B4332;">Experiments</b><br>交互原型<br>动效实验</div><div style="font-size:11px;line-height:2;"><b style="color:#1B4332;">Resources</b><br>模板<br>文章</div></div></div>';
-      case '底部导航': return '<div class="pv-block">'+badge+'<div style="display:flex;justify-content:space-around;margin-top:8px;padding:10px;background:#fff;border:1px solid #E6EBE0;border-radius:12px;">'+
-        '<div style="text-align:center;font-size:11px;color:#1B4332;"><span style="font-size:18px;display:block;">🏠</span>首页</div>'+
-        '<div style="text-align:center;font-size:11px;color:#888;"><span style="font-size:18px;display:block;">🧭</span>发现</div>'+
-        '<div style="text-align:center;font-size:11px;color:#888;"><span style="font-size:18px;display:block;">➕</span>发布</div>'+
-        '<div style="text-align:center;font-size:11px;color:#888;"><span style="font-size:18px;display:block;">👤</span>我的</div></div></div>';
-      case '分页': return '<div class="pv-block">'+badge+'<div class="pv-title">分页</div><div style="display:flex;gap:6px;margin-top:10px;">'+['‹','1','2','3','›'].map((s,k)=>'<span style="min-width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;'+(k===1?'background:#16A34A;color:#fff;':'background:#fff;color:#555;border:1px solid #E5E7E5;')+'">'+s+'</span>').join('')+'</div></div>';
-      case '返回顶部': return '<div class="pv-block">'+badge+'<div style="display:flex;justify-content:flex-end;margin-top:6px;"><span style="width:40px;height:40px;border-radius:50%;background:#16A34A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 6px 16px rgba(22,163,74,.35);">↑</span></div><p style="font-size:11px;color:#888;">滚动超过 800px 后淡入，点击回到顶部</p></div>';
-
-      /* ===== 常用组件 ===== */
-      case '模态框': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;background:#fff;border:1px solid #E5E7E5;border-radius:12px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.12);max-width:320px;"><b style="font-size:13px;color:#1A1A1A;">联系浩然</b><div style="height:10px;background:#F0F0EB;border-radius:5px;margin-top:12px;"></div><div style="height:10px;background:#F0F0EB;border-radius:5px;margin-top:8px;"></div><span style="display:inline-block;margin-top:12px;background:#16A34A;color:#fff;font-size:11px;padding:6px 14px;border-radius:6px;">发送</span></div></div>';
-      case '抽屉': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;display:flex;justify-content:flex-end;"><div style="width:180px;background:#fff;border:1px solid #E5E7E5;border-radius:12px;padding:14px;box-shadow:-8px 0 20px rgba(0,0,0,.08);"><b style="font-size:12px;color:#1A1A1A;">项目详情</b><div style="height:36px;border-radius:6px;background:linear-gradient(135deg,#C4B5FD,#93C5FD);margin-top:10px;"></div><p style="font-size:10px;color:#888;margin-top:8px;">简介 + 技术栈 + 访问链接</p></div></div></div>';
-      case '手风琴': return '<div class="pv-block">'+badge+'<div class="pv-title">手风琴</div><div style="margin-top:12px;border:1px solid #E6EBE0;border-radius:8px;overflow:hidden;">'+
-        '<div style="padding:10px 14px;background:#F5F7F2;font-size:13px;color:#1A1A1A;">已展开的项目 <span style="float:right;">✕</span></div>'+
-        '<div style="padding:10px 14px;border-top:1px solid #E6EBE0;font-size:13px;color:#888;">收起的内容 <span style="float:right;">＋</span></div>'+
-        '<div style="padding:10px 14px;border-top:1px solid #E6EBE0;font-size:13px;color:#888;">收起的内容 <span style="float:right;">＋</span></div></div></div>';
-      case '气泡提示': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:26px;margin-top:18px;">'+[['🖼️','查看作品集'],['💡','灵感来源'],['🔗','复制链接']].map(x=>'<div style="text-align:center;"><span style="font-size:22px;">'+x[0]+'</span><div style="margin-top:5px;background:#111;color:#fff;font-size:10px;padding:4px 9px;border-radius:6px;white-space:nowrap;">'+x[1]+'</div></div>').join('')+'</div></div>';
-      case '轻提示': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:8px;margin-top:12px;flex-direction:column;align-items:flex-end;"><span style="background:#111;color:#fff;font-size:12px;padding:8px 14px;border-radius:8px;">✓ 文章已保存</span><span style="background:#111;color:#fff;font-size:12px;padding:8px 14px;border-radius:8px;">⚠ 保存失败，请重试</span></div></div>';
-      case '轮播图': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;border-radius:12px;overflow:hidden;"><div style="height:130px;background:linear-gradient(135deg,#34D399,#1B4332);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:700;">精选项目 01</div></div><div style="display:flex;gap:6px;justify-content:center;margin-top:8px;"><span style="width:8px;height:8px;border-radius:50%;background:#1B4332;"></span><span style="width:8px;height:8px;border-radius:50%;background:#ddd;"></span><span style="width:8px;height:8px;border-radius:50%;background:#ddd;"></span></div></div>';
-      case '图片灯箱': return '<div class="pv-block">'+badge+'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;"><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#F9A8D4,#C4B5FD);"></div><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#A5F3FC,#86EFAC);"></div><div style="height:80px;border-radius:10px;background:linear-gradient(135deg,#FDE68A,#FCA5A5);"></div></div></div>';
-      case '表单': return '<div class="pv-block">'+badge+'<div class="pv-title">联系我们</div><input class="pv-input" placeholder="您的称呼" value="张三"><input class="pv-input" placeholder="手机号" value="138****8888"><textarea class="pv-input" style="min-height:56px;resize:vertical;" placeholder="留言内容">我想咨询网站建设</textarea><span class="pv-btn" style="background:#1B4332;color:#fff;">提交咨询</span></div>';
-      case '命令面板': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;background:#fff;border:1px solid #E5E7E5;border-radius:12px;overflow:hidden;max-width:340px;"><div style="padding:10px 14px;border-bottom:1px solid #E5E7E5;font-size:12px;color:#888;">⌘K 搜索或输入命令…</div><div style="padding:8px;"><div style="padding:7px 10px;border-radius:6px;background:#E7F6EC;font-size:12px;color:#1B4332;">Go to Work <span style="float:right;color:#888;">↵</span></div><div style="padding:7px 10px;font-size:12px;color:#555;">Open About</div><div style="padding:7px 10px;font-size:12px;color:#555;">Toggle Theme</div></div></div></div>';
-      case '悬浮按钮': return '<div class="pv-block">'+badge+'<div style="display:flex;justify-content:flex-end;margin-top:8px;"><span style="width:44px;height:44px;border-radius:50%;background:#1B4332;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 12px rgba(27,67,50,.4);">＋</span></div></div>';
-
-      /* ===== 滚动与动作 ===== */
-      case '滚动出现': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">'+[0,1,2].map(k=>'<div style="height:26px;border-radius:6px;background:'+(k===0?'#16A34A':'#D7EEDF')+';width:'+[70,55,80][k]+'%;opacity:'+(1-k*0.25)+';transform:translateY('+k*6+'px);"></div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:10px;">进入视口时淡入 + 上移 16px，卡片错峰</p></div>';
-      case '视差滚动': return '<div class="pv-block">'+badge+'<div style="position:relative;height:90px;border-radius:10px;overflow:hidden;margin-top:10px;background:linear-gradient(180deg,#C7D2FE,#A5B4FC);"><div style="position:absolute;bottom:-30%;left:0;right:0;height:70%;background:#4F46E5;clip-path:polygon(0 100%,15% 40%,30% 70%,48% 30%,66% 65%,84% 40%,100% 60%,100% 100%);"></div><div style="position:absolute;top:14px;left:16px;color:#fff;font-size:13px;font-weight:700;">视差滚动</div></div><p style="font-size:11px;color:#888;margin-top:8px;">前中背景以不同速度移动</p></div>';
-      case '阅读进度条': return '<div class="pv-block" style="padding:0 0 14px;">'+badge+'<div style="height:3px;background:#E5E7E5;"><div style="width:42%;height:100%;background:#16A34A;"></div></div><div style="padding:14px 26px 0;"><div class="pv-title">阅读进度条</div><p style="font-size:11px;color:#888;">顶部细线随阅读进度增长，当前 42%</p></div></div>';
-      case '滚动吸附': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:8px;overflow:hidden;margin-top:10px;">'+[0,1,2].map(k=>'<div style="flex:0 0 60%;height:60px;border-radius:10px;background:'+(k===1?'#E7F6EC;border:2px solid #16A34A;':'#F3F3EE;')+';display:flex;align-items:center;justify-content:center;font-size:12px;color:#1B4332;">项目 '+[1,2,3][k]+'</div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">滚动后自动对齐到卡片中心</p></div>';
-      case '横向滚动': return '<div class="pv-block">'+badge+'<div style="position:relative;margin-top:10px;"><div style="display:flex;gap:8px;overflow:hidden;"><div style="flex:0 0 46%;height:54px;border-radius:8px;background:linear-gradient(135deg,#34D399,#1B4332);"></div><div style="flex:0 0 46%;height:54px;border-radius:8px;background:linear-gradient(135deg,#FBBF24,#F59E0B);"></div><div style="flex:0 0 46%;height:54px;border-radius:8px;background:linear-gradient(135deg,#60A5FA,#3B82F6);"></div></div><span style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid #E5E7E5;display:flex;align-items:center;justify-content:center;color:#1B4332;">›</span></div><p style="font-size:11px;color:#888;margin-top:8px;">下一张露出一部分 + 左右箭头</p></div>';
-      case '无限滚动': return '<div class="pv-block">'+badge+'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;">'+[0,1,2].map(()=>'<div style="height:48px;border-radius:8px;background:#F3F3EE;"></div>').join('')+'</div><div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-top:10px;font-size:11px;color:#888;"><span style="width:12px;height:12px;border:2px solid #ddd;border-top-color:#16A34A;border-radius:50%;display:inline-block;animation:pvspin 1s linear infinite;"></span>正在加载下一批…</div></div>';
-      case '跑马灯': return '<div class="pv-block">'+badge+'<div style="overflow:hidden;margin-top:10px;"><div style="display:flex;gap:24px;white-space:nowrap;">'+['Design','Frontend','AI Prototyping','Writing','Creative Tools','Design','Frontend'].map(s=>'<span style="font-size:16px;font-weight:800;color:#16A34A;">'+s+'</span>').join('')+'</div></div><p style="font-size:11px;color:#888;margin-top:8px;">内容持续横向移动，悬停暂停</p></div>';
-      case '悬停微交互': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;display:flex;gap:10px;">'+[0,1].map(k=>'<div style="flex:1;background:#fff;border:1px solid #E5E7E5;border-radius:10px;padding:14px;transition:.2s;'+(k===0?'border-color:#16A34A;transform:translateY(-4px);box-shadow:0 8px 20px rgba(22,163,74,.15);':'')+'"><div style="height:34px;border-radius:6px;background:linear-gradient(135deg,#34D399,#1B4332);"></div><b style="font-size:12px;color:#1A1A1A;display:block;margin-top:8px;">项目卡片</b></div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">悬停上移 4px + 边框变绿 + 封面放大</p></div>';
-      case '错峰动画': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:8px;margin-top:10px;">'+[0,1,2,3].map(k=>'<div style="flex:1;height:50px;border-radius:8px;background:#D7EEDF;opacity:'+(1-k*0.22)+';transform:translateY('+k*8+'px);border:1px solid #A7D9BC;"></div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">四张卡片每隔 70ms 依次进入</p></div>';
-      case '滚动驱动': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:14px;margin-top:10px;"><div style="width:3px;background:#E5E7E5;border-radius:3px;"><div style="width:100%;height:40%;background:#16A34A;"></div></div><div style="flex:1;display:flex;flex-direction:column;gap:6px;">'+[0,1,2].map(k=>'<div style="height:26px;border-radius:6px;background:#E7F6EC;opacity:'+(1-k*0.3)+';"></div>').join('')+'</div></div><p style="font-size:11px;color:#888;margin-top:8px;">滚动经过章节时，进度线增长、面板渐显</p></div>';
-
-      /* ===== 提示与加载 ===== */
-      case '骨架屏': return '<div class="pv-block">'+badge+'<div class="pv-skel"><span class="pv-bar w80"></span><span class="pv-bar w60"></span><span class="pv-bar w40"></span></div></div>';
-      case '懒加载': return '<div class="pv-block">'+badge+'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;">'+[0,1,2].map(k=>'<div style="height:56px;border-radius:8px;background:'+(k===0?'#E5E7E5;':'linear-gradient(135deg,#A5F3FC,#86EFAC);')+';"></div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">首屏立即加载，下方图片接近视口才加载</p></div>';
-      case '加载转圈': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;display:flex;align-items:center;gap:10px;"><span style="width:18px;height:18px;border:3px solid #ddd;border-top-color:#1B4332;border-radius:50%;display:inline-block;animation:pvspin 1s linear infinite;"></span><span style="font-size:12px;color:#888;">正在加载项目…</span></div></div>';
-      case '进度条': return '<div class="pv-block">'+badge+'<div style="display:flex;align-items:center;gap:10px;margin-top:12px;"><span style="font-size:11px;color:#888;">导出中</span><div style="flex:1;height:8px;background:#ECECE6;border-radius:6px;overflow:hidden;"><div style="width:62%;height:100%;background:#1B4332;"></div></div><span style="font-size:11px;color:#1B4332;font-weight:700;">62%</span></div></div>';
-      case '加载按钮': return '<div class="pv-block">'+badge+'<span class="pv-btn" style="background:#1B4332;color:#fff;opacity:.8;">发送中…</span></div>';
-      case '空状态': return '<div class="pv-block">'+badge+'<div style="text-align:center;padding:20px 0;color:#888;"><div style="font-size:32px;margin-bottom:8px;">📭</div><p style="font-size:13px;">还没有项目</p><span class="pv-btn" style="background:#1B4332;color:#fff;">创建第一个项目</span></div></div>';
-      case '错误状态': return '<div class="pv-block">'+badge+'<div style="text-align:center;padding:20px 0;color:#888;"><div style="font-size:32px;margin-bottom:8px;">⚠️</div><p style="font-size:13px;">项目暂时无法加载</p><span class="pv-btn" style="background:#1B4332;color:#fff;">重试</span></div></div>';
-      case '重试状态': return '<div class="pv-block">'+badge+'<div style="text-align:center;padding:20px 0;color:#888;"><div style="font-size:32px;margin-bottom:8px;">🔁</div><p style="font-size:13px;">上传失败，请重试</p><span class="pv-btn" style="background:#1B4332;color:#fff;">重新上传</span></div></div>';
-      case '乐观更新': return '<div class="pv-block">'+badge+'<div style="display:flex;align-items:center;gap:10px;margin-top:10px;"><span style="font-size:24px;">❤️</span><span style="font-size:13px;color:#1A1A1A;font-weight:700;">已收藏 · 128</span></div><p style="font-size:11px;color:#888;margin-top:8px;">点击立即切换状态，后台再同步，失败自动回滚</p></div>';
-      case '行内验证': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;"><input class="pv-input" value="haoran@example.com" style="border-color:#16A34A;"><div style="font-size:11px;color:#16A34A;margin-top:4px;">✓ 邮箱格式正确</div></div><div style="margin-top:8px;"><input class="pv-input" value="bad-email" style="border-color:#EF4444;"><div style="font-size:11px;color:#EF4444;margin-top:4px;">✗ 请输入正确的邮箱</div></div></div>';
-
-      /* ===== 高级效果 ===== */
-      case '自定义光标': return '<div class="pv-block">'+badge+'<div style="margin-top:10px;display:flex;align-items:center;gap:10px;"><span style="width:16px;height:16px;border-radius:50%;background:#16A34A;"></span><span style="font-size:12px;color:#888;">自定义绿色圆点光标，悬停项目时扩展显示「View」</span></div></div>';
-      case '磁吸按钮': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;text-align:center;"><span style="display:inline-block;background:#16A34A;color:#fff;padding:11px 26px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:0 8px 20px rgba(22,163,74,.3);">View Work</span></div><p style="font-size:11px;color:#888;margin-top:10px;text-align:center;">光标靠近时按钮内容被轻微吸引</p></div>';
-      case '3D 倾斜卡片': return '<div class="pv-block">'+badge+'<div style="perspective:600px;margin-top:12px;display:flex;justify-content:center;"><div style="width:200px;height:100px;border-radius:12px;background:linear-gradient(135deg,#6366F1,#8B5CF6);transform:rotateX(8deg) rotateY(-8deg);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;box-shadow:0 16px 36px rgba(99,102,241,.4);">3D Tilt</div></div><p style="font-size:11px;color:#888;margin-top:10px;text-align:center;">随光标轻微旋转（≤5°）</p></div>';
-      case '聚光灯悬停': return '<div class="pv-block" style="background:#111827;">'+badge+'<div style="margin-top:10px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">'+[0,1].map(k=>'<div style="height:56px;border-radius:10px;border:1px solid #374151;'+(k===0?'background:radial-gradient(160px circle at 50% 50%, rgba(99,102,241,.5), transparent 70%);':'')+'display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;">功能 '+[1,2][k]+'</div>').join('')+'</div><p style="font-size:11px;color:#9CA3AF;margin-top:8px;">局部柔光斑跟随鼠标，突出当前卡片</p></div>';
-      case '文字蒙版': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;font-size:30px;font-weight:900;background:linear-gradient(90deg,#34D399,#1B4332,#34D399);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.01em;">MAKE IDEAS VISIBLE</div><p style="font-size:11px;color:#888;margin-top:6px;">图片/渐变只显示在文字内部</p></div>';
-      case '裁切揭示': return '<div class="pv-block">'+badge+'<div style="margin-top:12px;display:flex;gap:8px;">'+[1,0.66,0.33].map(k=>'<div style="flex:1;height:70px;border-radius:8px;background:linear-gradient(135deg,#34D399,#1B4332);clip-path:inset(0 '+Math.round((1-k)*100)+'% 0 0);"></div>').join('')+'</div><p style="font-size:11px;color:#888;margin-top:8px;">像幕布打开一样从左向右展开</p></div>';
-      case 'WebGL': return '<div class="pv-block" style="background:#0B0D0E;">'+badge+'<div style="display:flex;align-items:center;gap:14px;margin-top:12px;"><span style="width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 35% 30%, #C7D2FE, #6366F1 55%, #312E81);box-shadow:0 24px 60px rgba(99,102,241,.6);"></span><span style="color:#E5E7EB;font-size:13px;">Three.js 低多边形场景<br><span style="font-size:11px;color:#9CA3AF;">跟随鼠标轻微视差，隐藏时暂停</span></span></div></div>';
-      case '视图过渡': return '<div class="pv-block">'+badge+'<div style="display:flex;gap:8px;margin-top:12px;align-items:center;"><div style="width:70px;height:50px;border-radius:8px;background:linear-gradient(135deg,#C4B5FD,#93C5FD);"></div><span style="color:#888;">→</span><div style="width:130px;height:50px;border-radius:8px;background:linear-gradient(135deg,#C4B5FD,#93C5FD);"></div></div><p style="font-size:11px;color:#888;margin-top:8px;">卡片封面平滑扩展到详情页 Hero</p></div>';
-      case '减少动态': return '<div class="pv-block">'+badge+'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;background:#F6F7F6;border-radius:10px;padding:12px 14px;"><span style="font-size:13px;color:#1A1A1B;">♿ 尊重系统减少动态偏好</span><span style="width:40px;height:22px;border-radius:999px;background:#16A34A;position:relative;"><i style="position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;"></i></span></div><p style="font-size:11px;color:#888;margin-top:8px;">关闭视差/磁吸/3D/自动跑马灯，内容仍可读可操作</p></div>';
-      case '性能预算': return '<div class="pv-block">'+badge+'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;">'+[['JS','170KB gzip','✓'],['图片','WebP/AVIF','✓'],['字体','≤2 家族','✓']].map(x=>'<div style="background:#fff;border:1px solid #E5E7E5;border-radius:8px;padding:10px;text-align:center;"><b style="font-size:11px;color:#1B4332;display:block;">'+x[0]+'</b><span style="font-size:10px;color:#888;">'+x[1]+'</span><div style="color:#16A34A;font-size:12px;">'+x[2]+'</div></div>').join('')+'</div></div>';
-
-      default: return '<div class="pv-block">'+badge+'<div class="pv-title">'+escapeHtml(i.name)+'</div><div class="pv-sub">'+escapeHtml(i.desc)+'</div><p style="font-size:12px;color:#999;margin-top:10px;line-height:1.8;">这里是「'+escapeHtml(i.name)+'」组件的效果演示区，实际展示会根据你的内容自动适配。</p></div>';
-    }
-  }
-
-  /* ========== 底部标签 ========== */
-  function renderPills(){
-    const sel=ITEMS.filter(i=>selected.has(i.id));
-    const box=document.getElementById('pills');
-    if(!sel.length){ box.innerHTML='<span class="pill placeholder">尚未选择组件</span>'; return; }
-    box.innerHTML=sel.map(i=>'<span class="pill">'+i.emoji+' '+i.name+'</span>').join('');
-  }
-
-  /* ========== 生成 Prompt ========== */
-  function buildPrompt(){
-    const sel=ITEMS.filter(i=>selected.has(i.id));
-    if(!sel.length) return null;
-    const structure=sel.filter(i=>i.cat==='structure');
-    const nav=sel.filter(i=>i.cat==='navigation');
-    const comps=sel.filter(i=>['components','motion','feedback','effects'].includes(i.cat));
-    const style=sel.filter(i=>i.cat==='style');
-    let lines=[];
-    lines.push('为「'+proj.name+'」做一个网站，核心目标是：'+proj.purpose+'。');
-    if(structure.length) lines.push('页面结构采用：'+structure.map(i=>i.name).join('、')+'。');
-    if(nav.length) lines.push('导航采用：'+nav.map(i=>i.name).join('、')+'。');
-    if(style.length) lines.push('视觉风格：'+style.map(i=>i.name).join('、')+'。');
-    lines.push('');
-    const detailItems=[...structure.filter(i=>!['structure-1','structure-2','structure-3','structure-4'].includes(i.id)),...comps];
-    if(detailItems.length){
-      lines.push('页面包含以下区块与组件，请逐项实现：');
-      detailItems.forEach((i,idx)=>{ lines.push((idx+1)+'. '+i.name+'：'+i.prompt); });
-    }
-    lines.push('');
-    lines.push('所有动效尊重 prefers-reduced-motion，并控制性能预算；保持视觉风格统一、层级清晰。');
-    return lines.join('\n');
-  }
-  function openPrompt(){
-    // 门槛：访客必须先登录；登录后免费试用 5 次，用完需付费升级；付费用户无限生成
-    if(!window.__auth || window.__auth.isVisitor()){ if(window.__auth) window.__auth.show(); toast('请先注册并登录'); return; }
-    if(!window.__auth.isPaid()){
-      var n = parseInt(localStorage.getItem('hyr_gen_count')||'0', 10);
-      if(n >= 5){ openPay(); toast('免费试用已用完（5 次），升级后无限生成'); return; }
-      localStorage.setItem('hyr_gen_count', String(n+1));
-    }
-    const t=buildPrompt();
-    if(!t){ toast('请先在左侧选择一些组件'); return; }
-    document.getElementById('promptText').textContent=t;
-    show('promptOverlay');
-  }
-  function closePrompt(){ hide('promptOverlay'); }
-  function copyPrompt(){
-    const t=document.getElementById('promptText').textContent;
-    if(!t || t.indexOf('选择组件后')>=0){ toast('请先生成 Prompt'); return; }
-    copyText(t,()=>toast('已复制 Prompt ✓'),()=>toast('复制失败，请手动复制'));
-  }
-
-  /* ========== 复制（http 降级） ========== */
-  function copyText(text,ok,fail){
-    function fallback(){
-      var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly','');
-      ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta);
-      ta.focus(); ta.select(); ta.setSelectionRange(0,text.length);
-      var done=false; try{ done=document.execCommand('copy'); }catch(e){ done=false; }
-      document.body.removeChild(ta); done?(ok&&ok()):(fail&&fail());
-    }
-    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(()=>ok&&ok()).catch(fallback); }
-    else fallback();
-  }
-
-  /* AI 聊天：右下角 Dify 悬浮气泡（真实AI），见页面底部 embed.min.js 配置 */
-
-  /* ========== 引导层 ========== */
-  function show(id){ document.getElementById(id).classList.add('show'); }
-  function hide(id){ document.getElementById(id).classList.remove('show'); }
-  function startConfig(){
-    hide('onboardOverlay');
-    try{ localStorage.setItem('hyr_ai_onboarded','1'); }catch(e){}
-    toast('开始配置：左侧选组件 → 中间看预览 → 底部生成 Prompt');
-  }
-  function skipOnboard(){ hide('onboardOverlay'); try{ localStorage.setItem('hyr_ai_onboarded','1'); }catch(e){} }
-
-  /* ========== 其他 ========== */
-  let toastTimer;
-  function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2200); }
-  function toggleLeft(){ document.getElementById('leftPanel').classList.toggle('open'); }
-  function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  /* ========== 付费 & 试用 ========== */
-  function openPay(){
-    if(!window.__auth || window.__auth.isVisitor()){
-      if(window.__auth) window.__auth.show();
-      toast('请先登录后再解锁');
-      return;
-    }
-    show('payOverlay');
-  }
-  function closePay(){ hide('payOverlay'); }
-  async function doRedeem(){
-    if(!window.__auth){ toast('请稍后重试'); return; }
-    if(window.__auth.isVisitor()){ closePay(); window.__auth.show(); toast('请先登录后再激活'); return; }
-    var code = document.getElementById('redeemCode').value;
-    var r = await window.__auth.redeem(code);
-    if(r && r.ok){ closePay(); toast(r.msg); }
-    else { toast((r && r.msg) || '激活码错误'); }
-  }
-  function showQR(type){
-    if(type === 'wechat'){ document.getElementById('qrTitle').textContent='微信收款码'; document.getElementById('qrImg').src='微信收款码.png'; }
-    else { document.getElementById('qrTitle').textContent='支付宝收款码'; document.getElementById('qrImg').src='支付宝收款码.jpg'; }
-    show('qrOverlay');
-  }
-  function hideQR(){ hide('qrOverlay'); }
-  window.onAuthChange = function(){ renderTab(); };
-
-  /* ========== 初始化 ========== */
-  updateAddr();
-  renderTab(); renderPreview(); renderPills();
+  var landing=null;
+  (function(){
+    const navHome=document.querySelector('.navlinks button[data-view="home"]');if(navHome){navHome.dataset.view='landing';navHome.textContent='主页';navHome.onclick=function(){go('landing')}}
+    const brand=document.querySelector('.brand');if(brand){brand.href='#landing';brand.onclick=function(){go('landing')}}
+    const quick=document.querySelector('.navright .button:not(.primary)');if(quick)quick.remove();
+    const home=document.getElementById('home');if(home){const landing=document.createElement('section');landing.className='landing-view';landing.id='landing';landing.innerHTML='<div class="landing-layer landing-base"></div><div class="landing-layer landing-reveal"></div><div class="landing-content"><div><div class="landing-kicker">HAORAN AI LAB / VISUAL SYSTEM</div><div class="landing-title">浩然 AI 实验室</div></div></div><a class="landing-enter" href="#home">进入主页</a><div class="landing-hint">MOVE TO EXPLORE</div>';home.parentNode.insertBefore(landing,home);}
+    const annualText=document.querySelector('#home .entitlements div:first-child span');if(annualText)annualText.textContent='核心建站能力 · 10 次完整方案';const annualFull=document.querySelector('#home .entitlements div:last-child span');if(annualFull)annualFull.textContent='全模块工作流 · 持续生成与顾问';
+    const footer=document.createElement('footer');footer.className='site-footer';footer.innerHTML='浩然AI实验室 · 网站内容仅供产品体验与学习使用　 <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">ICP备案信息待补充</a>';home.appendChild(footer);
+    const reveal=landing&&landing.querySelector('.landing-reveal');if(landing&&reveal){landing.addEventListener('pointermove',function(e){const r=landing.getBoundingClientRect();reveal.style.clipPath='circle(190px at '+(e.clientX-r.left)+'px '+(e.clientY-r.top)+'px)'});landing.addEventListener('pointerleave',function(){reveal.style.clipPath='circle(0 at 50% 50%)'})}
+    const baseGo=go;go=function(view){if(view==='landing'){document.querySelectorAll('.view,.landing-view').forEach(s=>s.classList.toggle('active',s.id==='landing'));document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view==='landing'));history.replaceState(null,'','#landing');window.scrollTo(0,0);return}document.querySelector('.landing-view')?.classList.remove('active');baseGo(view)};
+    if(location.hash!=='#home'&&location.hash!=='#library'&&location.hash!=='#configurator'&&location.hash!=='#annual')go('landing');
+    landing&&landing.querySelector('.landing-enter').addEventListener('click',function(e){e.preventDefault();go('home')});
+  })();
+  landing=document.getElementById('landing');
+  if(landing){const reveal=landing.querySelector('.landing-reveal');landing.addEventListener('pointermove',function(e){const r=landing.getBoundingClientRect();reveal.style.clipPath='circle(190px at '+(e.clientX-r.left)+'px '+(e.clientY-r.top)+'px)'});landing.addEventListener('pointerleave',function(){reveal.style.clipPath='circle(0 at 50% 50%)'});landing.querySelector('.landing-enter').addEventListener('click',function(e){e.preventDefault();go('home')})}
+  document.querySelectorAll('body *').forEach(function(el){if(el.children.length===0&&el.textContent){el.textContent=el.textContent.replace('基础 6 类','核心 6 项能力').replace('10 大模块','全域 10 项能力').replace('基础建站路径','核心建站能力').replace('完整建站工作流','全域建站系统')}});
 </script>
-
-
-
-<!-- AI 客服：自定义聊天窗（chat.js 调服务器中转接口），付费用户可见 -->
-<script src="auth.js"></script>
-<script src="chat.js"></script>
+<script>
+  (function(){const landing=document.getElementById('landing');const reveal=landing&&landing.querySelector('.landing-reveal');if(!landing||!reveal)return;landing.addEventListener('pointermove',function(e){const r=landing.getBoundingClientRect();reveal.style.setProperty('--mx',(e.clientX-r.left)+'px');reveal.style.setProperty('--my',(e.clientY-r.top)+'px');reveal.style.opacity='1'});landing.addEventListener('pointerleave',function(){reveal.style.opacity='.08'})})();
+</script>
+<script>
+  (function(){const landing=document.getElementById('landing');if(landing)landing.remove();const homeNav=document.querySelector('.navlinks button[data-view="landing"]');if(homeNav){homeNav.dataset.view='home';homeNav.onclick=function(){go('home')}}const brand=document.querySelector('.brand');if(brand){brand.href='#home';brand.onclick=function(){go('home')}}if(location.hash==='#landing'||!location.hash)go('home')})();
+</script>
+<script>
+  (function(){const spot=document.createElement('div');spot.className='page-spotlight';document.body.appendChild(spot);let frame=0;window.addEventListener('pointermove',function(e){if(frame)return;frame=requestAnimationFrame(function(){spot.style.setProperty('--spot-x',e.clientX+'px');spot.style.setProperty('--spot-y',e.clientY+'px');spot.classList.add('on');frame=0})},{passive:true});window.addEventListener('pointerleave',function(){spot.classList.remove('on')})})();
+</script>
+<script>
+  (function(){const title=document.querySelector('#home .hero h1');if(title)title.innerHTML='给 AI 一份真正能<br>执行的建站方案。';const labels=['公开组件域','可组合构件','完整方案额度','年度版持续生成'];document.querySelectorAll('#home .stats span').forEach(function(el,i){if(labels[i])el.textContent=labels[i]});const filing=document.querySelector('.site-footer a');if(filing){filing.textContent='冀ICP备2026034843号-1';filing.href='https://beian.miit.gov.cn/'}const footer=document.querySelector('.site-footer');if(footer)footer.firstChild.textContent='浩然AI实验室　·　产品与内容实验平台　';})();
+</script>
+<script>
+  (function(){const labels=['建站关键决策维度','可编排页面模块','次完整方案生成','年度版持续创作'];document.querySelectorAll('#home .stats span').forEach(function(el,index){if(labels[index])el.textContent=labels[index]});})();
+</script>
+<script>
+  (function(){
+    var conversationId='',sending=false,advisorTrialCharged=false;
+    function context(){
+      var name=(document.getElementById('siteName')||{}).value||'未命名网站';
+      var goal=(document.getElementById('siteGoal')||{}).value||'未填写';
+      var selected=[].slice.call(chosen||[]).map(function(id){var entry=item(id);return entry?entry.name:''}).filter(Boolean).join('、')||'暂未选择组件';
+      return '【当前配置上下文】\n网站名称：'+name+'\n网站目标：'+goal+'\n已选组件：'+selected+'\n\n用户问题：';
+    }
+    function addMessage(text,type){var body=document.getElementById('haoranAdvisorBody');if(!body)return null;var node=document.createElement('div');node.className='haoran-message '+type;node.textContent=text;body.appendChild(node);body.scrollTop=body.scrollHeight;return node}
+    function setStatus(text){var node=document.getElementById('haoranAdvisorStatus');if(node)node.textContent=text}
+    async function send(question){
+      if(sending||!question)return;if(!window.__auth||window.__auth.isVisitor()){window.__auth&&window.__auth.show();return}if(!advisorTrialCharged&&window.__haoranAccess&&!(await window.__haoranAccess.useAdvisor()))return;advisorTrialCharged=true;sending=true;
+      var input=document.getElementById('haoranAdvisorInput'),button=document.getElementById('haoranAdvisorSend');
+      if(input)input.value='';if(button)button.disabled=true;
+      addMessage(question,'me');var answer=addMessage('正在分析当前配置…','loading');setStatus('分析中');
+      fetch('/api/dify/chat-messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({inputs:{},query:context()+question,response_mode:'streaming',conversation_id:conversationId,user:(localStorage.getItem('hyr_phone')||localStorage.getItem('_hy_uid')||'haoran-web-guest')})})
+        .then(function(response){if(!response.ok)throw new Error('HTTP '+response.status);var reader=response.body.getReader(),decoder=new TextDecoder(),buffer='',full='';function read(){return reader.read().then(function(result){if(result.done)return full;buffer+=decoder.decode(result.value,{stream:true});var lines=buffer.split('\n');buffer=lines.pop();lines.forEach(function(line){if(line.indexOf('data:')!==0)return;try{var data=JSON.parse(line.slice(5).trim());if((data.event==='agent_message'||data.event==='message')&&data.answer)full+=data.answer;if(data.event==='message_end'&&data.conversation_id)conversationId=data.conversation_id}catch(error){}});answer.textContent=full||'正在思考…';document.getElementById('haoranAdvisorBody').scrollTop=99999;return read()})}return read()})
+        .then(function(full){answer.classList.remove('loading');answer.textContent=full||'暂时没有收到回复，请再试一次。';setStatus('在线')})
+        .catch(function(){answer.classList.remove('loading');answer.textContent='暂时无法连接顾问。请确认线上网站的 /api/dify/ 中转已重载；本地 127.0.0.1 预览不会经过线上 Nginx。';setStatus('连接异常')})
+        .finally(function(){sending=false;if(button)button.disabled=false});
+    }
+    function mount(){var right=document.querySelector('#configurator .config-right');if(!right||document.getElementById('haoranAdvisor'))return;var panel=document.createElement('section');panel.className='haoran-advisor';panel.id='haoranAdvisor';panel.innerHTML='<div class="haoran-advisor-head"><div class="haoran-advisor-mark">H</div><div class="haoran-advisor-title"><b>HAORAN 小顾问</b><span>基于你当前的配置给出建议</span></div><span class="haoran-advisor-status" id="haoranAdvisorStatus">在线</span></div><div class="haoran-advisor-body" id="haoranAdvisorBody"></div><div class="haoran-advisor-quick"><button type="button" data-q="我应该先补齐哪些关键项？">补齐关键项</button><button type="button" data-q="根据我的目标推荐一套基础方案">推荐基础方案</button><button type="button" data-q="检查我当前选择是否合理">检查当前选择</button></div><div class="haoran-advisor-input"><input id="haoranAdvisorInput" placeholder="问小顾问：这个网站还缺什么？"><button id="haoranAdvisorSend" type="button" aria-label="发送">→</button></div>';
+      right.appendChild(panel);panel.querySelector('.haoran-advisor-head').insertAdjacentHTML('beforeend','<button class="haoran-advisor-close" type="button" aria-label="关闭小顾问">×</button>');var reopen=document.createElement('button');reopen.className='haoran-advisor-reopen';reopen.type='button';reopen.textContent='H / 打开小顾问';document.body.appendChild(reopen);panel.querySelector('.haoran-advisor-close').addEventListener('click',function(){document.body.classList.add('advisor-dismissed')});reopen.addEventListener('click',function(){document.body.classList.remove('advisor-dismissed');document.getElementById('haoranAdvisorInput').focus()});addMessage('你好，我是 HAORAN 小顾问。告诉我你想做什么网站，我会结合当前选择帮你补齐方案。','ai');panel.querySelectorAll('[data-q]').forEach(function(button){button.addEventListener('click',function(){send(button.dataset.q)})});document.getElementById('haoranAdvisorSend').addEventListener('click',function(){send(document.getElementById('haoranAdvisorInput').value.trim())});document.getElementById('haoranAdvisorInput').addEventListener('keydown',function(event){if(event.key==='Enter')send(event.target.value.trim())});}
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+  })();
+</script>
+<script>document.body.classList.toggle('config-advisor-open',location.hash==='#configurator');</script>
+<script>
+  (function(){
+    function auth(){return window.__auth}
+    function isPaid(){return !!(auth()&&auth().isPaid())}
+    function requireLogin(){if(!auth()||auth().isVisitor()){auth()&&auth().show();return false}return true}
+    function refresh(){
+      var ready=auth()&&auth().isWorkflowReady&&auth().isWorkflowReady(),remaining=auth()?auth().getWorkflowRemaining():10;
+      var loginEntry=document.getElementById('haoranLoginEntry');if(loginEntry)loginEntry.style.display=auth()&&!auth().isVisitor()?'none':'';
+      var status=document.getElementById('haoranAdvisorStatus');if(status)status.textContent=isPaid()?'年度版 · 不限':(ready?'试用 '+remaining+' 次':'额度同步中');
+      var note=document.getElementById('configAccessNote');if(!note){note=document.createElement('div');note.id='configAccessNote';note.className='access-note';var picker=document.getElementById('picker');if(picker)picker.parentNode.insertBefore(note,picker)}
+      if(!auth()||auth().isVisitor()){note.className='access-note show';note.innerHTML='<b>登录后开始体验</b><br>登录即可获得 10 次建站方案试用额度。';}
+      else if(isPaid()){note.className='access-note show';note.innerHTML='<b>年度版已解锁</b><br>全域建站能力、方案生成与小顾问均不限使用。';}
+      else if(!ready){note.className='access-note show';note.innerHTML='<b>正在同步试用额度</b><br>额度由云端账号保存，请稍候再生成方案或咨询小顾问。'}
+      else{note.className='access-note show';note.innerHTML='<b>方案试用剩余 '+remaining+' / '+auth().getWorkflowLimit()+'</b><br>核心建站能力可用；进阶能力将在年度版解锁。'}
+      document.querySelectorAll('.choice.locked').forEach(function(button){button.classList.toggle('locked',!isPaid())});
+    }
+    async function use(kind){if(!requireLogin())return false;if(isPaid())return true;if(!auth().isWorkflowReady()){var synced=await auth().syncTrialQuota();if(!synced){alert('暂时无法同步试用额度，请检查网络后重试。');return false}}if(!auth().canUseWorkflow()){window.__haoranContact&&window.__haoranContact.show('你的 10 次建站方案试用已用完。添加微信后，我会协助你开通年度版并发送激活码。');return false}var consumed=await auth().consumeWorkflow();refresh();if(consumed)return true;if(auth().isWorkflowReady()&&!auth().canUseWorkflow())window.__haoranContact&&window.__haoranContact.show('你的 10 次建站方案试用已用完。添加微信后，我会协助你开通年度版并发送激活码。');else alert('暂时无法扣减试用额度，请检查网络后重试。');return false}
+    window.__haoranAccess={usePrompt:function(){return use('prompt')},useAdvisor:function(){return use('advisor')},refresh:refresh};
+    window.onAuthChange=function(){refresh();if(typeof renderPicker==='function')renderPicker()};
+    var originalSelect=selectItem;selectItem=function(id){var entry=item(id);if(!entry)return;if(!requireLogin())return;if(!isPaid()&&!freeCats.includes(entry.cat)){alert('这是年度版进阶能力。升级后可以加入完整建站方案。');go('annual');return}originalSelect(id)};
+    var originalRecommend=recommend;recommend=function(){if(!requireLogin())return;originalRecommend()};
+    var wait=setInterval(function(){if(auth()){clearInterval(wait);auth().refresh();refresh()}},80);
+    var nav=document.querySelector('.navright');if(nav){var pill=document.getElementById('authPill');if(pill)nav.insertBefore(pill,nav.firstChild);var login=document.createElement('button');login.className='button';login.type='button';login.id='haoranLoginEntry';login.textContent='登录 / 试用';login.addEventListener('click',function(){auth().show()});nav.insertBefore(login,nav.firstChild);refresh()}
+  })();
+</script>
+<script>
+  (function(){var overlay=document.createElement('div');overlay.className='contact-overlay';overlay.id='haoranContactOverlay';overlay.innerHTML='<section class="contact-card" role="dialog" aria-modal="true" aria-labelledby="haoranContactTitle"><button class="contact-close" type="button" aria-label="关闭">×</button><div class="eyebrow">WECHAT / ANNUAL ACCESS</div><h3 id="haoranContactTitle">添加我，继续你的建站计划</h3><p id="haoranContactCopy">扫码添加微信，说明你的建站需求；人工确认后会发送年度版激活码。</p><img class="contact-qr" src="assets/wechat-contact-qr.png" alt="微信好友二维码"><div class="contact-note">添加后请备注：<b>浩然AI实验室 + 登录手机号</b></div></section>';document.body.appendChild(overlay);function close(){overlay.classList.remove('show')}overlay.querySelector('.contact-close').addEventListener('click',close);overlay.addEventListener('click',function(event){if(event.target===overlay)close()});document.addEventListener('keydown',function(event){if(event.key==='Escape')close()});window.__haoranContact={show:function(message){var copy=document.getElementById('haoranContactCopy');if(message)copy.textContent=message;overlay.classList.add('show')}};document.addEventListener('haoran-auth-register',function(){window.__haoranContact.show('欢迎注册。扫码添加微信，告诉我你想做的网站；我会协助你把方案做完整。')});})();
+</script>
+<script>
+  (function(){
+    var annual=document.getElementById('annual');if(!annual)return;
+    var upgrade=document.createElement('section');upgrade.className='manual-upgrade';upgrade.innerHTML='<div class="manual-upgrade-qr"><img src="assets/wechat-contact-qr.png" alt="添加微信咨询年度版"><small>扫码添加微信，人工开通</small></div><div class="manual-upgrade-copy"><div class="eyebrow">MANUAL ACTIVATION / ANNUAL</div><h3>和我聊聊你的建站计划。</h3><p>直接扫码添加微信，说明你的建站需求。人工确认后会发送专属激活码；回到这里输入激活码，即可开通年度版。</p><div class="manual-steps"><div class="manual-step"><i>01</i><b>添加微信</b>扫码后备注“浩然AI实验室”</div><div class="manual-step"><i>02</i><b>人工确认</b>发送你的登录手机号</div><div class="manual-step"><i>03</i><b>输入激活码</b>立即解锁年度版权益</div></div><div class="activation-row"><input id="activationCode" placeholder="输入收到的激活码"><button class="button primary" id="activationSubmit">开通年度版</button></div><div class="activation-msg" id="activationMsg">激活码与登录账户绑定；请先登录后再兑换。</div></div>';
+    annual.querySelector('.wrap').appendChild(upgrade);
+    document.getElementById('activationSubmit').addEventListener('click',async function(){var message=document.getElementById('activationMsg'),code=document.getElementById('activationCode').value.trim();if(!window.__auth||window.__auth.isVisitor()){window.__auth&&window.__auth.show();message.textContent='请先登录，再兑换激活码。';return}if(!code){message.textContent='请输入收到的激活码。';return}this.disabled=true;message.textContent='正在验证激活码…';var result=await window.__auth.redeem(code);this.disabled=false;message.textContent=result.msg;if(result.ok){message.style.color='var(--accent)';document.getElementById('activationCode').value='';window.__haoranAccess&&window.__haoranAccess.refresh()}});
+  })();
+</script>
 </body>
 </html>

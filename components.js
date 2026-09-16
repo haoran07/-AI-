@@ -102,6 +102,57 @@ window.COMPONENTS = [
     ]
   },
   {
+    id: "conversion",
+    name: "转化与信任",
+    emoji: "🎯",
+    items: [
+      { id: "conversion-1", name: "主行动按钮", en: "Primary CTA", desc: "全站围绕一个明确行动", emoji: "👉", prompt: "为网站定义唯一主行动按钮，例如“预约咨询”或“免费试用”；首屏、关键内容后和页尾重复同一行动，次要按钮使用弱视觉层级，避免同时出现多个竞争性的主按钮。" },
+      { id: "conversion-2", name: "客户评价", en: "Testimonials", desc: "用真实反馈降低决策顾虑", emoji: "💬", prompt: "添加客户评价区，展示 3—6 条真实评价，每条包含原话、姓名、身份或公司和可选头像；不要编造可验证的客户、数据或 Logo，移动端保持易读的单列或可控轮播。" },
+      { id: "conversion-3", name: "品牌 Logo 墙", en: "Logo Cloud", desc: "合作品牌建立信任", emoji: "🏷️", prompt: "在价值说明后加入低调的品牌 Logo 墙，标题使用“受到这些团队信任”之类的真实表述；统一 Logo 的尺寸与灰度，不要把无合作关系的品牌放入其中。" },
+      { id: "conversion-4", name: "定价对比", en: "Pricing Table", desc: "把选择讲清楚", emoji: "💳", prompt: "设计清晰的 Pricing Table，最多展示 3 个方案；突出推荐方案、功能差异、计费周期和主行动按钮；价格、限制和退款条件必须真实明确，手机端改为纵向卡片。" },
+      { id: "conversion-5", name: "数据背书", en: "Social Proof Stats", desc: "用可验证数据增强可信度", emoji: "📈", prompt: "添加 3—4 个可验证的数据指标，例如服务客户数、交付项目数或平均响应时间；每个数据包含数字、单位和简短说明，不夸大、不使用无法证实的百分比。" },
+      { id: "conversion-6", name: "预约入口", en: "Booking CTA", desc: "让用户直接约时间", emoji: "📅", prompt: "加入预约咨询入口，先说明预约后会发生什么、所需时长和适合的人群；表单只收集必要信息，提交后给出明确成功状态与后续预期。" },
+      { id: "conversion-7", name: "风险逆转", en: "Risk Reversal", desc: "降低第一次行动门槛", emoji: "🛡️", prompt: "在主要 CTA 附近说明真实的低风险承诺，例如“无需信用卡”“可随时取消”或明确退款政策；承诺必须可履行，避免夸张的绝对化表述。" },
+      { id: "conversion-8", name: "案例成果", en: "Case Results", desc: "展示过程与结果", emoji: "🏆", prompt: "用案例成果区展示问题、采取的方案和真实结果；采用“背景—行动—结果”结构，并把关键数据注明时间范围或来源，避免只展示漂亮截图。" },
+      { id: "conversion-9", name: "下载资料", en: "Lead Magnet", desc: "用资源换取线索", emoji: "📥", prompt: "提供一份与页面主题强相关的免费清单、模板或指南作为下载资料；下载前说明用户将获得什么，表单仅要求必要字段，并提供隐私说明。" },
+      { id: "conversion-10", name: "最终行动区", en: "Final CTA", desc: "页面收尾给出下一步", emoji: "🚀", prompt: "在 Footer 前加入 Final CTA，重述核心价值、适合对象和一个明确按钮；不要再引入新功能或复杂导航，让犹豫的访客能轻松完成下一步。" }
+    ]
+  },
+  {
+    id: "showcase",
+    name: "内容展示",
+    emoji: "🖼️",
+    items: [
+      { id: "showcase-1", name: "Bento 网格", en: "Bento Grid", desc: "大小不一的模块化展示", emoji: "🧱", prompt: "使用 Bento Grid 展示功能或内容，按重要性安排 1 个大卡与多个小卡；卡片信息密度有层次，手机端改为单列，不要为炫技牺牲阅读顺序。" },
+      { id: "showcase-2", name: "产品 Mockup", en: "Product Mockup", desc: "用设备框展示真实界面", emoji: "💻", prompt: "用浏览器或手机 Mockup 展示真实产品界面，截图清晰并配一两句说明；避免大量无意义的 3D 装饰，移动端保证图片不小到看不清。" },
+      { id: "showcase-3", name: "前后对比", en: "Before / After", desc: "拖动查看变化", emoji: "↔️", prompt: "实现可拖动的 Before / After 对比，提供清晰的前后标签、键盘操作和静态降级方案；拖动手柄足够大，不能只依赖颜色表达差异。" },
+      { id: "showcase-4", name: "功能步骤", en: "How It Works", desc: "三步说明怎么使用", emoji: "1️⃣", prompt: "用 3—5 步 How It Works 区块解释用户从开始到完成的过程，每步有序号、短标题、说明和可选示意图；步骤要贴近真实流程而非营销口号。" },
+      { id: "showcase-5", name: "作品筛选", en: "Filterable Gallery", desc: "按类别快速找内容", emoji: "🔎", prompt: "为作品或资源列表提供筛选与结果数量提示；筛选后保留可分享 URL 或清除筛选入口，空结果给出恢复路径，键盘与移动端均可操作。" },
+      { id: "showcase-6", name: "数据大数字", en: "Animated Metrics", desc: "让指标更有存在感", emoji: "🔢", prompt: "用大数字展示关键指标；数字进入视口时平滑变化一次，保留静态最终值与单位，减少动态偏好下直接显示结果，不让动画影响理解。" },
+      { id: "showcase-7", name: "横向作品墙", en: "Horizontal Gallery", desc: "横向沉浸浏览", emoji: "🎞️", prompt: "创建横向作品墙，显示下一张卡片的一部分作为继续浏览提示，并提供可见的前后控制；触摸、触控板、键盘都能自然浏览，避免劫持整个页面滚动。" },
+      { id: "showcase-8", name: "引用强调", en: "Pull Quote", desc: "用一句话建立节奏", emoji: "❝", prompt: "在长页面中用 Pull Quote 强调一句关键洞察或用户原话；引用应有来源或上下文，字体与留白形成节奏，不要把重要正文全部做成超大字。" },
+      { id: "showcase-9", name: "对比矩阵", en: "Comparison Matrix", desc: "帮助用户做选择", emoji: "⚖️", prompt: "用 Comparison Matrix 对比方案、功能或服务范围；表格第一列固定关键维度，使用文字与图标共同表示支持状态，手机端可横向滚动或转为卡片。" },
+      { id: "showcase-10", name: "动态文字", en: "Text Reveal", desc: "克制的标题揭示", emoji: "✨", prompt: "为 Hero 或章节标题添加克制的逐词 Text Reveal，控制在 400—600ms，正文不要逐字动画；减少动态偏好和不支持环境中直接显示完整文字。" }
+    ]
+  },
+  {
+    id: "quality",
+    name: "上线品质",
+    emoji: "✅",
+    items: [
+      { id: "quality-1", name: "移动端优先", en: "Mobile-first", desc: "先保证手机好用", emoji: "📱", prompt: "以 Mobile-first 方式实现页面：先完成单列、可触摸的手机布局，再在平板和桌面扩展；按钮最小触摸区域约 44px，重要 CTA 不被底部安全区遮挡。" },
+      { id: "quality-2", name: "深浅主题", en: "Theme Toggle", desc: "跟随系统且可手动切换", emoji: "🌗", prompt: "支持深浅主题：默认尊重 prefers-color-scheme，同时提供手动切换并本地保存；检查两种主题下文字、边框、图片与表单的对比度，深色背景避免纯黑。" },
+      { id: "quality-3", name: "键盘可访问", en: "Keyboard Access", desc: "不用鼠标也能完成操作", emoji: "⌨️", prompt: "确保所有交互可用键盘完成：可见 focus-visible、逻辑 Tab 顺序、Modal 焦点管理、Esc 关闭；不要用 div 模拟 button，焦点状态不能只依赖颜色。" },
+      { id: "quality-4", name: "SEO 基础", en: "SEO Essentials", desc: "让搜索和分享看得懂", emoji: "🔍", prompt: "完善 SEO 基础：每页唯一 title 和 meta description、语义化 heading 层级、canonical、Open Graph 分享卡、sitemap 与 robots；内容必须与页面真实主题一致。" },
+      { id: "quality-5", name: "404 与空状态", en: "Empty & 404", desc: "走错路也有下一步", emoji: "🧭", prompt: "设计 404、无搜索结果和首次空状态；每种状态清楚说明发生什么，并提供回首页、清除筛选或创建内容等下一步，不能只放装饰插画。" },
+      { id: "quality-6", name: "表单反馈", en: "Form Validation", desc: "提交过程清晰可控", emoji: "📝", prompt: "表单字段使用可见 label、行内错误与成功反馈；提交中防重复提交，失败时保留用户输入并聚焦到错误摘要，成功后说明下一步与响应时间。" },
+      { id: "quality-7", name: "图片性能", en: "Image Performance", desc: "快加载且不跳动", emoji: "⚡", prompt: "优化图片：首屏关键图优先加载，其余图片懒加载；使用 WebP/AVIF、srcset 和明确宽高或 aspect-ratio 防止布局跳动，不要延迟加载首屏主图。" },
+      { id: "quality-8", name: "减少动态", en: "Reduced Motion", desc: "尊重用户系统偏好", emoji: "♿", prompt: "全站支持 prefers-reduced-motion：关闭视差、自动跑马灯、磁吸与大范围过渡；内容立即可见，轮播停止自动播放，功能与信息不依赖动画。" },
+      { id: "quality-9", name: "隐私说明", en: "Privacy Notice", desc: "收集信息前说明用途", emoji: "🔒", prompt: "在联系、订阅和分析相关页面提供清晰隐私说明：收集哪些信息、用于什么、保存多久以及如何联系；非必要 Cookie 和营销追踪需获得合适同意。" },
+      { id: "quality-10", name: "上线检查", en: "Launch Checklist", desc: "发布前逐项验收", emoji: "🚦", prompt: "输出上线前检查清单：手机和主流浏览器、所有链接、表单送达、404、SEO 分享卡、性能、可访问性、域名 HTTPS 与备份；每项能明确勾选，不要只写笼统建议。" }
+    ]
+  },
+  {
     id: "effects",
     name: "高级效果",
     emoji: "✨",

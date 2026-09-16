@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>案例 · 浩然AI建站配置器</title>
+<title>案例档案 · 浩然建站蓝图</title>
 <style>
   :root{
     --green:#16A34A; --green2:#15803D; --green-soft:#E7F6EC; --green-softer:#F1FAF4;
@@ -68,19 +68,19 @@
 </head>
 <body>
 <nav class="navbar">
-  <div class="logo"><span class="sq">浩</span>浩然AI建站配置器<span class="beta">Beta</span></div>
+  <div class="logo"><span class="sq">浩</span>浩然建站蓝图<span class="beta">BETA</span></div>
   <div class="nav-links">
-    <a href="showcase.html" class="active">案例</a>
-    <a href="index.html">定价</a>
-    <a href="library.html">组件参考</a>
+    <a href="showcase.html" class="active">案例档案</a>
+    <a href="index.html">建站工作台</a>
+    <a href="library.html">组件图鉴</a>
   </div>
-  <div class="nav-right"><a class="btn-primary" href="index.html">开始配置</a></div>
+  <div class="nav-right"><a class="btn-primary" href="index.html">开始做网站</a></div>
 </nav>
 
 <div class="page">
   <div class="hero">
-    <h1>10 大行业 · 真实建站案例</h1>
-    <p>每个案例都是「选组件 → 生成 Prompt → 交给 AI」几步完成，无需写代码</p>
+    <div class="archive-kicker">CASE STUDIES / 10 STARTING POINTS</div><h1>不是模板库，<br>是能看懂的建站方案。</h1>
+    <p>按行业、目标和页面结构拆解。找到接近你的案例，再带着方案进入工作台。</p>
   </div>
 
   <div class="grid">
@@ -519,5 +519,22 @@
 <!-- AI 客服：自定义聊天窗（chat.js 调服务器中转接口），付费用户可见 -->
 <script src="auth.js"></script>
 <script src="chat.js"></script>
+<style>
+/* 案例页：档案索引而非旧式绿色模板卡 */
+:root{--green:#1e4d45;--green2:#163c36;--green-soft:#e1ebe6;--green-softer:#edf1ed;--bg:#f2f1ed;--text:#171714;--muted:#68675f;--faint:#89877f;--border:#d4d1c8;--shadow:none}
+body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}.navbar{height:64px;background:rgba(242,241,237,.92);border-color:var(--border);padding:0 34px}.logo{color:var(--text)}.logo .sq{background:var(--text);border-radius:6px}.logo .beta{color:var(--green);background:transparent;border:1px solid #a7b7b0;border-radius:3px;letter-spacing:.08em}.nav-links{gap:8px;margin-left:24px}.nav-links a{color:var(--muted);border-radius:3px;padding:7px 10px}.nav-links a:hover,.nav-links a.active{background:transparent;color:var(--green);box-shadow:inset 0 -2px 0 var(--green)}.btn-primary{background:var(--green);border-radius:3px;padding:9px 14px}.btn-primary:hover{background:var(--green2)}.page{max-width:1240px;padding:76px 32px 110px}.hero{text-align:left;max-width:790px;margin:0 0 54px}.archive-kicker{font:800 10px ui-monospace,monospace;letter-spacing:.14em;color:var(--green);margin-bottom:16px}.hero h1{font-size:clamp(40px,5vw,66px);line-height:1.04;letter-spacing:-.065em;color:var(--text);font-weight:750}.hero p{max-width:500px;font-size:15px;line-height:1.8;color:var(--muted);margin-top:17px}.grid{gap:0;border-top:1px solid var(--border);border-left:1px solid var(--border)}.case{border:0;border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0;background:#f8f7f3;box-shadow:none;transition:background .2s}.case:hover{transform:none;box-shadow:none;background:#e8e7e0}.shot{height:245px;background:#e4e2da!important;border-bottom:1px solid var(--border)}.shot .mini{width:82%;height:172px;border-radius:0;box-shadow:10px 10px 0 #c9c6bc;border:1px solid #b8b5aa}.shot .mini .mbar{background:#f8f7f3;border-color:#d4d1c8}.shot .mini .mtitle,.shot .mini .mbtn{background:var(--green);border-radius:1px}.shot .mini .mline{background:#b6b3aa;border-radius:1px}.shot .mini .mcard{background:#eeece6;border-color:#d4d1c8;border-radius:1px}.case .info{padding:22px 24px 25px}.case .info h3{font-size:19px;font-weight:750;letter-spacing:-.035em;color:var(--text)}.case .meta{font-size:12px;color:var(--muted);filter:grayscale(1)}.case .tags{gap:5px;margin-top:15px}.tag{background:#e1ebe6;color:var(--green);border-radius:2px;font-size:10.5px;padding:3px 7px}.tag.style{background:#e5e3db;color:#5f5e56}.case .cta{color:var(--green);font-size:12px;letter-spacing:.02em;margin-top:19px}.case .cta:after{content:' ↗';margin-left:3px}@media(max-width:720px){.navbar{padding:0 18px}.nav-links{display:none}.page{padding:48px 18px 65px}.grid{grid-template-columns:1fr}.hero h1{font-size:42px}}
+</style>
+<style>
+/* APIMart-inspired product archive: dark system, clear sections, no decorative card soup. */
+:root{--bg:#0d1424;--surface:#121d32;--surface2:#17243c;--text:#f4f7fc;--muted:#91a0b7;--faint:#60718d;--border:rgba(220,231,248,.16);--green:#8db6ff;--green-soft:rgba(141,182,255,.12);--green2:#b6d2ff}
+body{background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}.navbar{height:64px;background:rgba(13,20,36,.9);border-color:var(--border);padding:0 42px}.logo{color:var(--text)}.logo .sq{background:#f4f7fc;color:#0d1424;border-radius:4px}.logo .beta{color:var(--green);border-color:rgba(141,182,255,.5);background:transparent}.nav-links{gap:18px;margin-left:26px}.nav-links a{color:#9ba9bf;border-radius:3px;padding:6px 8px}.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(141,182,255,.1);box-shadow:none}.btn-primary{background:#f4f7fc;color:#0d1424;border-radius:3px}.page{max-width:1280px;padding:88px 42px 125px}.hero{max-width:850px;text-align:left;margin-bottom:70px}.archive-kicker{color:var(--green);font:700 11px ui-monospace,monospace;letter-spacing:.12em}.hero h1{color:var(--text);font-size:clamp(48px,6.5vw,88px);line-height:.96;letter-spacing:-.09em;font-weight:720}.hero p{color:var(--muted);font-size:16px;max-width:540px;line-height:1.75;margin-top:22px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--border);border-left:1px solid var(--border)}.case{border:0;border-right:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:0;background:transparent;box-shadow:none;transition:background .2s}.case:hover{transform:none;background:var(--surface2);box-shadow:none}.shot{height:265px;background:linear-gradient(145deg,#162844,#243e69)!important;border-bottom:1px solid var(--border)}.shot .mini{width:80%;height:176px;border-radius:4px;background:#f4f7fc;box-shadow:0 20px 40px rgba(0,0,0,.24);border:0}.shot .mini .mbar{background:#e7edf7;border-color:#d0d9e7}.shot .mini .mtitle,.shot .mini .mbtn{background:#2f68c3;border-radius:2px}.shot .mini .mline{background:#b4bfd0;border-radius:2px}.shot .mini .mcard{background:#eaf0f8;border-color:#cdd8e8;border-radius:2px}.case .info{padding:25px 25px 30px}.case .info h3{color:var(--text);font-size:20px;letter-spacing:-.04em}.case .meta{color:var(--muted);filter:none}.case .tags{margin-top:17px}.tag{background:var(--green-soft);color:var(--green);border-radius:3px}.tag.style{background:rgba(255,255,255,.08);color:#aab6c9}.case .cta{color:var(--green);margin-top:21px}.case .cta:after{content:' ↗'}
+@media(max-width:720px){.navbar{padding:0 18px}.nav-links{display:none}.page{padding:56px 18px 85px}.hero h1{font-size:48px}.grid{grid-template-columns:1fr}.shot{height:225px}}
+</style>
+<style>
+/* Shared APIMart black/orange system. */
+:root{--bg:#080808;--surface:#11100f;--surface2:#171513;--text:#f5f3ef;--muted:#928d87;--faint:#665f58;--border:#282522;--green:#f07a32;--green-soft:rgba(240,122,50,.12);--green2:#ff9a5f}
+body{background:var(--bg);color:var(--text)}.navbar{background:rgba(8,8,8,.92);border-color:var(--border)}.logo{color:var(--text)}.logo .sq{background:var(--text);color:#080808}.logo .beta{color:var(--green);border-color:#643f2d}.nav-links a{color:var(--muted)}.nav-links a:hover,.nav-links a.active{background:#171513;color:var(--green)}.btn-primary{background:var(--green);color:#fff}.page{padding-top:90px}.archive-kicker{color:var(--green)}.hero h1{color:var(--text)}.hero p{color:var(--muted)}.grid{border-color:var(--border)}.case{background:transparent;border-color:var(--border)}.case:hover{background:var(--surface2)}.shot{background:linear-gradient(145deg,#171411,#2b2019)!important;border-color:var(--border)}.shot .mini{background:#171513;border-color:#44332a;box-shadow:none}.shot .mini .mbar{background:#201b17;border-color:#44332a}.shot .mini .mtitle,.shot .mini .mbtn{background:var(--green)}.shot .mini .mline{background:#685e56}.shot .mini .mcard{background:#201c19;border-color:#44332a}.case .info h3{color:var(--text)}.case .meta{color:var(--muted)}.tag{background:var(--green-soft);color:var(--green)}.tag.style{background:#201c19;color:#ada69e}.case .cta{color:var(--green)}
+</style>
 </body>
+<style>body{background:#080808!important;color:#f5f3ef!important}.navbar{background:rgba(8,8,8,.94)!important;border-color:#282522!important}.nav-links a{color:#928d87!important}.nav-links a:hover,.nav-links a.active{color:#f07a32!important;background:#171513!important}.page{background:transparent!important}.hero h1{color:#f5f3ef!important}.hero p{color:#928d87!important}.case{background:transparent!important;border-color:#282522!important}.case:hover{background:#171513!important}.shot{background:#171513!important}.case .info h3{color:#f5f3ef!important}.case .meta{color:#928d87!important}.tag{background:rgba(240,122,50,.12)!important;color:#f07a32!important}.tag.style{background:#201c19!important;color:#ada69e!important}.case .cta{color:#f07a32!important}</style>
 </html>
