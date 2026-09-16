@@ -93,6 +93,7 @@
       return '【当前配置上下文】\n网站名称：'+name+'\n网站目标：'+goal+'\n已选组件：'+selected+'\n\n用户问题：';
     }
     function addMessage(text,type){var body=document.getElementById('haoranAdvisorBody');if(!body)return null;var node=document.createElement('div');node.className='haoran-message '+type;node.textContent=text;body.appendChild(node);body.scrollTop=body.scrollHeight;return node}
+    function visibleAnswer(raw,isComplete){var text=String(raw||'').replace(/<!--\s*dify-[\s\S]*?-->/gi,'');var opening=text.search(/<think\b[^>]*>/i),closing=text.search(/<\/think\s*>/i);if(opening!==-1){if(closing===-1)return isComplete?'': '思考中';text=text.slice(closing).replace(/<\/think\s*>/i,'')}return text.replace(/<think\b[^>]*>[\s\S]*?<\/think\s*>/gi,'').trim()}
     function setStatus(text){var node=document.getElementById('haoranAdvisorStatus');if(node)node.textContent=text}
     async function send(question){
       if(sending||!question)return;if(!window.__auth||window.__auth.isVisitor()){window.__auth&&window.__auth.show();return}if(!advisorTrialCharged&&window.__haoranAccess&&!(await window.__haoranAccess.useAdvisor()))return;advisorTrialCharged=true;sending=true;
@@ -100,8 +101,8 @@
       if(input)input.value='';if(button)button.disabled=true;
       addMessage(question,'me');var answer=addMessage('思考中','loading');setStatus('思考中');
       fetch('/api/dify/chat-messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({inputs:{},query:context()+question,response_mode:'streaming',conversation_id:conversationId,user:(localStorage.getItem('hyr_phone')||localStorage.getItem('_hy_uid')||'haoran-web-guest')})})
-        .then(function(response){if(!response.ok)throw new Error('HTTP '+response.status);var reader=response.body.getReader(),decoder=new TextDecoder(),buffer='',full='';function read(){return reader.read().then(function(result){if(result.done)return full;buffer+=decoder.decode(result.value,{stream:true});var lines=buffer.split('\n');buffer=lines.pop();lines.forEach(function(line){if(line.indexOf('data:')!==0)return;try{var data=JSON.parse(line.slice(5).trim());if((data.event==='agent_message'||data.event==='message')&&data.answer)full+=data.answer;if(data.event==='message_end'&&data.conversation_id)conversationId=data.conversation_id}catch(error){}});answer.textContent=full||'正在思考…';document.getElementById('haoranAdvisorBody').scrollTop=99999;return read()})}return read()})
-        .then(function(full){answer.classList.remove('loading');answer.textContent=full||'暂时没有收到回复，请再试一次。';setStatus('在线')})
+        .then(function(response){if(!response.ok)throw new Error('HTTP '+response.status);var reader=response.body.getReader(),decoder=new TextDecoder(),buffer='',full='';function read(){return reader.read().then(function(result){if(result.done)return full;buffer+=decoder.decode(result.value,{stream:true});var lines=buffer.split('\n');buffer=lines.pop();lines.forEach(function(line){if(line.indexOf('data:')!==0)return;try{var data=JSON.parse(line.slice(5).trim());if((data.event==='agent_message'||data.event==='message')&&data.answer)full+=data.answer;if(data.event==='message_end'&&data.conversation_id)conversationId=data.conversation_id}catch(error){}});answer.textContent=visibleAnswer(full,false)||'思考中';document.getElementById('haoranAdvisorBody').scrollTop=99999;return read()})}return read()})
+        .then(function(full){answer.classList.remove('loading');answer.textContent=visibleAnswer(full,true)||'暂时没有收到回复，请再试一次。';setStatus('在线')})
         .catch(function(){answer.classList.remove('loading');answer.textContent='暂时无法连接顾问。请确认线上网站的 /api/dify/ 中转已重载；本地 127.0.0.1 预览不会经过线上 Nginx。';setStatus('连接异常')})
         .finally(function(){sending=false;if(button)button.disabled=false});
     }
