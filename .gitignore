@@ -1,3 +1,10 @@
 # 敏感文件（含激活码，禁止提交到 GitHub）
 激活码.txt
 supabase_codes.sql
+
+# 仅用于本地部署/安全留档，不属于网站源码，禁止提交
+nginx_dify_proxy.conf
+supabase/
+supabase_安全加固.sql
+supabase_顾问额度安全.sql
+安全上线清单.md
