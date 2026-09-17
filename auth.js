@@ -97,7 +97,7 @@
       if(pwd.length < 6){ A.msg('密码至少 6 位'); return; }
       var r = await fetch(SUPABASE_URL + '/auth/v1/signup', { method:'POST', headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'}, body: JSON.stringify({ email: email(phone), password: pwd, data: { nickname: nick, phone: phone } }) });
       var j = await r.json();
-      if(j.access_token){ A.save(j, nick, phone); A.msg('注册成功，已登录', true); A.refresh(); A.hide(); A.syncPaid().then(function(){ return A.syncTrialQuota(); }); document.dispatchEvent(new CustomEvent('haoran-auth-register')); }
+      if(j.access_token){ A.save(j, nick, phone); A.msg('注册成功，已登录', true); A.refresh(); if(window.__haoranAdvisorReset)window.__haoranAdvisorReset(); A.hide(); A.syncPaid().then(function(){ return A.syncTrialQuota(); }); document.dispatchEvent(new CustomEvent('haoran-auth-register')); }
       else { A.msg(j.msg || j.error_description || '注册失败，请重试'); }
     },
     login: async function(){
@@ -108,13 +108,14 @@
       if(j.access_token){
         var nick = '', phone2 = phone;
         try { var u = await fetch(SUPABASE_URL + '/auth/v1/user', { headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+j.access_token} }).then(function(x){ return x.json(); }); nick = (u.user_metadata && u.user_metadata.nickname) || phone; phone2 = (u.user_metadata && u.user_metadata.phone) || phone; } catch(e){ nick = phone; }
-        A.save(j, nick, phone2); A.msg('登录成功', true); A.refresh(); A.hide(); A.syncPaid().then(function(){ return A.syncTrialQuota(); });
+        A.save(j, nick, phone2); A.msg('登录成功', true); A.refresh(); if(window.__haoranAdvisorReset)window.__haoranAdvisorReset(); A.hide(); A.syncPaid().then(function(){ return A.syncTrialQuota(); });
       } else { A.msg(j.error_description || '登录失败，请检查手机号或密码'); }
     },
     logout: function(){
       try{ localStorage.removeItem('hyr_token'); localStorage.removeItem('hyr_refresh'); localStorage.removeItem('hyr_nick'); localStorage.removeItem('hyr_paid'); localStorage.removeItem('hyr_phone'); }catch(e){}
       workflowUsageValue = 0; workflowReady = false;
       A.refresh();
+      if(window.__haoranAdvisorReset)window.__haoranAdvisorReset();
     },
     // 兑换码解锁（Supabase 服务端校验 + 原子标记已用，前端看不到码）
     redeem: async function(code){
