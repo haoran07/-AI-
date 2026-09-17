@@ -37,6 +37,9 @@
     .prompt-modal-foot .prompt-copy{border-color:#ef6b2d;background:#ef6b2d;color:#fff;font-weight:700}
     @media(max-width:600px){.prompt-overlay{padding:12px}.prompt-modal{width:100%;max-height:calc(100vh - 24px)}.prompt-modal-head{padding:14px}.prompt-modal-meta{padding:10px 14px 0}.prompt-modal pre{margin:10px 14px 14px;padding:13px;font-size:12px}.prompt-modal-foot{padding:12px 14px}}
   </style>
+  <style>
+    .annual-price{display:flex;align-items:baseline;gap:10px;margin:18px 0 2px}.annual-price strong{font-size:34px;color:var(--accent)}.annual-price del{color:#777;font-size:13px}.contact-upgrade-toggle{margin-top:16px;width:100%;padding:10px 12px;border:1px solid #4b423c;background:#17110e;color:#e7c5b5;font-size:12px}.contact-upgrade-toggle:hover{border-color:var(--accent);color:#fff}.contact-activation{display:none;margin-top:12px;text-align:left}.contact-activation.show{display:block}.contact-activation label{display:block;margin-bottom:6px;color:#9f958c;font-size:10px}.contact-activation-row{display:flex;gap:7px}.contact-activation-row input{min-width:0;flex:1;border:1px solid #4a4039;background:#0b0b0b;color:#fff;padding:9px;font-size:11px;outline:0}.contact-activation-row input:focus{border-color:var(--accent)}.contact-activation-row button{border:1px solid var(--accent);background:var(--accent);color:#fff;padding:9px 10px;font-size:11px}.contact-activation-msg{margin-top:7px;color:#9f958c;font-size:10px;line-height:1.5}
+  </style>
 </head>
 <body>
   <nav class="nav"><a class="brand" href="#home" onclick="go('home')"><i>H</i>浩然AI实验室</a><div class="navlinks"><button data-view="home" onclick="go('home')">主页</button><button data-view="library" onclick="go('library')">组件库</button><button data-view="configurator" onclick="go('configurator')">配置器</button><button data-view="annual" onclick="go('annual')">年度版权益</button></div><div class="navright"><button class="button" onclick="go('library')">先看组件</button><button class="button" type="button" id="haoranLoginEntry" onclick="window.__auth&&window.__auth.show()">登录 / 试用</button><button class="button primary" onclick="go('configurator')">开始配置</button></div></nav>
@@ -169,6 +172,18 @@
 </script>
 <script>
   (function(){var overlay=document.createElement('div');overlay.className='contact-overlay';overlay.id='haoranContactOverlay';overlay.innerHTML='<section class="contact-card" role="dialog" aria-modal="true" aria-labelledby="haoranContactTitle"><button class="contact-close" type="button" aria-label="关闭">×</button><div class="eyebrow">WECHAT / ANNUAL ACCESS</div><h3 id="haoranContactTitle">添加我，继续你的建站计划</h3><p id="haoranContactCopy">扫码添加微信，说明你的建站需求；人工确认后会发送年度版激活码。</p><img class="contact-qr" src="assets/wechat-contact-qr.png" alt="微信好友二维码"><div class="contact-note">添加后请备注：<b>浩然AI实验室 + 登录手机号</b></div></section>';document.body.appendChild(overlay);function close(){overlay.classList.remove('show')}overlay.querySelector('.contact-close').addEventListener('click',close);overlay.addEventListener('click',function(event){if(event.target===overlay)close()});document.addEventListener('keydown',function(event){if(event.key==='Escape')close()});window.__haoranContact={show:function(message){var copy=document.getElementById('haoranContactCopy');if(message)copy.textContent=message;overlay.classList.add('show')}};document.addEventListener('haoran-auth-register',function(){window.__haoranContact.show('欢迎注册。扫码添加微信，告诉我你想做的网站；我会协助你把方案做完整。')});})();
+</script>
+<script>
+  (function(){
+    var featured=document.querySelector('#annual .plan.featured');
+    if(featured&&!featured.querySelector('.annual-price')){var price=document.createElement('div');price.className='annual-price';price.innerHTML='<strong>¥99</strong><del>原价 ¥199</del>';var desc=featured.querySelector('p');if(desc)desc.insertAdjacentElement('beforebegin',price)}
+    var card=document.querySelector('#haoranContactOverlay .contact-card');
+    if(!card)return;
+    var toggle=document.createElement('button');toggle.type='button';toggle.className='contact-upgrade-toggle';toggle.textContent='已添加微信？输入激活码';card.querySelector('.contact-note').insertAdjacentElement('afterend',toggle);
+    var form=document.createElement('div');form.className='contact-activation';form.innerHTML='<label for="contactActivationCode">已有激活码</label><div class="contact-activation-row"><input id="contactActivationCode" placeholder="输入激活码"><button type="button" id="contactActivationSubmit">立即开通</button></div><div class="contact-activation-msg" id="contactActivationMsg">激活码将绑定当前登录账户。</div>';toggle.insertAdjacentElement('afterend',form);
+    toggle.addEventListener('click',function(){form.classList.toggle('show');toggle.textContent=form.classList.contains('show')?'收起激活码输入':'已添加微信？输入激活码';if(form.classList.contains('show'))form.querySelector('input').focus()});
+    form.querySelector('button').addEventListener('click',async function(){var msg=form.querySelector('.contact-activation-msg'),code=form.querySelector('input').value.trim();if(!window.__auth||window.__auth.isVisitor()){msg.textContent='请先登录，再兑换激活码。';window.__auth&&window.__auth.show();return}if(!code){msg.textContent='请输入收到的激活码。';return}this.disabled=true;msg.textContent='正在验证激活码…';var result=await window.__auth.redeem(code);this.disabled=false;msg.textContent=result.msg;if(result.ok){msg.style.color='#bb4d1f';form.querySelector('input').value='';window.__haoranAccess&&window.__haoranAccess.refresh()}});
+  })();
 </script>
 <script>
   (function(){
