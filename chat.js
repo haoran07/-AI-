@@ -1,14 +1,12 @@
 /* 自定义 AI 客服：调用 Dify Agent API（经服务器 nginx 中转，密钥不暴露）
    支持流式打字机 + Markdown 渲染 + 一键复制 + 「思考中…」占位 + 多轮记忆 */
 (function(){
-  var API_URL = '/api/dify/chat-messages';
+  var API_URL = 'https://ysslreesusynfbrgxnew.supabase.co/functions/v1/dify-chat';
   var convId = '';
   var busy = false;
 
   function uid(){
     try{
-      var p = localStorage.getItem('hyr_phone');
-      if(p) return p;
       var u = localStorage.getItem('_hy_uid');
       if(!u){ u = 'u' + Math.random().toString(36).slice(2,10); localStorage.setItem('_hy_uid', u); }
       return u;
@@ -179,10 +177,6 @@
     var text = (input.value || '').trim();
     if(!text) return;
     if(!window.__auth || window.__auth.isVisitor()) return;
-    if(!window.__auth.canUseWorkflow()){
-      addAi('你的 10 次完整方案试用已用完。升级年度版后，可以不限次数生成提示词和继续向 AI 建站顾问提问。');
-      return;
-    }
     input.value = '';
     addUser(text);
     var aiEl = addAi();
@@ -195,13 +189,12 @@
     try{
       var resp = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window.__auth.getAccessToken() },
         body: JSON.stringify({
           inputs: {},
           query: text,
           response_mode: 'streaming',
-          conversation_id: convId,
-          user: uid()
+          conversation_id: convId
         })
       });
       if(!resp.ok) throw new Error('HTTP ' + resp.status);
@@ -268,10 +261,7 @@
       aiEl.dataset.prompt = prompt;
       aiEl.querySelector('.copy-btn').classList.add('show');
     }
-    if(completed && finalText && window.__auth && !window.__auth.isPaid()){
-      window.__auth.consumeWorkflow();
-      refreshQuota();
-    }
+    if(completed && finalText && window.__auth){ window.__auth.syncTrialQuota().then(refreshQuota); }
     var body = document.getElementById('hyChatBody');
     if(body) body.scrollTop = body.scrollHeight;
     busy = false;

@@ -112,10 +112,10 @@
     redeem: async function(code){
       code = (code||'').trim().toUpperCase();
       try{
-        var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/redeem_code', {
+        var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/redeem_code_secure', {
           method:'POST',
           headers:rpcHeaders(),
-          body: JSON.stringify({ p_code: code, p_user: (cur().phone || cur().nick || '未登录') })
+          body: JSON.stringify({ p_code: code })
         });
         var j = await r.json();
         if(j && j.ok === true){
@@ -129,6 +129,7 @@
       }
     },
     isPaid: function(){ return cur().paid === '1'; },
+    getAccessToken: function(){ return cur().token; },
     isTrial: function(){ return !!cur().nick && cur().paid !== '1'; },
     isVisitor: function(){ return !cur().nick; },
     getWorkflowLimit: function(){ return FREE_WORKFLOW_LIMIT; },
@@ -177,10 +178,10 @@
       if(!u.phone){ return false; }
       if(u.paid === '1'){ return true; }
       try{
-        var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/check_paid', {
+        var r = await fetch(SUPABASE_URL + '/rest/v1/rpc/check_paid_secure', {
           method:'POST',
           headers:rpcHeaders(),
-          body: JSON.stringify({ p_user: u.phone })
+          body: '{}'
         });
         var j = await r.json();
         if(j && j.paid === true){
