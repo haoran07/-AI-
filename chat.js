@@ -187,9 +187,11 @@
 
     var full = '', completed = false;
     try{
+      var accessToken = window.__auth.ensureSession ? await window.__auth.ensureSession() : window.__auth.getAccessToken();
+      if(!accessToken) throw new Error('Authentication expired');
       var resp = await fetch(API_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window.__auth.getAccessToken() },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + accessToken },
         body: JSON.stringify({
           inputs: {},
           query: text,

@@ -9,6 +9,14 @@
   function email(p){ return (p||'').trim() + '@haoxixi.com'; }
   function cur(){ try{ return { nick: localStorage.getItem('hyr_nick')||'', phone: localStorage.getItem('hyr_phone')||'', token: localStorage.getItem('hyr_token')||'', paid: localStorage.getItem('hyr_paid')||'' }; }catch(e){ return {nick:'',phone:'',token:'',paid:''}; } }
   function $(id){ return document.getElementById(id); }
+  // Supabase access token 有有效期。昵称保留在本地不等于令牌仍然有效，
+  // 所有需要鉴权的请求前都先在临近过期时静默换取新令牌。
+  function tokenExpiresSoon(token, bufferSeconds){
+    try{
+      var payload = JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+      return !payload.exp || payload.exp <= Math.floor(Date.now()/1000) + (bufferSeconds || 120);
+    }catch(e){ return true; }
+  }
 
   // 注入登录门
   var gate = document.createElement('div');
@@ -130,6 +138,24 @@
     },
     isPaid: function(){ return cur().paid === '1'; },
     getAccessToken: function(){ return cur().token; },
+    ensureSession: async function(){
+      var u = cur();
+      if(!u.token) return '';
+      if(!tokenExpiresSoon(u.token, 120)) return u.token;
+      var refreshToken = '';
+      try{ refreshToken = localStorage.getItem('hyr_refresh') || ''; }catch(e){}
+      if(!refreshToken) return '';
+      try{
+        var r = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
+          method:'POST', headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'},
+          body:JSON.stringify({ refresh_token: refreshToken })
+        });
+        var j = await r.json();
+        if(!r.ok || !j.access_token) return '';
+        A.save(j, u.nick, u.phone);
+        return j.access_token;
+      }catch(e){ return ''; }
+    },
     isTrial: function(){ return !!cur().nick && cur().paid !== '1'; },
     isVisitor: function(){ return !cur().nick; },
     getWorkflowLimit: function(){ return FREE_WORKFLOW_LIMIT; },
@@ -212,5 +238,7 @@
 
   window.__auth = A;
   A.refresh();
-  A.syncPaid().then(function(){ return A.syncTrialQuota(); });
+  A.ensureSession().then(function(){ return A.syncPaid(); }).then(function(){ return A.syncTrialQuota(); });
+  // 让长时间停留在页面的用户也能在令牌过期前自动续期。
+  setInterval(function(){ A.ensureSession(); }, 10 * 60 * 1000);
 })();
