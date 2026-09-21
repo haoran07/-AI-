@@ -31,6 +31,9 @@ Deno.serve(async (req) => {
   const { data: { user }, error: authError } = await userClient.auth.getUser()
   if (authError || !user) return jsonError(401, 'AUTHENTICATION_EXPIRED', '登录状态已失效，请重新登录。')
 
+  const { data: access } = await adminClient.from('intelligence_authorized_users').select('user_id').eq('user_id', user.id).maybeSingle()
+  if (!access) return jsonError(403, 'ACCESS_DENIED', '情报工作站目前仅对管理员账号开放。')
+
   let payload: Record<string, unknown>
   try { payload = await req.json() } catch { return jsonError(400, 'INVALID_REQUEST', '请求内容格式不正确。') }
   const action = String(payload.action || 'start')
