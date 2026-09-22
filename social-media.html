@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="社媒雷达：自动搜索 Facebook、Instagram、TikTok、LinkedIn 和 Reddit 的公开信息。">
+  <title>社媒雷达 · 浩然AI实验室</title>
+  <link rel="stylesheet" href="auth.css">
+  <style>
+    :root{--bg:#090a0d;--panel:#12151b;--line:#29303a;--text:#f5f7fa;--muted:#8d98a6;--accent:#b8ff32}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Microsoft YaHei",sans-serif}.nav{height:68px;display:flex;align-items:center;padding:0 5vw;border-bottom:1px solid var(--line);gap:30px}.brand{color:var(--text);text-decoration:none;font-weight:800}.navlinks{display:flex;gap:22px}.navlinks a{color:var(--muted);text-decoration:none;font-size:13px}.navlinks a:hover{color:var(--text)}.shell{max-width:1180px;margin:auto;padding:70px 24px}.eyebrow{color:var(--accent);letter-spacing:.16em;font:700 11px ui-monospace,monospace}.hero h1{font-size:clamp(44px,8vw,88px);line-height:.95;margin:18px 0}.hero p{color:var(--muted);font-size:16px;line-height:1.8;max-width:650px}.card{margin-top:44px;border:1px solid var(--line);background:var(--panel);padding:28px}.label{display:block;color:var(--muted);font-size:13px;margin-bottom:10px}.task{width:100%;min-height:150px;background:#0d1015;border:1px solid var(--line);color:var(--text);padding:18px;font:inherit;resize:vertical;outline:none}.task:focus{border-color:var(--accent)}.run{margin-top:18px;width:100%;height:54px;border:0;background:var(--accent);color:#111;font-weight:800;cursor:pointer}.platforms{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}.platform{padding:7px 10px;border:1px solid var(--line);color:var(--muted);font-size:12px}.note{color:#687381;font-size:12px;line-height:1.7;margin-top:18px}.result{display:none;margin-top:28px;white-space:pre-wrap;line-height:1.8}.result.show{display:block}.error{color:#ff9d8c}.status{color:var(--muted);font-size:12px;margin-top:18px}
+  </style>
+</head>
+<body>
+  <nav class="nav"><a class="brand" href="index.html">浩然AI实验室</a><div class="navlinks"><a href="index.html">主页</a><a href="intelligence.html">情报工作站</a><a href="social-media.html">社媒雷达</a></div></nav>
+  <main class="shell">
+    <section class="hero"><div class="eyebrow">SOCIAL MEDIA RADAR</div><h1>社媒雷达</h1><p>只输入一句话，自动检索五大社交平台的公开信息，整理成清晰的中文社交媒体报告。</p></section>
+    <section class="card"><label class="label" for="task">你想调查什么？</label><textarea id="task" class="task" placeholder="例如：调查苹果18的配置、发布时间以及社交媒体上的讨论"></textarea><button id="run" class="run">开始调查 →</button><div class="platforms"><span class="platform">Facebook</span><span class="platform">Instagram</span><span class="platform">TikTok</span><span class="platform">LinkedIn</span><span class="platform">Reddit</span></div><div class="note">仅使用公开信息。不会要求登录、Cookie 或私密内容。网址只在后台作为检索过程使用，不要求你手动输入。</div><div id="status" class="status"></div><pre id="result" class="result"></pre></section>
+  </main>
+  <script>
+    const button=document.getElementById('run'),task=document.getElementById('task'),status=document.getElementById('status'),result=document.getElementById('result');
+    button.onclick=async()=>{const value=task.value.trim();if(!value){status.textContent='请先输入调查任务';return}button.disabled=true;status.textContent='正在准备公开搜索…';result.classList.remove('show');try{const token=window.__auth&&await window.__auth.ensureSession();if(!token){window.__auth&&window.__auth.show();return}const r=await fetch('https://ysslreesusynfbrgxnew.supabase.co/functions/v1/social-media',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({task:value})});const data=await r.json();if(!r.ok)throw new Error(data.error||'任务执行失败');result.textContent=data.report||JSON.stringify(data,null,2);result.classList.add('show');status.textContent='调查完成'}catch(e){status.textContent=e.message;status.className='status error'}finally{button.disabled=false}};
+  </script>
+</body>
+</html>
