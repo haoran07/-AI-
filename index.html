@@ -297,30 +297,5 @@
   if(marquee)marquee.setAttribute('aria-label','主流大模型厂商');
 })();
 </script>
-<script>
-(function(){
-  var baseGo=window.go;
-  window.go=function(view){
-    if(view==='social'){
-      document.querySelectorAll('.view').forEach(function(s){s.classList.toggle('active',s.id==='social')});
-      document.querySelectorAll('[data-view]').forEach(function(b){b.classList.toggle('active',b.dataset.view==='social')});
-      history.replaceState(null,'','#social'); window.scrollTo(0,0); return;
-    }
-    return baseGo(view);
-  };
-  var nav=document.querySelector('.navlinks');
-  window.addEventListener('hashchange',function(){if(location.hash==='#social')window.go('social')});
-  if(nav && !nav.querySelector('[data-view="social"]')){
-    var b=document.createElement('button'); b.dataset.view='social'; b.textContent='社媒雷达'; b.onclick=function(){go('social')};
-    var annual=nav.querySelector('[data-view="annual"]'); nav.insertBefore(b,annual||null);
-  }
-  var main=document.querySelector('main');
-  if(main && !document.getElementById('social')){
-    var s=document.createElement('section'); s.className='view'; s.id='social'; s.innerHTML='<iframe class="social-frame" src="social-media.html" title="社媒雷达"></iframe>'; main.appendChild(s);
-    var frame=s.querySelector('iframe'); frame.addEventListener('load',function(){try{var d=frame.contentDocument;var n=d.querySelector('.nav');if(n)n.style.display='none';var sh=d.querySelector('.shell');if(sh)sh.style.paddingTop='54px';}catch(e){}});
-    var st=document.createElement('style'); st.textContent='.social-frame{display:block;width:100%;height:calc(100vh - 68px);min-height:900px;border:0;background:#090a0d}'; document.head.appendChild(st);
-  }
-})();
-</script>
 </body>
 </html>
