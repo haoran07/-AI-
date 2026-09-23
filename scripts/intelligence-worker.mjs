@@ -41,21 +41,70 @@ function parseSources(value) {
   }).filter(row => row.url)
 }
 
+
+async function readWorkflow(response) {
+  if (!response.body) throw new Error('Dify response has no stream')
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  let pending = ''
+  let dataLines = []
+  let outputs
+  let finished = false
+  function flush() {
+    if (!dataLines.length) return
+    const raw = dataLines.join('\n')
+    dataLines = []
+    if (raw === '[DONE]') return
+    const event = JSON.parse(raw)
+    if (event.event === 'workflow_started') console.log('Dify workflow started')
+    if (event.event === 'error') throw new Error('Dify stream error: ' + String(event.message || event.code || 'unknown'))
+    if (event.event === 'workflow_finished') {
+      if (event.data?.status !== 'succeeded') throw new Error('Dify workflow failed: ' + String(event.data?.error || event.data?.status))
+      outputs = event.data.outputs
+      finished = true
+    }
+  }
+  try {
+    while (!finished) {
+      const { value, done } = await reader.read()
+      pending += done ? decoder.decode() : decoder.decode(value, { stream: true })
+      let pos
+      while ((pos = pending.indexOf('\n')) >= 0) {
+        const line = pending.slice(0, pos).replace(/\r$/, '')
+        pending = pending.slice(pos + 1)
+        if (!line) flush()
+        else if (line.startsWith('data:')) dataLines.push(line.slice(5).trimStart())
+      }
+      if (done) {
+        if (pending.startsWith('data:')) dataLines.push(pending.slice(5).trimStart())
+        flush()
+        break
+      }
+    }
+    if (!finished) throw new Error('Dify stream closed before workflow_finished; do not assume workflow stopped')
+    return outputs
+  } finally {
+    await reader.cancel().catch(() => {})
+  }
+}
+
+let stage = 'load_job'
 try {
   const jobResponse = await fetch(`${supabaseUrl}/rest/v1/intelligence_jobs?id=eq.${jobId}&select=*`, { headers: restHeaders })
   if (!jobResponse.ok) throw new Error(`Cannot load job (${jobResponse.status})`)
   const [job] = await jobResponse.json()
   if (!job) throw new Error('Job not found')
   await updateJob({ status: 'running', started_at: new Date().toISOString(), error_message: null })
+  stage = 'dify_stream'
   const response = await fetch(`${difyBase}/workflows/run`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${process.env.DIFY_INTELLIGENCE_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ inputs: { topic: job.topic, time_range: job.time_range, target_market: job.target_market, source_language: job.source_language }, response_mode: 'blocking', user: job.user_id }),
+    body: JSON.stringify({ inputs: { topic: job.topic, time_range: job.time_range, target_market: job.target_market, source_language: job.source_language }, response_mode: 'streaming', user: job.user_id }),
     signal: AbortSignal.timeout(25 * 60 * 1000),
   })
-  const data = await response.json().catch(() => ({}))
-  if (!response.ok) throw new Error(`Dify failed (${response.status}): ${String(data.message || 'unknown error').slice(0, 500)}`)
-  const outputs = object(data.data?.outputs ?? data.outputs)
+  if (!response.ok) throw new Error('Dify HTTP ' + response.status)
+  const outputs = object(await readWorkflow(response))
+  stage = 'save_report'
   const report = findReport(outputs)
   if (!report) throw new Error(`Dify completed without a report. Output keys: ${Object.keys(outputs).join(', ')}`)
   const sources = parseSources(outputs.source_records_json ?? outputs.source_records ?? outputs.source_re ?? outputs.source_urls ?? outputs.source_ur)
@@ -64,7 +113,8 @@ try {
   console.log(`Intelligence job ${jobId} completed.`)
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error)
-  console.error(message)
-  try { await updateJob({ status: 'failed', error_message: message.slice(0, 1000), completed_at: new Date().toISOString() }) } catch (updateError) { console.error(updateError) }
+  const causeCode = error?.cause?.code || error?.code || 'unknown'
+  console.error(JSON.stringify({ stage, message, causeCode }))
+  try { await updateJob({ status: 'failed', error_message: ('阶段：' + stage + '；' + message + '；错误码：' + causeCode).slice(0, 1000), completed_at: new Date().toISOString() }) } catch (updateError) { console.error(updateError) }
   process.exitCode = 1
 }
